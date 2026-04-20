@@ -8,11 +8,11 @@ import { type Client, type Segment, formatCurrency } from '../../data/mockData';
 export type OutcomeType = 'Interested' | 'Follow-up' | 'Not Interested';
 
 export const SEG_COLORS: Record<Segment, string> = {
-  Risk: '#f43f5e', Opportunity: '#10b981', Underperforming: '#f59e0b',
+  Risk: '#f43f5e', Opportunity: '#10b981', Underperforming: '#f59e0b', Stable: '#3b82f6',
 };
 
 export const ACTION_ICONS: Record<string, React.ElementType> = {
-  Risk: Phone, Opportunity: TrendingUp, Underperforming: RefreshCw,
+  Risk: Phone, Opportunity: TrendingUp, Underperforming: RefreshCw, Stable: CheckCircle,
 };
 
 /* ─── AI Conversation guides ──────────────────── */
@@ -41,6 +41,13 @@ export const CONVERSATION_GUIDES: Record<string, { topic: string; point: string 
     { topic: 'Risk profile check',     point: '"Has your risk appetite changed since we last spoke?"' },
     { topic: 'Get buy-in',             point: '"I\'d recommend moving from Fund A to Fund B. Want me to process this?"' },
   ],
+  Stable: [
+    { topic: 'Validate success',      point: '"Your portfolio is currently beating your targets. You\'re in the green!"' },
+    { topic: 'Reinforce strategy',     point: '"The current allocation is working exactly as planned for your Retirement goal."' },
+    { topic: 'Gather feedback',        point: '"Are there any life changes or new goals we should account for?"' },
+    { topic: 'Ask for referrals',      point: '"Since you\'re happy with the results, is there anyone else I should help?"' },
+    { topic: 'Schedule next touch',    point: '"Let\'s connect again in 6 months for your semi-annual review."' },
+  ],
 };
 
 export const AI_INSIGHTS: Record<string, string[]> = {
@@ -59,6 +66,11 @@ export const AI_INSIGHTS: Record<string, string[]> = {
     'Rebalancing conversation is best initiated post-quarterly review — client is already primed.',
     'Fund switch framing as "upgrade" (not "loss") improves buy-in by 45%.',
   ],
+  Stable: [
+    'Stable clients have the highest referral potential — 40% are willing to refer if asked during a performance review.',
+    'Long-term winners are susceptible to "lifestyle creep" — observe for idle cash accumulation in 3–6 months.',
+    'Retention rate for this segment is 98% when contacted once per quarter with a success summary.',
+  ],
 };
 
 /* ─── Copilot Drawer ─────────────────────────────────────────────────── */
@@ -69,7 +81,9 @@ export default function CopilotDrawer({ client, onClose }: {
   const guide   = CONVERSATION_GUIDES[client.segment];
   const insights = AI_INSIGHTS[client.segment];
   const segLabel = client.segment === 'Risk' ? '🔴 At Risk'
-    : client.segment === 'Opportunity' ? '🟢 Opportunity' : '🟡 Underperforming';
+    : client.segment === 'Opportunity' ? '🟢 Opportunity' 
+    : client.segment === 'Underperforming' ? '🟡 Underperforming'
+    : '🔵 Stable';
 
   const [outcomeFor, setOutcomeFor]   = useState<OutcomeType | null>(null);
   const [outcomeNote, setOutcomeNote] = useState('');

@@ -1,7 +1,12 @@
 import { useRef, useState, useEffect } from 'react';
 import { Bell, Search, Sun, Moon, Settings, LogOut, ChevronDown } from 'lucide-react';
-import { NUDGES, ADVISOR_PERFORMANCE, BADGE_TIERS, getBadge } from '../../data/mockData';
+import { 
+  MOCK_NOTIFICATIONS, NUDGES, ADVISOR_PERFORMANCE, 
+  BADGE_TIERS, getBadge, MOCK_CLIENTS 
+} from '../../data/mockData';
 import { useTheme } from '../../context/ThemeContext';
+import NotificationDrawer from '../shared/NotificationDrawer';
+import CopilotDrawer from '../shared/CopilotDrawer';
 
 interface TopbarProps {
   readonly title: string;
@@ -12,7 +17,12 @@ export default function Topbar({ title, subtitle }: TopbarProps) {
   const urgentCount = NUDGES.filter(n => n.type === 'risk').reduce((s, n) => s + n.count, 0);
   const { theme, toggleTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [activeCopilotClient, setActiveCopilotClient] = useState<any>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  const notifications = MOCK_NOTIFICATIONS;
+  const unreadNotifications = notifications.filter(n => n.unread).length;
 
   const perf  = ADVISOR_PERFORMANCE;
   const badge = getBadge(perf.possibilityAchievement);
@@ -89,15 +99,22 @@ export default function Topbar({ title, subtitle }: TopbarProps) {
         </button>
 
         {/* Notifications */}
-        <div style={{ position: 'relative', cursor: 'pointer' }}>
+        <div 
+          onClick={() => setShowNotifications(true)}
+          style={{ position: 'relative', cursor: 'pointer', transition: 'transform 0.2s' }}
+          onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.1)'}
+          onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+        >
           <Bell size={20} color="var(--text-secondary)" />
-          {urgentCount > 0 && (
+          {unreadNotifications > 0 && (
             <span style={{
               position: 'absolute', top: -6, right: -6,
               background: '#f43f5e', color: '#fff',
               fontSize: 10, fontWeight: 700, borderRadius: '50%',
               width: 16, height: 16, display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>{urgentCount}</span>
+              boxShadow: '0 0 8px rgba(244,63,94,0.5)',
+              border: '2px solid var(--bg-secondary)',
+            }}>{unreadNotifications}</span>
           )}
         </div>
 
@@ -277,6 +294,28 @@ export default function Topbar({ title, subtitle }: TopbarProps) {
           )}
         </div>
       </div>
+
+      {/* Notification Drawer */}
+      {showNotifications && (
+        <NotificationDrawer 
+          onClose={() => setShowNotifications(false)} 
+          onOpenCopilot={(id) => {
+            const client = MOCK_CLIENTS.find(c => c.id === id);
+            if (client) {
+              setActiveCopilotClient(client);
+              setShowNotifications(false);
+            }
+          }}
+        />
+      )}
+
+      {/* Global AI Copilot (triggered from notifications) */}
+      {activeCopilotClient && (
+        <CopilotDrawer 
+          client={activeCopilotClient} 
+          onClose={() => setActiveCopilotClient(null)} 
+        />
+      )}
     </header>
   );
 }

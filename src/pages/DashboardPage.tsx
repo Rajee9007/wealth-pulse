@@ -11,7 +11,7 @@ import {
 import {
   TrendingUp, TrendingDown, Users, Target, ArrowRight,
   ChevronRight, Phone, RefreshCw,
-  ShieldAlert, Sparkles, BarChart3, Wallet, Crosshair, Lightbulb,
+  ShieldAlert, Sparkles, BarChart3, Wallet, Crosshair, Lightbulb, CheckCircle
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -54,6 +54,7 @@ export default function DashboardPage() {
   const atRisk = MOCK_CLIENTS.filter(c => c.segment === 'Risk').length;
   const oppo   = MOCK_CLIENTS.filter(c => c.segment === 'Opportunity').length;
   const under  = MOCK_CLIENTS.filter(c => c.segment === 'Underperforming').length;
+  const stable = MOCK_CLIENTS.filter(c => c.segment === 'Stable').length;
 
   const topClients = [...MOCK_CLIENTS]
     .sort((a, b) => b.urgencyScore - a.urgencyScore)
@@ -64,7 +65,8 @@ export default function DashboardPage() {
   const segCards = [
     { icon: Sparkles,    label: 'Opportunity', sub: 'Ready to Invest', value: oppo, color: '#10b981', bg: 'rgba(16,185,129,0.08)', weight: '0.6x · Priority 1' },
     { icon: TrendingDown, label: 'Underperforming', sub: 'High Potential', value: under, color: '#f59e0b', bg: 'rgba(245,158,11,0.08)', weight: '0.5x · Priority 2' },
-    { icon: ShieldAlert, label: 'At Risk', sub: 'Churn / Dormant', value: atRisk, color: '#f43f5e', bg: 'rgba(244,63,94,0.08)', weight: '0.3x · Monitor' },
+    { icon: ShieldAlert, label: 'At Risk', sub: 'Churn / Dormant', value: atRisk, color: '#f43f5e', bg: 'rgba(244,63,94,0.08)', weight: '0.3x · Priority 3' },
+    { icon: CheckCircle,  label: 'Stable', sub: 'Good Portfolio', value: stable, color: '#3b82f6', bg: 'rgba(59,130,246,0.08)', weight: '0.1x · Least Priority' },
   ];
 
   return (
@@ -222,7 +224,7 @@ export default function DashboardPage() {
             All clients <ArrowRight size={14} />
           </button>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14 }}>
           {segCards.map(s => (
             <div
               key={s.label}

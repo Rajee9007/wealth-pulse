@@ -1,6 +1,6 @@
 // Mock data for WealthPulse Advisor Copilot
 
-export type Segment = 'Risk' | 'Opportunity' | 'Underperforming';
+export type Segment = 'Risk' | 'Opportunity' | 'Underperforming' | 'Stable';
 
 export interface Client {
   id: string;
@@ -23,6 +23,16 @@ export interface Client {
   phone: string;
 }
 
+export interface Notification {
+  id: string;
+  type: 'growth' | 'risk' | 'success' | 'insight';
+  title: string;
+  message: string;
+  time: string;
+  unread: boolean;
+  relatedClientId?: string;
+}
+
 export interface AdvisorPerformance {
   month: string;
   actual: number;
@@ -35,7 +45,7 @@ export interface AdvisorPerformance {
   possibilityAchievement: number;
 }
 
-export const MOCK_CLIENTS: Client[] = [
+export const CURATED_CLIENTS: Client[] = [
   {
     id: 'C001', name: 'Arjun Mehta', segment: 'Risk',
     aum: 480000, aumPotential: 80000, commissionPotential: 3200,
@@ -116,6 +126,84 @@ export const MOCK_CLIENTS: Client[] = [
     goalTag: 'Child Education', riskProfile: 'Moderate', returns: 13.1,
     email: 'ananya.bose@example.com', phone: '+919777788899',
   },
+  {
+    id: 'C009', name: 'Vikram Joshi', segment: 'Stable',
+    aum: 1500000, aumPotential: 20000, commissionPotential: 800,
+    sipActive: true, lastActivity: '2026-04-10', lastContacted: '2026-03-20',
+    urgencyScore: 15, action: 'Anniversary Review',
+    reason: 'Portfolio on track. 12% CAGR vs 10% goal.',
+    talkingPoints: ['Goals on track', 'Consistent 12% returns', 'Maintain current allocation'],
+    goalTag: 'Retirement', riskProfile: 'Moderate', returns: 12.1,
+    email: 'vikram.j@example.com', phone: '+919666655544',
+  },
+  {
+    id: 'C010', name: 'Meera Deshmukh', segment: 'Stable',
+    aum: 950000, aumPotential: 15000, commissionPotential: 600,
+    sipActive: true, lastActivity: '2026-04-12', lastContacted: '2026-03-15',
+    urgencyScore: 12, action: 'Client Satisfaction Call',
+    reason: 'High satisfaction, consistent SIP activity.',
+    talkingPoints: ['Consistent investor', 'Portfolio resilience check', 'Collect feedback'],
+    goalTag: 'Wealth Building', riskProfile: 'Conservative', returns: 8.5,
+    email: 'meera.d@example.com', phone: '+919444433322',
+  },
+  {
+    id: 'C011', name: 'Zoya Khan', segment: 'Stable',
+    aum: 2200000, aumPotential: 0, commissionPotential: 0,
+    sipActive: true, lastActivity: '2026-04-20', lastContacted: '2026-04-05',
+    urgencyScore: 5, action: 'Portfolio Maintenance',
+    reason: 'Strong performance, Aggressive profile matched.',
+    talkingPoints: ['18% CAGR over 3 years', 'High engagement', 'No action required'],
+    goalTag: 'Wealth Building', riskProfile: 'Aggressive', returns: 18.2,
+    email: 'zoya.k@example.com', phone: '+919333322211',
+  },
+];
+
+// --- Generation Engine for 100+ Clients ---
+const FIRST_NAMES = ['Aarav', 'Ishaan', 'Vihaan', 'Aditya', 'Siddharth', 'Rahul', 'Nandini', 'Kiara', 'Diya', 'Riya', 'Ansh', 'Aryan', 'Kabir', 'Myra', 'Zoya', 'Advait', 'Atharv', 'Shanaya', 'Hridhaan', 'Kavya'];
+const LAST_NAMES = ['Kapoor', 'Singh', 'Reddy', 'Patel', 'Goel', 'Malhotra', 'Chatterjee', 'Verma', 'Dubey', 'Saxena', 'Desai', 'Banerjee', 'Nayar', 'Shetty', 'Venkatesh', 'Jain', 'Mehta', 'Gupta', 'Shah', 'Rao'];
+const GOAL_TAGS = ['Retirement', 'Child Education', 'Wealth Building', 'Home Purchase', 'Tax Saving'];
+const RISK_PROFILES: ('Conservative' | 'Moderate' | 'Aggressive')[] = ['Conservative', 'Moderate', 'Aggressive'];
+
+function generateMockClients(count: number): Client[] {
+  const generated: Client[] = [];
+  const segments: Segment[] = ['Opportunity', 'Underperforming', 'Risk', 'Stable'];
+  
+  for (let i = 0; i < count; i++) {
+    const fn = FIRST_NAMES[Math.floor(Math.random() * FIRST_NAMES.length)];
+    const ln = LAST_NAMES[Math.floor(Math.random() * LAST_NAMES.length)];
+    const seg = segments[Math.floor(Math.random() * segments.length)];
+    const aum = Math.floor(Math.random() * 5000000) + 100000;
+    const pot = Math.floor(Math.random() * 500000);
+    const returns = +(Math.random() * 15 + 2).toFixed(1);
+    const urgency = Math.floor(Math.random() * 100);
+
+    generated.push({
+      id: `GEN-${i}`,
+      name: `${fn} ${ln}`,
+      segment: seg,
+      aum,
+      aumPotential: pot,
+      commissionPotential: Math.round(pot * 0.04),
+      sipActive: Math.random() > 0.3,
+      lastActivity: '2026-04-15',
+      lastContacted: '2026-04-01',
+      urgencyScore: urgency,
+      action: seg === 'Opportunity' ? 'Upsell SIP' : seg === 'Risk' ? 'Retention Call' : seg === 'Underperforming' ? 'Rebalance' : 'Maintenance',
+      reason: `Automated insight for ${fn}. Potential growth of ${pot / 100000}L.`,
+      talkingPoints: [`Portfolio returns at ${returns}%`, 'Goal tracking active', 'Consistent SIP history'],
+      goalTag: GOAL_TAGS[Math.floor(Math.random() * GOAL_TAGS.length)],
+      riskProfile: RISK_PROFILES[Math.floor(Math.random() * RISK_PROFILES.length)],
+      returns,
+      email: `${fn.toLowerCase()}.${ln.toLowerCase()}${i}@example.com`,
+      phone: `+91 ${Math.floor(8000000000 + Math.random() * 2000000000)}`,
+    });
+  }
+  return generated;
+}
+
+export const MOCK_CLIENTS: Client[] = [
+  ...CURATED_CLIENTS,
+  ...generateMockClients(100)
 ];
 
 export const ADVISOR_PERFORMANCE: AdvisorPerformance = {
@@ -150,6 +238,34 @@ export const MONTHLY_TREND = [
   { month: 'Apr', actual: 720000, target: 600000, possibility: 850000 },
 ];
 
+export const MOCK_NOTIFICATIONS: Notification[] = [
+  {
+    id: 'n1', type: 'growth', title: 'Idle Cash Detected',
+    message: 'Arjun Mehta has ₹5.2L idle in savings. Possible upsell to Moderate SIP.',
+    time: '2 min ago', unread: true, relatedClientId: 'C001'
+  },
+  {
+    id: 'n2', type: 'risk', title: 'Urgent Rebalance',
+    message: 'Zoya Khan\'s portfolio is 18% off target allocation due to equity rallies.',
+    time: '1 hour ago', unread: true, relatedClientId: 'C011'
+  },
+  {
+    id: 'n3', type: 'success', title: 'SIP Reactivated',
+    message: 'Priya Sharma successfully resumed her ₹5,000 monthly SIP.',
+    time: '3 hours ago', unread: true, relatedClientId: 'C002'
+  },
+  {
+    id: 'n4', type: 'insight', title: 'Segment Performance',
+    message: 'Your "Stable" portfolio segment is currently beating the benchmark by 2.4%.',
+    time: '5 hours ago', unread: false
+  },
+  {
+    id: 'n5', type: 'growth', title: 'High Potential Harvest',
+    message: 'Ananya Bose has reached a 15.2% return milestone. Suggest top-up.',
+    time: 'Yesterday', unread: false, relatedClientId: 'C008'
+  },
+];
+
 export const NUDGES = [
   { id: 'N1', type: 'risk',   message: '3 At-Risk clients not contacted in 7+ days', count: 3 },
   { id: 'N2', type: 'oppo',   message: '2 Opportunity clients have idle funds available', count: 2 },
@@ -161,7 +277,8 @@ export function calcPossibility(clients: Client[]) {
   const opp   = clients.filter(c => c.segment === 'Opportunity').reduce((s,c) => s + c.aumPotential, 0);
   const risk  = clients.filter(c => c.segment === 'Risk').reduce((s,c) => s + c.aumPotential, 0);
   const under = clients.filter(c => c.segment === 'Underperforming').reduce((s,c) => s + c.aumPotential, 0);
-  return Math.round(opp * 0.6 + risk * 0.3 + under * 0.5);
+  const stable = clients.filter(c => c.segment === 'Stable').reduce((s,c) => s + c.aumPotential, 0);
+  return Math.round(opp * 0.6 + risk * 0.3 + under * 0.5 + stable * 0.1);
 }
 
 export function calcScore(actual: number, possibility: number): number {

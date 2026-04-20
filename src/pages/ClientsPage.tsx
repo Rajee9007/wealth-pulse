@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import AppShell from '../components/layout/AppShell';
 import { MOCK_CLIENTS, formatCurrency } from '../data/mockData';
 import type { Segment, Client } from '../data/mockData';
@@ -38,6 +38,8 @@ export default function ClientsPage() {
   const [sortKey,   setSortKey]   = useState<SortKey>('aumPotential');
   const [sortDir,   setSortDir]   = useState<'asc' | 'desc'>('desc');
   const [copilotClient, setCopilotClient] = useState<Client | null>(null);
+  const [visibleCount, setVisibleCount] = useState(20);
+  const loaderRef = useRef<HTMLDivElement>(null);
 
   const [searchParams] = useSearchParams();
   const segmentParam = searchParams.get('segment');
@@ -47,6 +49,29 @@ export default function ClientsPage() {
       setSegFilter(segmentParam as Segment | 'All');
     }
   }, [segmentParam]);
+
+  // Infinite Scroll Logic
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setVisibleCount(prev => prev + 20);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (loaderRef.current) {
+      observer.observe(loaderRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [segFilter, searchQ]); // Reset observer if filters change
+
+  // Reset pagination on filter change
+  useEffect(() => {
+    setVisibleCount(20);
+  }, [segFilter, searchQ]);
 
   const handleSort = (key: SortKey) => {
     if (sortKey === key) setSortDir(d => d === 'asc' ? 'desc' : 'asc');
@@ -62,6 +87,8 @@ export default function ClientsPage() {
       if (typeof av === 'string') return sortDir === 'asc' ? av.localeCompare(bv as string) : (bv as string).localeCompare(av);
       return sortDir === 'asc' ? (av as number) - (bv as number) : (bv as number) - (av as number);
     });
+
+  const displayClients = filtered.slice(0, visibleCount);
 
   return (
     <AppShell title="Clients" subtitle="Portfolio health and recommended actions per client.">
@@ -81,7 +108,7 @@ export default function ClientsPage() {
           />
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
-          {(['All', 'Opportunity', 'Underperforming', 'Risk'] as (Segment | 'All')[]).map(s => (
+          {(['All', 'Opportunity', 'Underperforming', 'Risk', 'Stable'] as (Segment | 'All')[]).map(s => (
             <button
               key={s}
               onClick={() => setSegFilter(s)}
@@ -91,7 +118,7 @@ export default function ClientsPage() {
                 color: segFilter === s ? '#fff' : 'var(--text-secondary)', transition: 'all 0.2s',
               }}
             >
-              {s === 'Risk' ? '🔴 At Risk' : s === 'Opportunity' ? '🟢 Opportunity' : s === 'Underperforming' ? '🟡 Underperforming' : '🌐 All'}
+              {s === 'Risk' ? '🔴 At Risk' : s === 'Opportunity' ? '🟢 Opportunity' : s === 'Underperforming' ? '🟡 Underperforming' : s === 'Stable' ? '🔵 Stable' : '🌐 All'}
             </button>
           ))}
         </div>
@@ -114,7 +141,7 @@ export default function ClientsPage() {
             </tr>
           </thead>
           <tbody>
-            {filtered.map((c, i) => {
+            {displayClients.map((c, i) => {
               const color = SEG_COLORS[c.segment];
               const ActionIcon = ACTION_ICONS[c.segment];
               const isSelected = copilotClient?.id === c.id;
@@ -153,7 +180,7 @@ export default function ClientsPage() {
                       fontSize: 11, padding: '3px 10px', borderRadius: 20, fontWeight: 600,
                       background: `${color}15`, color, border: `1px solid ${color}30`,
                     }}>
-                      {c.segment === 'Risk' ? '🔴 At Risk' : c.segment === 'Opportunity' ? '🟢 Opportunity' : '🟡 Underperforming'}
+                      {c.segment === 'Risk' ? '🔴 At Risk' : c.segment === 'Opportunity' ? '🟢 Opportunity' : c.segment === 'Underperforming' ? '🟡 Underperforming' : '🔵 Stable'}
                     </span>
                   </td>
 
@@ -202,6 +229,22 @@ export default function ClientsPage() {
           </tbody>
         </table>
       </div>
+
+      {/* Sentinel / Loader */}
+      {visibleCount < filtered.length && (
+        <div 
+          ref={loaderRef}
+          style={{ 
+            padding: '40px 0', textAlign: 'center', color: 'var(--text-muted)',
+            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12
+          }}
+        >
+          <div className="shimmer" style={{ width: '80%', height: 40, borderRadius: 8 }} />
+          <div style={{ fontSize: 13, fontWeight: 500 }}>
+            Loading more clients ({visibleCount} of {filtered.length})
+          </div>
+        </div>
+      )}
 
       {/* Copilot Drawer */}
       {copilotClient && (

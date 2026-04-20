@@ -8,8 +8,8 @@ import {
 } from 'recharts';
 import { 
   Zap, Coins, Target, Sparkles, Brain, Code, 
-  ArrowRight, TrendingUp, ShieldAlert, RefreshCw,
-  TrendingDown
+  ArrowRight, TrendingUp, ShieldAlert,
+  TrendingDown, CheckCircle
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import CopilotDrawer, { SEG_COLORS } from '../components/shared/CopilotDrawer';
@@ -23,14 +23,17 @@ export default function PossibilityPage() {
   const opp   = clients.filter(c => c.segment === 'Opportunity');
   const risk  = clients.filter(c => c.segment === 'Risk');
   const under = clients.filter(c => c.segment === 'Underperforming');
+  const stable = clients.filter(c => c.segment === 'Stable');
 
   const oppAum   = opp.reduce((s,c) => s + c.aumPotential, 0);
   const riskAum  = risk.reduce((s,c) => s + c.aumPotential, 0);
   const underAum = under.reduce((s,c) => s + c.aumPotential, 0);
+  const stableAum = stable.reduce((s,c) => s + c.aumPotential, 0);
 
   const oppWeighted   = Math.round(oppAum * 0.6);
   const riskWeighted  = Math.round(riskAum * 0.3);
   const underWeighted = Math.round(underAum * 0.5);
+  const stableWeighted = Math.round(stableAum * 0.1);
   const totalPossibility = calcPossibility(clients);
   const commPossibility = Math.round(totalPossibility * 0.04);
 
@@ -42,12 +45,14 @@ export default function PossibilityPage() {
     { name: 'Opportunity', value: oppWeighted, color: '#10b981' },
     { name: 'Underperf.',  value: underWeighted, color: '#f59e0b' },
     { name: 'At Risk',     value: riskWeighted,  color: '#f43f5e' },
+    { name: 'Stable',      value: stableWeighted > 0 ? stableWeighted : 1, color: '#3b82f6' },
   ];
 
   const barData = [
     { name: 'Opportunity', raw: oppAum,  weighted: oppWeighted, fill: '#10b981' },
     { name: 'Underperf.',  raw: underAum,weighted: underWeighted, fill: '#f59e0b' },
     { name: 'At Risk',     raw: riskAum, weighted: riskWeighted, fill: '#f43f5e' },
+    { name: 'Stable',      raw: stableAum, weighted: stableWeighted, fill: '#3b82f6' },
   ];
 
   return (
@@ -78,11 +83,12 @@ export default function PossibilityPage() {
       </div>
 
       {/* ── Segmentation Breakdown ───────────────────────────────────── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 24 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 24 }}>
         {[
           { seg: 'Opportunity', icon: Sparkles, count: opp.length, raw: oppAum, weighted: oppWeighted, weight: '60', color: '#10b981' },
           { seg: 'Underperforming', icon:TrendingDown, count: under.length, raw: underAum, weighted: underWeighted, weight: '50', color: '#f59e0b' },
           { seg: 'At Risk', icon: ShieldAlert, count: risk.length, raw: riskAum, weighted: riskWeighted, weight: '30', color: '#f43f5e' },
+          { seg: 'Stable', icon: CheckCircle, count: stable.length, raw: stableAum, weighted: stableWeighted, weight: '10', color: '#3b82f6' },
         ].map(item => (
           <div key={item.seg} className="glass-card" style={{ padding: 24 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
@@ -256,8 +262,19 @@ export default function PossibilityPage() {
                     <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>{c.goalTag}</div>
                   </td>
                   <td style={{ padding: '14px 14px' }}>
-                    <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 4, background: c.segment === 'Opportunity' ? 'rgba(16,185,129,0.1)' : c.segment === 'Risk' ? 'rgba(244,63,94,0.1)' : 'rgba(245,158,11,0.1)', color: c.segment === 'Opportunity' ? '#10b981' : c.segment === 'Risk' ? '#f43f5e' : '#f59e0b', fontWeight: 700 }}>
-                      {c.segment}
+                    <span style={{ 
+                      fontSize: 10, padding: '2px 8px', borderRadius: 4, 
+                      background: c.segment === 'Opportunity' ? 'rgba(16,185,129,0.1)' 
+                        : c.segment === 'Risk' ? 'rgba(244,63,94,0.1)' 
+                        : c.segment === 'Stable' ? 'rgba(59,130,246,0.1)'
+                        : 'rgba(245,158,11,0.1)', 
+                      color: c.segment === 'Opportunity' ? '#10b981' 
+                        : c.segment === 'Risk' ? '#f43f5e' 
+                        : c.segment === 'Stable' ? '#3b82f6'
+                        : '#f59e0b', 
+                      fontWeight: 700 
+                    }}>
+                      {c.segment === 'Risk' ? '🔴 At Risk' : c.segment === 'Opportunity' ? '🟢 Opportunity' : c.segment === 'Underperforming' ? '🟡 Underperforming' : '🔵 Stable'}
                     </span>
                   </td>
                   <td style={{ padding: '14px 14px', textAlign: 'right', fontWeight: 700, color: '#10b981', fontSize: 13 }}>
