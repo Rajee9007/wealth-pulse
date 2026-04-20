@@ -6,13 +6,13 @@ import {
 
 const NAV_ITEMS = [
   { path: '/',                label: 'Dashboard',       icon: LayoutDashboard },
-  { path: '/portfolio-health', label: 'Portfolio Health', icon: PieChart },
-  { path: '/possibility',      label: 'Possibility',      icon: Zap },
+  { path: '/clients',          label: 'Clients',           icon: Users },
   { path: '/targets',          label: 'Targets',           icon: Target },
   { path: '/performance',      label: 'Performance',       icon: BarChart3 },
   { path: '/badge',            label: 'Badge System',      icon: Award },
-  { path: '/clients',          label: 'Clients',           icon: Users },
   { path: '/copilot',          label: 'Copilot',           icon: Bot },
+  { path: '/portfolio-health', label: 'Portfolio Health', icon: PieChart },
+  { path: '/possibility',      label: 'Possibility',      icon: Zap },
 ];
 
 export default function Sidebar() {
@@ -66,17 +66,31 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* Footer badge */}
+      {/* Profile strip */}
       <div style={{
-        marginTop: 24, padding: '12px 14px',
-        background: 'linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.1))',
-        border: '1px solid rgba(59,130,246,0.2)',
+        marginTop: 24, padding: '10px 12px',
+        background: 'rgba(255,255,255,0.03)',
+        border: '1px solid var(--border-subtle)',
         borderRadius: 12,
+        display: 'flex', alignItems: 'center', gap: 10,
       }}>
-        <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 2 }}>Advisor</div>
-        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>Rajesh Kumar</div>
-        <div style={{ fontSize: 11, color: '#f59e0b', marginTop: 4 }}>🚀 Elite Badge</div>
+        <div style={{
+          width: 32, height: 32, borderRadius: '50%', flexShrink: 0,
+          background: 'linear-gradient(135deg, #3b82f620, #8b5cf620)',
+          border: '1.5px solid #3b82f660',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: 12, fontWeight: 800, color: '#3b82f6',
+        }}>
+          RK
+        </div>
+        <div style={{ minWidth: 0 }}>
+          <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            Rajesh Kumar
+          </div>
+          <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>Advisor</div>
+        </div>
       </div>
+
     </aside>
   );
 }

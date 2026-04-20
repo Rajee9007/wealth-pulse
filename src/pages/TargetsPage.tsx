@@ -1,158 +1,246 @@
 import { useState } from 'react';
 import AppShell from '../components/layout/AppShell';
 import { ADVISOR_PERFORMANCE, formatCurrency, calcPossibility, MOCK_CLIENTS } from '../data/mockData';
-import { CheckCircle, XCircle, Sliders } from 'lucide-react';
+import { CheckCircle, XCircle, Zap, Shield, Rocket, Target } from 'lucide-react';
 
-type Strategy = 'Conservative' | 'Optimal' | 'Aggressive' | 'Custom';
+type Preset = 'Conservative' | 'Optimal' | 'Aggressive';
 
-const STRATEGIES: { key: Strategy; label: string; pct: number; color: string; desc: string }[] = [
-  { key: 'Conservative', label: '🛡️ Conservative', pct: 0.70, color: '#94a3b8', desc: '70% of possibility — safe and achievable' },
-  { key: 'Optimal',      label: '✅ Optimal',      pct: 1.00, color: '#10b981', desc: '100% of possibility — aligned with opportunity' },
-  { key: 'Aggressive',   label: '🔥 Aggressive',   pct: 1.20, color: '#f59e0b', desc: '120% of possibility — stretch goal' },
-  { key: 'Custom',       label: '🎛️ Custom',       pct: 0,    color: '#3b82f6', desc: 'Enter your own target amount' },
+interface PresetCard {
+  key: Preset;
+  icon: typeof Shield;
+  label: string;
+  tagline: string;
+  pct: number;
+  color: string;
+  bg: string;
+}
+
+const PRESETS: PresetCard[] = [
+  {
+    key: 'Conservative', icon: Shield, label: 'Conservative', tagline: 'Safer, easier to beat',
+    pct: 0.70, color: '#94a3b8', bg: 'rgba(148,163,184,0.08)',
+  },
+  {
+    key: 'Optimal', icon: Zap, label: 'Optimal', tagline: 'Match the possibility',
+    pct: 1.00, color: '#10b981', bg: 'rgba(16,185,129,0.08)',
+  },
+  {
+    key: 'Aggressive', icon: Rocket, label: 'Aggressive', tagline: 'Stretch goal',
+    pct: 1.20, color: '#f59e0b', bg: 'rgba(245,158,11,0.08)',
+  },
 ];
 
 export default function TargetsPage() {
-  const possibility = calcPossibility(MOCK_CLIENTS);
-  const [selected, setSelected] = useState<Strategy>('Optimal');
-  const [customVal, setCustomVal] = useState(possibility);
-  const [saved, setSaved] = useState(false);
-  const [rejected, setRejected] = useState(false);
+  const possibility   = calcPossibility(MOCK_CLIENTS);
+  const minAllowed    = Math.round(possibility * 0.70);
+  const maxSlider     = Math.round(possibility * 1.50);
 
-  const currentTarget = selected === 'Custom'
-    ? customVal
-    : Math.round(possibility * (STRATEGIES.find(s => s.key === selected)!.pct));
+  const [preset,     setPreset]     = useState<Preset | null>('Optimal');
+  const [sliderVal,  setSliderVal]  = useState(Math.round(possibility * 1.00));
+  const [saved,      setSaved]      = useState(false);
+  const [confirmed,  setConfirmed]  = useState(false);
 
-  const minAllowed = Math.round(possibility * 0.70);
-  const isValid = currentTarget >= minAllowed;
+  // Current effective target
+  const currentTarget = preset
+    ? Math.round(possibility * PRESETS.find(p => p.key === preset)!.pct)
+    : sliderVal;
 
-  function handleSave() {
-    if (isValid) { setSaved(true); setRejected(false); }
-    else          { setRejected(true); setSaved(false); }
+  const isValid   = currentTarget >= minAllowed;
+  const pctOfPoss = Math.round((currentTarget / possibility) * 100);
+
+  function selectPreset(p: Preset) {
+    setPreset(p);
+    setSliderVal(Math.round(possibility * PRESETS.find(x => x.key === p)!.pct));
+    setSaved(false); setConfirmed(false);
+  }
+
+  function handleSlider(v: number) {
+    setPreset(null);
+    setSliderVal(v);
+    setSaved(false); setConfirmed(false);
+  }
+
+  function handleConfirm() {
+    if (isValid) { setConfirmed(true); setSaved(false); }
+    else          { setSaved(true);    setConfirmed(false); }
   }
 
   return (
-    <AppShell title="Target Module" subtitle="Set your monthly AUM target based on possibility">
-      {/* Possibility reference */}
-      <div className="glass-card" style={{
-        padding: '16px 24px', marginBottom: 24,
-        background: 'linear-gradient(135deg, rgba(139,92,246,0.08), rgba(59,130,246,0.08))',
-        border: '1px solid rgba(139,92,246,0.25)',
-      }}>
-        <div style={{ display: 'flex', gap: 40 }}>
-          <div>
-            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Possibility AUM</div>
-            <div style={{ fontSize: 26, fontWeight: 800, color: '#8b5cf6' }}>{formatCurrency(possibility)}</div>
-          </div>
-          <div>
-            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Minimum Target (70%)</div>
-            <div style={{ fontSize: 26, fontWeight: 800, color: '#f59e0b' }}>{formatCurrency(minAllowed)}</div>
-          </div>
-          <div>
-            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Previous Target</div>
-            <div style={{ fontSize: 26, fontWeight: 800, color: '#3b82f6' }}>{formatCurrency(ADVISOR_PERFORMANCE.target)}</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Strategy Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 24 }}>
-        {STRATEGIES.map(s => (
-          <div
-            key={s.key}
-            className="glass-card"
-            onClick={() => { setSelected(s.key); setSaved(false); setRejected(false); }}
-            style={{
-              padding: 20, cursor: 'pointer', textAlign: 'center',
-              borderColor: selected === s.key ? `${s.color}60` : undefined,
-              background: selected === s.key ? `${s.color}12` : undefined,
-              boxShadow: selected === s.key ? `0 0 16px ${s.color}20` : undefined,
-            }}
-          >
-            <div style={{ fontSize: 16, fontWeight: 700, color: s.color, marginBottom: 6 }}>{s.label}</div>
-            <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 12 }}>{s.desc}</div>
-            {s.key !== 'Custom' && (
-              <div style={{ fontSize: 18, fontWeight: 800, color: 'var(--text-primary)' }}>
-                {formatCurrency(Math.round(possibility * s.pct))}
-              </div>
-            )}
-            {s.key === 'Custom' && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 4, justifyContent: 'center', color: s.color }}>
-                <Sliders size={16} /> Enter amount
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* Custom Input */}
-      {selected === 'Custom' && (
-        <div className="glass-card" style={{ padding: 24, marginBottom: 20 }}>
-          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 12 }}>Enter Custom Target</div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            <span style={{ fontSize: 20, color: 'var(--text-secondary)' }}>₹</span>
-            <input
-              type="number"
-              value={customVal}
-              onChange={e => { setCustomVal(Number(e.target.value)); setSaved(false); setRejected(false); }}
+    <AppShell
+      title="Set Monthly Target"
+      subtitle={`Your possibility this month is ${formatCurrency(possibility)}. Targets must be at least 70% (${formatCurrency(minAllowed)}).`}
+    >
+      {/* ── Preset Cards ─────────────────────────────────────────────── */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 20 }}>
+        {PRESETS.map(p => {
+          const amount    = Math.round(possibility * p.pct);
+          const isActive  = preset === p.key;
+          return (
+            <div
+              key={p.key}
+              className="glass-card"
+              onClick={() => selectPreset(p.key)}
               style={{
-                background: 'var(--bg-primary)', border: `1px solid ${isValid ? 'rgba(16,185,129,0.4)' : 'rgba(244,63,94,0.4)'}`,
-                borderRadius: 10, padding: '10px 16px', fontSize: 20, color: 'var(--text-primary)',
-                outline: 'none', fontWeight: 700, width: 240,
+                padding: '24px 28px', cursor: 'pointer',
+                background:   isActive ? p.bg : 'var(--bg-card)',
+                border:       `1px solid ${isActive ? p.color + '60' : 'var(--border-subtle)'}`,
+                boxShadow:    isActive ? `0 0 24px ${p.color}20` : undefined,
+                transition:   'all 0.2s',
+                position: 'relative', overflow: 'hidden',
               }}
-            />
-            <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>Min: {formatCurrency(minAllowed)}</div>
-          </div>
-        </div>
-      )}
+            >
+              {/* Active glow chip */}
+              {isActive && (
+                <div style={{
+                  position: 'absolute', top: 12, right: 14,
+                  fontSize: 10, fontWeight: 700, color: p.color,
+                  background: `${p.color}18`, border: `1px solid ${p.color}40`,
+                  padding: '2px 8px', borderRadius: 20, letterSpacing: 0.5,
+                }}>SELECTED</div>
+              )}
 
-      {/* Current target preview */}
-      <div className="glass-card" style={{
-        padding: 24, marginBottom: 20,
-        background: isValid ? 'rgba(16,185,129,0.05)' : 'rgba(244,63,94,0.05)',
-        border: `1px solid ${isValid ? 'rgba(16,185,129,0.3)' : 'rgba(244,63,94,0.3)'}`,
-      }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              {/* Icon */}
+              <div style={{
+                width: 40, height: 40, borderRadius: 10, marginBottom: 14,
+                background: `${p.color}15`, border: `1px solid ${p.color}30`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <p.icon size={20} color={p.color} strokeWidth={1.8} />
+              </div>
+
+              <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 2 }}>{p.label}</div>
+              <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 16 }}>{p.tagline}</div>
+
+              <div style={{ fontSize: 26, fontWeight: 900, color: p.color, letterSpacing: -0.5 }}>
+                {formatCurrency(amount)}
+              </div>
+              <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>{p.pct * 100}% of possibility</div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* ── Custom Slider ─────────────────────────────────────────────── */}
+      <div className="glass-card" style={{ padding: '24px 28px', marginBottom: 20 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
           <div>
-            <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>Selected Target</div>
-            <div style={{ fontSize: 36, fontWeight: 900, color: isValid ? '#10b981' : '#f43f5e', letterSpacing: -1 }}>
-              {formatCurrency(currentTarget)}
-            </div>
-            <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>
-              {Math.round((currentTarget / possibility) * 100)}% of possibility
-            </div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Custom target</div>
+            <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>Pick any value ≥ 70% of possibility</div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, fontWeight: 600, color: isValid ? '#10b981' : '#f43f5e' }}>
-            {isValid ? <><CheckCircle size={20} /> Valid Target</> : <><XCircle size={20} /> Below Minimum</>}
-          </div>
+          <button
+            onClick={() => { setPreset(null); setSaved(false); setConfirmed(false); }}
+            style={{
+              fontSize: 12, fontWeight: 600, padding: '6px 14px', borderRadius: 8, cursor: 'pointer',
+              background:  preset === null ? 'rgba(59,130,246,0.15)' : 'rgba(255,255,255,0.04)',
+              border:      preset === null ? '1px solid rgba(59,130,246,0.4)' : '1px solid var(--border-subtle)',
+              color:       preset === null ? '#60a5fa' : 'var(--text-muted)',
+              transition: 'all 0.18s',
+            }}
+          >Use custom</button>
+        </div>
+
+        {/* Slider track */}
+        <div style={{ position: 'relative', marginBottom: 12 }}>
+          <input
+            type="range"
+            min={minAllowed}
+            max={maxSlider}
+            step={10000}
+            value={preset ? Math.round(possibility * PRESETS.find(p => p.key === preset)!.pct) : sliderVal}
+            onChange={e => handleSlider(Number(e.target.value))}
+            style={{ width: '100%', accentColor: '#10b981', cursor: 'pointer', height: 4 }}
+          />
+        </div>
+
+        {/* Slider + number input row */}
+        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>₹</span>
+          <input
+            type="number"
+            value={preset
+              ? Math.round(possibility * PRESETS.find(p => p.key === preset)!.pct)
+              : sliderVal}
+            onChange={e => handleSlider(Number(e.target.value))}
+            style={{
+              width: 120, background: 'var(--bg-primary)',
+              border: `1px solid ${preset === null && !isValid ? 'rgba(244,63,94,0.5)' : 'var(--border-subtle)'}`,
+              borderRadius: 8, padding: '8px 12px', fontSize: 15,
+              color: 'var(--text-primary)', outline: 'none', fontWeight: 700, textAlign: 'right',
+            }}
+          />
         </div>
       </div>
 
-      {/* Save button */}
-      <button
-        onClick={handleSave}
-        style={{
-          padding: '12px 32px', borderRadius: 12, border: 'none', cursor: 'pointer',
-          background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)', color: '#fff',
-          fontSize: 15, fontWeight: 700, letterSpacing: 0.3,
-          boxShadow: '0 4px 16px rgba(59,130,246,0.3)',
-          transition: 'opacity 0.2s',
-        }}
-      >
-        Save Target
-      </button>
+      {/* ── Summary Bar ──────────────────────────────────────────────── */}
+      <div className="glass-card" style={{
+        padding: '20px 28px',
+        background: isValid ? 'rgba(16,185,129,0.05)' : 'rgba(244,63,94,0.05)',
+        border:     `1px solid ${isValid ? 'rgba(16,185,129,0.25)' : 'rgba(244,63,94,0.25)'}`,
+        marginBottom: 20,
+      }}>
+        {/* KPIs */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, marginBottom: 18 }}>
+          {[
+            { label: 'Possibility',       value: formatCurrency(possibility),   color: '#8b5cf6' },
+            { label: 'Selected Target',   value: formatCurrency(currentTarget), sub: `${pctOfPoss}% of possibility`, color: isValid ? '#10b981' : '#f43f5e' },
+            { label: 'Minimum Required',  value: formatCurrency(minAllowed),    color: '#f59e0b' },
+          ].map(item => (
+            <div key={item.label}>
+              <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 }}>{item.label}</div>
+              <div style={{ fontSize: 24, fontWeight: 900, color: item.color, letterSpacing: -0.5 }}>{item.value}</div>
+              {item.sub && <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>{item.sub}</div>}
+            </div>
+          ))}
+        </div>
 
-      {/* Feedback */}
-      {saved && (
-        <div style={{ marginTop: 16, display: 'flex', alignItems: 'center', gap: 8, color: '#10b981', fontSize: 14 }}>
-          <CheckCircle size={18} /> ✅ Target saved successfully — {formatCurrency(currentTarget)}
-        </div>
-      )}
-      {rejected && (
-        <div style={{ marginTop: 16, display: 'flex', alignItems: 'center', gap: 8, color: '#f43f5e', fontSize: 14 }}>
-          <XCircle size={18} /> ❌ Target rejected — minimum is {formatCurrency(minAllowed)} (70% of possibility)
-        </div>
-      )}
+        {/* Validation / success message */}
+        {confirmed && (
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 8,
+            padding: '10px 16px', borderRadius: 10, marginBottom: 16,
+            background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)',
+            fontSize: 13, fontWeight: 600, color: '#10b981',
+          }}>
+            <CheckCircle size={16} /> Target accepted. Anti-gaming check passed.
+          </div>
+        )}
+        {saved && (
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 8,
+            padding: '10px 16px', borderRadius: 10, marginBottom: 16,
+            background: 'rgba(244,63,94,0.1)', border: '1px solid rgba(244,63,94,0.3)',
+            fontSize: 13, fontWeight: 600, color: '#f43f5e',
+          }}>
+            <XCircle size={16} /> Target rejected — minimum is {formatCurrency(minAllowed)} (70% of possibility)
+          </div>
+        )}
+
+        {/* CTA */}
+        <button
+          onClick={handleConfirm}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 8,
+            padding: '12px 28px', borderRadius: 10, border: 'none', cursor: 'pointer',
+            background: isValid
+              ? 'linear-gradient(135deg, #10b981, #059669)'
+              : 'linear-gradient(135deg, #f43f5e, #e11d48)',
+            color: '#fff', fontSize: 14, fontWeight: 700, letterSpacing: 0.3,
+            boxShadow: isValid ? '0 4px 16px rgba(16,185,129,0.35)' : '0 4px 16px rgba(244,63,94,0.3)',
+            transition: 'all 0.2s',
+          }}
+        >
+          <Target size={16} />
+          {confirmed ? 'Update Target' : 'Confirm Target'}
+        </button>
+      </div>
+
+      {/* ── Previous Target reference ─────────────────────────────── */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: 'var(--text-muted)' }}>
+        <span>Previous target:</span>
+        <span style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>{formatCurrency(ADVISOR_PERFORMANCE.target)}</span>
+        <span>·</span>
+        <span>{Math.round((ADVISOR_PERFORMANCE.target / possibility) * 100)}% of current possibility</span>
+      </div>
     </AppShell>
   );
 }

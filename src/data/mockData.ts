@@ -14,6 +14,7 @@ export interface Client {
   lastContacted: string; // ISO date
   urgencyScore: number;
   action: string;
+  reason: string;
   talkingPoints: string[];
   goalTag: string;
   riskProfile: 'Conservative' | 'Moderate' | 'Aggressive';
@@ -38,6 +39,7 @@ export const MOCK_CLIENTS: Client[] = [
     aum: 480000, aumPotential: 80000, commissionPotential: 3200,
     sipActive: false, lastActivity: '2026-02-28', lastContacted: '2026-04-01',
     urgencyScore: 94, action: 'Reactivate SIP',
+    reason: 'SIP paused 52 days ago, AUM down 6%',
     talkingPoints: ['SIP paused 52 days', 'Goal corpus at risk', 'Offer lower SIP amount'],
     goalTag: 'Retirement', riskProfile: 'Moderate', returns: 6.2,
   },
@@ -46,6 +48,7 @@ export const MOCK_CLIENTS: Client[] = [
     aum: 720000, aumPotential: 150000, commissionPotential: 6000,
     sipActive: true, lastActivity: '2026-04-18', lastContacted: '2026-04-15',
     urgencyScore: 78, action: 'Upsell SIP',
+    reason: '₹2L idle in savings, salary hike detected',
     talkingPoints: ['Idle savings ₹2L detected', 'Portfolio doing well', 'Suggest SIP top-up ₹5,000/mo'],
     goalTag: 'Child Education', riskProfile: 'Aggressive', returns: 14.5,
   },
@@ -54,6 +57,7 @@ export const MOCK_CLIENTS: Client[] = [
     aum: 1200000, aumPotential: 200000, commissionPotential: 8000,
     sipActive: true, lastActivity: '2026-04-10', lastContacted: '2026-03-25',
     urgencyScore: 85, action: 'Rebalance Portfolio',
+    reason: '60% in sector fund, 3yr CAGR 4.2%',
     talkingPoints: ['High AUM but returns 5.1% vs benchmark 11%', 'Sector over-concentration risk', 'Switch from underperforming fund to hybrid fund'],
     goalTag: 'Wealth Building', riskProfile: 'Moderate', returns: 5.1,
   },
@@ -62,6 +66,7 @@ export const MOCK_CLIENTS: Client[] = [
     aum: 320000, aumPotential: 50000, commissionPotential: 2000,
     sipActive: false, lastActivity: '2026-03-05', lastContacted: '2026-04-05',
     urgencyScore: 89, action: 'Re-engagement Call',
+    reason: 'No transactions in 46 days, AUM declining',
     talkingPoints: ['No transactions in 46 days', 'AUM declining trend', 'Offer pause instead of stop'],
     goalTag: 'Home Purchase', riskProfile: 'Conservative', returns: 4.8,
   },
@@ -70,6 +75,7 @@ export const MOCK_CLIENTS: Client[] = [
     aum: 560000, aumPotential: 120000, commissionPotential: 4800,
     sipActive: true, lastActivity: '2026-04-19', lastContacted: '2026-04-10',
     urgencyScore: 72, action: 'Lump Sum Deployment',
+    reason: 'Bonus credited, ₹1.5L parked in liquid',
     talkingPoints: ['₹1.5L idle in savings', 'Consistent investor', 'Present lump sum opportunity'],
     goalTag: 'Retirement', riskProfile: 'Moderate', returns: 12.3,
   },
@@ -78,6 +84,7 @@ export const MOCK_CLIENTS: Client[] = [
     aum: 850000, aumPotential: 130000, commissionPotential: 5200,
     sipActive: true, lastActivity: '2026-04-08', lastContacted: '2026-03-30',
     urgencyScore: 81, action: 'Portfolio Optimization',
+    reason: 'High AUM, 70% in debt during bull run',
     talkingPoints: ['Poor allocation — 70% in debt, 30% equity', 'Risk appetite mismatch', 'Propose equity rebalancing'],
     goalTag: 'Wealth Building', riskProfile: 'Aggressive', returns: 6.8,
   },
@@ -86,6 +93,7 @@ export const MOCK_CLIENTS: Client[] = [
     aum: 200000, aumPotential: 30000, commissionPotential: 1200,
     sipActive: false, lastActivity: '2026-01-20', lastContacted: '2026-02-15',
     urgencyScore: 97, action: 'Urgent Re-engagement',
+    reason: '90+ days inactive, likely considering redemption',
     talkingPoints: ['90+ days inactive', 'Likely considering redemption', 'Emergency re-engagement call required'],
     goalTag: 'Tax Saving', riskProfile: 'Conservative', returns: 3.2,
   },
@@ -94,6 +102,7 @@ export const MOCK_CLIENTS: Client[] = [
     aum: 430000, aumPotential: 90000, commissionPotential: 3600,
     sipActive: true, lastActivity: '2026-04-17', lastContacted: '2026-04-12',
     urgencyScore: 68, action: 'Goal-based Upsell',
+    reason: 'Child education goal in 8 years, SIP insufficient',
     talkingPoints: ['Child education goal in 8 years', 'Current SIP insufficient for goal', 'Suggest SIP increase ₹3,000/mo'],
     goalTag: 'Child Education', riskProfile: 'Moderate', returns: 13.1,
   },
@@ -111,14 +120,15 @@ export const ADVISOR_PERFORMANCE: AdvisorPerformance = {
   possibilityAchievement: 84.7,
 };
 
+// Badge tiers keyed on Possibility Achievement % (actual / possibility * 100)
 export const BADGE_TIERS = [
-  { label: '⚠️ At Risk',  min: 0,    max: 70,   color: '#f43f5e', bg: 'rgba(244,63,94,0.15)' },
-  { label: '👍 Stable',   min: 70,   max: 100,  color: '#94a3b8', bg: 'rgba(148,163,184,0.15)' },
-  { label: '🔥 Strong',   min: 100,  max: 150,  color: '#f59e0b', bg: 'rgba(245,158,11,0.15)' },
-  { label: '🚀 Elite',    min: 150,  max: 300,  color: '#3b82f6', bg: 'rgba(59,130,246,0.15)' },
-  { label: '💎 Ultra',    min: 300,  max: 600,  color: '#8b5cf6', bg: 'rgba(139,92,246,0.15)' },
-  { label: '🧠 Master',   min: 600,  max: 1000, color: '#10b981', bg: 'rgba(16,185,129,0.15)' },
-  { label: '👑 Legend',   min: 1000, max: Infinity, color: '#f8fafc', bg: 'rgba(248,250,252,0.15)' },
+  { label: '⚠️ At Risk',  min: 0,    max: 70,   color: '#f43f5e', bg: 'rgba(244,63,94,0.12)' },
+  { label: '👍 Stable',   min: 70,   max: 100,  color: '#94a3b8', bg: 'rgba(148,163,184,0.12)' },
+  { label: '🔥 Strong',   min: 100,  max: 150,  color: '#f59e0b', bg: 'rgba(245,158,11,0.12)' },
+  { label: '🚀 Elite',    min: 150,  max: 300,  color: '#3b82f6', bg: 'rgba(59,130,246,0.12)' },
+  { label: '💎 Ultra',    min: 300,  max: 600,  color: '#8b5cf6', bg: 'rgba(139,92,246,0.12)' },
+  { label: '🧠 Master',   min: 600,  max: 1000, color: '#10b981', bg: 'rgba(16,185,129,0.12)' },
+  { label: '👑 Legend',   min: 1000, max: Infinity, color: '#f8fafc', bg: 'rgba(248,250,252,0.12)' },
 ];
 
 export const MONTHLY_TREND = [
@@ -148,8 +158,9 @@ export function calcScore(actual: number, possibility: number): number {
   return Math.round(100 * Math.log10(1 + actual / possibility));
 }
 
+/** Pass possibilityAchievement % (e.g. 84.7 for 84.7%) */
 export function getBadge(possibilityPct: number) {
-  return BADGE_TIERS.find(t => possibilityPct >= t.min && possibilityPct < t.max) ?? BADGE_TIERS[BADGE_TIERS.length - 1];
+  return BADGE_TIERS.find(t => possibilityPct >= t.min && possibilityPct < t.max) ?? BADGE_TIERS.at(-1)!;
 }
 
 export function formatCurrency(n: number): string {

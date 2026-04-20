@@ -2,7 +2,7 @@ import { useState } from 'react';
 import AppShell from '../components/layout/AppShell';
 import {
   MOCK_CLIENTS, ADVISOR_PERFORMANCE, MONTHLY_TREND,
-  formatCurrency, calcPossibility, getBadge,
+  formatCurrency, calcPossibility,
 } from '../data/mockData';
 import {
   ComposedChart, Bar, Line, XAxis, YAxis, Tooltip,
@@ -69,7 +69,6 @@ export default function DashboardPage() {
   const navigate = useNavigate();
   const perf = ADVISOR_PERFORMANCE;
   const possibility = calcPossibility(MOCK_CLIENTS);
-  const badge = getBadge(perf.possibilityAchievement);
   const totalAum = MOCK_CLIENTS.reduce((s, c) => s + c.aum, 0);
 
   const atRisk = MOCK_CLIENTS.filter(c => c.segment === 'Risk').length;
@@ -83,42 +82,25 @@ export default function DashboardPage() {
   const [chartTab, setChartTab] = useState<'line' | 'bar'>('bar');
 
   const segCards = [
-    { icon: ShieldAlert, label: 'At Risk', sub: 'Churn / Dormant', value: atRisk, color: '#f43f5e', bg: 'rgba(244,63,94,0.08)', weight: '0.3x in possibility' },
-    { icon: Sparkles,    label: 'Opportunity', sub: 'Ready to Invest', value: oppo, color: '#10b981', bg: 'rgba(16,185,129,0.08)', weight: '0.6x in possibility' },
-    { icon: TrendingDown, label: 'Underperforming', sub: 'High Potential', value: under, color: '#f59e0b', bg: 'rgba(245,158,11,0.08)', weight: '0.5x in possibility' },
+    { icon: Sparkles,    label: 'Opportunity', sub: 'Ready to Invest', value: oppo, color: '#10b981', bg: 'rgba(16,185,129,0.08)', weight: '0.6x · Priority 1' },
+    { icon: TrendingDown, label: 'Underperforming', sub: 'High Potential', value: under, color: '#f59e0b', bg: 'rgba(245,158,11,0.08)', weight: '0.5x · Priority 2' },
+    { icon: ShieldAlert, label: 'At Risk', sub: 'Churn / Dormant', value: atRisk, color: '#f43f5e', bg: 'rgba(244,63,94,0.08)', weight: '0.3x · Monitor' },
   ];
 
   return (
     <AppShell title="Dashboard" subtitle="">
       {/* ── Hero ─────────────────────────────────────────────────── */}
-      <div style={{
-        display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
-        marginBottom: 28, flexWrap: 'wrap', gap: 16,
-      }}>
-        <div>
-          <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 6 }}>
-            Good morning, Rajesh 👋
-          </div>
-          <div style={{ fontSize: 30, fontWeight: 900, color: 'var(--text-primary)', letterSpacing: -1, lineHeight: 1.15 }}>
-            You can drive{' '}
-            <span style={{ color: '#10b981' }}>{formatCurrency(possibility)}</span>{' '}
-            this month
-          </div>
-          <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 6 }}>
-            Based on {MOCK_CLIENTS.length} active clients across opportunity, risk and underperforming segments.
-          </div>
+      <div style={{ marginBottom: 28 }}>
+        <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 6 }}>
+          Good morning, Rajesh 👋
         </div>
-
-        {/* Badge pill */}
-        <div style={{
-          background: `${badge.bg}`, border: `1px solid ${badge.color}40`,
-          borderRadius: 14, padding: '14px 20px', minWidth: 160, textAlign: 'right',
-        }}>
-          <div style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 600, letterSpacing: 0.5, textTransform: 'uppercase', marginBottom: 4 }}>
-            Current Badge
-          </div>
-          <div style={{ fontSize: 22, fontWeight: 800, color: badge.color }}>{badge.label}</div>
-          <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>Score {perf.score}</div>
+        <div style={{ fontSize: 30, fontWeight: 900, color: 'var(--text-primary)', letterSpacing: -1, lineHeight: 1.15 }}>
+          You can drive{' '}
+          <span style={{ color: '#10b981' }}>{formatCurrency(possibility)}</span>{' '}
+          this month
+        </div>
+        <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 6 }}>
+          Based on {MOCK_CLIENTS.length} active clients across opportunity, risk and underperforming segments.
         </div>
       </div>
 
@@ -131,43 +113,123 @@ export default function DashboardPage() {
       </div>
 
       {/* ── Performance vs Target bar ─────────────────────────────── */}
-      <div className="glass-card" style={{ padding: '18px 24px', marginBottom: 22 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-          <div>
-            <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Performance vs Target</div>
-            <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>
-              Live tracking · {perf.targetAchievement}% achieved
+      {(() => {
+        // Scale: 0 → ceiling so both actual and target fit, with 15% headroom
+        const ceiling = Math.max(perf.actual, perf.target) * 1.15;
+        const actualPct  = (perf.actual  / ceiling) * 100;
+        const targetPct  = (perf.target  / ceiling) * 100;
+        const minTgtPct  = (perf.target * 0.70 / ceiling) * 100;
+        const isOver     = perf.actual >= perf.target;
+        const barColor   = isOver
+          ? 'linear-gradient(90deg, #10b981, #34d399)'
+          : 'linear-gradient(90deg, #3b82f6, #60a5fa)';
+
+        return (
+          <div className="glass-card" style={{ padding: '18px 24px', marginBottom: 22 }}>
+            {/* Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+              <div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Performance vs Target</div>
+                <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>
+                  Live tracking ·{' '}
+                  <span style={{ color: isOver ? '#10b981' : '#3b82f6', fontWeight: 600 }}>
+                    {perf.targetAchievement}% of target
+                  </span>
+                  {isOver && <span style={{ color: '#10b981', fontWeight: 700 }}> · Overperforming 🎯</span>}
+                </div>
+              </div>
+              <button
+                onClick={() => navigate('/performance')}
+                style={{
+                  background: 'none', border: 'none', cursor: 'pointer',
+                  color: '#3b82f6', fontSize: 12, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4,
+                }}
+              >
+                Details <ChevronRight size={14} />
+              </button>
+            </div>
+
+            {/* Scaled bar + markers */}
+            <div style={{ position: 'relative', marginBottom: 8 }}>
+              {/* Track */}
+              <div style={{ position: 'relative', height: 12, background: 'rgba(255,255,255,0.05)', borderRadius: 99, overflow: 'visible' }}>
+
+                {/* Actual fill */}
+                <div style={{
+                  position: 'absolute', left: 0, top: 0, bottom: 0,
+                  width: `${actualPct}%`,
+                  background: barColor,
+                  borderRadius: 99,
+                  boxShadow: isOver ? '0 0 12px rgba(16,185,129,0.5)' : '0 0 8px rgba(59,130,246,0.4)',
+                  transition: 'width 0.8s ease',
+                }} />
+
+                {/* Min target marker (70%) */}
+                <div style={{
+                  position: 'absolute', left: `${minTgtPct}%`, top: -3, bottom: -3,
+                  width: 1.5, background: 'rgba(255,255,255,0.2)',
+                }} />
+
+                {/* TARGET pin */}
+                <div style={{
+                  position: 'absolute', left: `${targetPct}%`, top: -6, bottom: -6,
+                  width: 2.5, background: '#f59e0b',
+                  boxShadow: '0 0 6px rgba(245,158,11,0.7)',
+                }} />
+              </div>
+
+              {/* Actual value label floating at bar tip */}
+              <div style={{
+                position: 'absolute',
+                left: `${Math.min(actualPct, 92)}%`,
+                top: -22,
+                transform: 'translateX(-50%)',
+                fontSize: 10, fontWeight: 700,
+                color: isOver ? '#10b981' : '#60a5fa',
+                whiteSpace: 'nowrap',
+              }}>
+                {formatCurrency(perf.actual)}
+              </div>
+            </div>
+
+            {/* Scale labels */}
+            <div style={{ display: 'flex', position: 'relative', height: 22, marginTop: 4 }}>
+              <span style={{ fontSize: 10, color: 'var(--text-muted)' }}>₹0</span>
+
+              {/* Min target label */}
+              <span style={{
+                position: 'absolute', left: `${minTgtPct}%`, transform: 'translateX(-50%)',
+                fontSize: 10, color: 'rgba(255,255,255,0.3)', whiteSpace: 'nowrap',
+              }}>70% min</span>
+
+              {/* Target label pinned at targetPct */}
+              <span style={{
+                position: 'absolute', left: `${targetPct}%`, transform: 'translateX(-50%)',
+                fontSize: 10, fontWeight: 700, color: '#f59e0b', whiteSpace: 'nowrap',
+              }}>
+                🎯 Target {formatCurrency(perf.target)}
+              </span>
+            </div>
+
+            {/* Legend row */}
+            <div style={{ display: 'flex', gap: 18, marginTop: 6 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <div style={{ width: 10, height: 4, borderRadius: 99, background: isOver ? '#10b981' : '#3b82f6' }} />
+                <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Actual MTD</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <div style={{ width: 3, height: 12, borderRadius: 1, background: '#f59e0b' }} />
+                <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Target</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <div style={{ width: 2, height: 12, borderRadius: 1, background: 'rgba(255,255,255,0.2)' }} />
+                <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Min target (70%)</span>
+              </div>
             </div>
           </div>
-          <button
-            onClick={() => navigate('/performance')}
-            style={{
-              background: 'none', border: 'none', cursor: 'pointer',
-              color: '#3b82f6', fontSize: 12, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4,
-            }}
-          >
-            Details <ChevronRight size={14} />
-          </button>
-        </div>
-        <div style={{ position: 'relative', height: 10, background: 'rgba(59,130,246,0.1)', borderRadius: 99, overflow: 'hidden' }}>
-          <div style={{
-            position: 'absolute', left: 0, top: 0, bottom: 0,
-            width: `${Math.min(perf.targetAchievement, 100)}%`,
-            background: 'linear-gradient(90deg, #10b981, #3b82f6)',
-            borderRadius: 99, transition: 'width 0.8s ease',
-          }} />
-          {/* 70% min target marker */}
-          <div style={{
-            position: 'absolute', left: '70%', top: 0, bottom: 0,
-            width: 2, background: 'rgba(255,255,255,0.3)',
-          }} />
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
-          <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>0</span>
-          <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>70% min target</span>
-          <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{formatCurrency(perf.target)}</span>
-        </div>
-      </div>
+        );
+      })()}
+
 
       {/* ── Portfolio Health Segmentation ────────────────────────── */}
       <div style={{ marginBottom: 22 }}>
@@ -242,7 +304,7 @@ export default function DashboardPage() {
         </div>
 
         <ResponsiveContainer width="100%" height={240}>
-          <ComposedChart data={MONTHLY_TREND} margin={{ top: 4, right: 4, left: 0, bottom: 0 }} barGap={7} barCategoryGap="10%">
+          <ComposedChart data={MONTHLY_TREND} margin={{ top: 4, right: 4, left: 0, bottom: 0 }} barGap={4} barCategoryGap="10%">
             <defs>
               <linearGradient id="gradActualBar" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.85} />
@@ -265,9 +327,9 @@ export default function DashboardPage() {
 
             {chartTab === 'bar' ? (
               <>
-                <Bar dataKey="possibility" name="Possibility" fill="url(#gradPossBar)" radius={[4, 4, 0, 0]} barSize={18} />
-                <Bar dataKey="actual" name="Actual" fill="url(#gradActualBar)" radius={[4, 4, 0, 0]} barSize={18} />
-                <Bar dataKey="target" name="Target" fill="rgba(16,185,129,0.4)" radius={[4, 4, 0, 0]} barSize={18} />
+                <Bar dataKey="possibility" name="Possibility" fill="url(#gradPossBar)" radius={[4, 4, 0, 0]} barSize={28} />
+                <Bar dataKey="actual" name="Actual" fill="url(#gradActualBar)" radius={[4, 4, 0, 0]} barSize={28} />
+                <Bar dataKey="target" name="Target" fill="rgba(16,185,129,0.4)" radius={[4, 4, 0, 0]} barSize={28} />
               </>
             ) : (
               <>

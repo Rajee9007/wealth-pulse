@@ -74,7 +74,7 @@ function PriorityRow({ client, rank, selected, onClick }: {
 }
 
 export default function CopilotPage() {
-  const priorityList = [...MOCK_CLIENTS].sort((a, b) => b.urgencyScore - a.urgencyScore);
+  const priorityList = [...MOCK_CLIENTS].sort((a, b) => b.aumPotential - a.aumPotential);
   const [selected, setSelected] = useState<Client>(priorityList[0]);
   const [outcomes, setOutcomes] = useState<Outcome[]>([]);
   const [outcomeFor, setOutcomeFor] = useState<OutcomeType | null>(null);
