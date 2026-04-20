@@ -11,7 +11,6 @@ const NAV_ITEMS = [
   { path: '/performance',      label: 'Performance',       icon: BarChart3 },
   { path: '/badge',            label: 'Badge System',      icon: Award },
   { path: '/copilot',          label: 'Copilot',           icon: Bot },
-  { path: '/portfolio-health', label: 'Portfolio Health', icon: PieChart },
   { path: '/possibility',      label: 'Possibility',      icon: Zap },
 ];
 

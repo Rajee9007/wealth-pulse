@@ -19,6 +19,8 @@ export interface Client {
   goalTag: string;
   riskProfile: 'Conservative' | 'Moderate' | 'Aggressive';
   returns: number; // %
+  email: string;
+  phone: string;
 }
 
 export interface AdvisorPerformance {
@@ -38,28 +40,31 @@ export const MOCK_CLIENTS: Client[] = [
     id: 'C001', name: 'Arjun Mehta', segment: 'Risk',
     aum: 480000, aumPotential: 80000, commissionPotential: 3200,
     sipActive: false, lastActivity: '2026-02-28', lastContacted: '2026-04-01',
-    urgencyScore: 94, action: 'Reactivate SIP',
-    reason: 'SIP paused 52 days ago, AUM down 6%',
-    talkingPoints: ['SIP paused 52 days', 'Goal corpus at risk', 'Offer lower SIP amount'],
+    urgencyScore: 95, action: 'Reactivate SIP',
+    reason: 'SIP paused 52 days. High-value long-term investor missing growth cycle.',
+    talkingPoints: ['SIP paused 52 days', 'Goal corpus at risk', 'Compound growth being lost'],
     goalTag: 'Retirement', riskProfile: 'Moderate', returns: 6.2,
+    email: 'arjun.mehta@example.com', phone: '+919876543210',
   },
   {
     id: 'C002', name: 'Priya Sharma', segment: 'Opportunity',
     aum: 720000, aumPotential: 150000, commissionPotential: 6000,
     sipActive: true, lastActivity: '2026-04-18', lastContacted: '2026-04-15',
-    urgencyScore: 78, action: 'Upsell SIP',
-    reason: '₹2L idle in savings, salary hike detected',
+    urgencyScore: 92, action: 'Upsell SIP',
+    reason: '₹2L idle savings detected. High investment possibility.',
     talkingPoints: ['Idle savings ₹2L detected', 'Portfolio doing well', 'Suggest SIP top-up ₹5,000/mo'],
     goalTag: 'Child Education', riskProfile: 'Aggressive', returns: 14.5,
+    email: 'priya.sharma@example.com', phone: '+919988776655',
   },
   {
     id: 'C003', name: 'Ramesh Iyer', segment: 'Underperforming',
     aum: 1200000, aumPotential: 200000, commissionPotential: 8000,
     sipActive: true, lastActivity: '2026-04-10', lastContacted: '2026-03-25',
-    urgencyScore: 85, action: 'Rebalance Portfolio',
-    reason: '60% in sector fund, 3yr CAGR 4.2%',
+    urgencyScore: 75, action: 'Rebalance Portfolio',
+    reason: 'Underperforming strategy. ₹20L AUM at risk of goal mismatch.',
     talkingPoints: ['High AUM but returns 5.1% vs benchmark 11%', 'Sector over-concentration risk', 'Switch from underperforming fund to hybrid fund'],
     goalTag: 'Wealth Building', riskProfile: 'Moderate', returns: 5.1,
+    email: 'ramesh.iyer@example.com', phone: '+919123456789',
   },
   {
     id: 'C004', name: 'Kavita Nair', segment: 'Risk',
@@ -69,6 +74,7 @@ export const MOCK_CLIENTS: Client[] = [
     reason: 'No transactions in 46 days, AUM declining',
     talkingPoints: ['No transactions in 46 days', 'AUM declining trend', 'Offer pause instead of stop'],
     goalTag: 'Home Purchase', riskProfile: 'Conservative', returns: 4.8,
+    email: 'kavita.nair@example.com', phone: '+919000011122',
   },
   {
     id: 'C005', name: 'Suresh Pillai', segment: 'Opportunity',
@@ -78,6 +84,7 @@ export const MOCK_CLIENTS: Client[] = [
     reason: 'Bonus credited, ₹1.5L parked in liquid',
     talkingPoints: ['₹1.5L idle in savings', 'Consistent investor', 'Present lump sum opportunity'],
     goalTag: 'Retirement', riskProfile: 'Moderate', returns: 12.3,
+    email: 'suresh.pillai@example.com', phone: '+919222233344',
   },
   {
     id: 'C006', name: 'Deepa Krishnan', segment: 'Underperforming',
@@ -87,15 +94,17 @@ export const MOCK_CLIENTS: Client[] = [
     reason: 'High AUM, 70% in debt during bull run',
     talkingPoints: ['Poor allocation — 70% in debt, 30% equity', 'Risk appetite mismatch', 'Propose equity rebalancing'],
     goalTag: 'Wealth Building', riskProfile: 'Aggressive', returns: 6.8,
+    email: 'deepa.k@example.com', phone: '+919555566677',
   },
   {
     id: 'C007', name: 'Vijay Anand', segment: 'Risk',
     aum: 200000, aumPotential: 30000, commissionPotential: 1200,
     sipActive: false, lastActivity: '2026-01-20', lastContacted: '2026-02-15',
-    urgencyScore: 97, action: 'Urgent Re-engagement',
-    reason: '90+ days inactive, likely considering redemption',
-    talkingPoints: ['90+ days inactive', 'Likely considering redemption', 'Emergency re-engagement call required'],
+    urgencyScore: 32, action: 'Financial Need Review',
+    reason: 'Full redemption for house purchase (Financial Need). Unavoidable.',
+    talkingPoints: ['Review house goal progress', 'Discuss tax implications', 'Maintenance call only'],
     goalTag: 'Tax Saving', riskProfile: 'Conservative', returns: 3.2,
+    email: 'vijay.anand@example.com', phone: '+919888877766',
   },
   {
     id: 'C008', name: 'Ananya Bose', segment: 'Opportunity',
@@ -105,6 +114,7 @@ export const MOCK_CLIENTS: Client[] = [
     reason: 'Child education goal in 8 years, SIP insufficient',
     talkingPoints: ['Child education goal in 8 years', 'Current SIP insufficient for goal', 'Suggest SIP increase ₹3,000/mo'],
     goalTag: 'Child Education', riskProfile: 'Moderate', returns: 13.1,
+    email: 'ananya.bose@example.com', phone: '+919777788899',
   },
 ];
 
@@ -155,7 +165,7 @@ export function calcPossibility(clients: Client[]) {
 }
 
 export function calcScore(actual: number, possibility: number): number {
-  return Math.round(100 * Math.log10(1 + actual / possibility));
+  return Math.min(100, Math.round((actual / possibility) * 100));
 }
 
 /** Pass possibilityAchievement % (e.g. 84.7 for 84.7%) */

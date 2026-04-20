@@ -1,8 +1,24 @@
+import { useState } from 'react';
 import AppShell from '../components/layout/AppShell';
 import { MOCK_CLIENTS, formatCurrency, calcPossibility } from '../data/mockData';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
+import type { Client } from '../data/mockData';
+import { 
+  PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, 
+  Tooltip, ResponsiveContainer, CartesianGrid 
+} from 'recharts';
+import { 
+  Zap, Coins, Target, Sparkles, Brain, Code, 
+  ArrowRight, TrendingUp, ShieldAlert, RefreshCw,
+  TrendingDown
+} from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import CopilotDrawer, { SEG_COLORS } from '../components/shared/CopilotDrawer';
+
+const COLORS = ['#10b981', '#f43f5e', '#f59e0b'];
 
 export default function PossibilityPage() {
+  const navigate = useNavigate();
+  const [copilotClient, setCopilotClient] = useState<Client | null>(null);
   const clients = MOCK_CLIENTS;
   const opp   = clients.filter(c => c.segment === 'Opportunity');
   const risk  = clients.filter(c => c.segment === 'Risk');
@@ -16,90 +32,298 @@ export default function PossibilityPage() {
   const riskWeighted  = Math.round(riskAum * 0.3);
   const underWeighted = Math.round(underAum * 0.5);
   const totalPossibility = calcPossibility(clients);
-
   const commPossibility = Math.round(totalPossibility * 0.04);
 
-  const chartData = [
-    { name: 'Opportunity\n(×0.6)', raw: oppAum, weighted: oppWeighted, fill: '#10b981' },
-    { name: 'Risk\n(×0.3)', raw: riskAum, weighted: riskWeighted, fill: '#f43f5e' },
-    { name: 'Underperforming\n(×0.5)', raw: underAum, weighted: underWeighted, fill: '#f59e0b' },
+  const topPotentialClients = [...clients]
+    .sort((a,b) => b.aumPotential - a.aumPotential)
+    .slice(0, 5);
+
+  const pieData = [
+    { name: 'Opportunity', value: oppWeighted, color: '#10b981' },
+    { name: 'Underperf.',  value: underWeighted, color: '#f59e0b' },
+    { name: 'At Risk',     value: riskWeighted,  color: '#f43f5e' },
+  ];
+
+  const barData = [
+    { name: 'Opportunity', raw: oppAum,  weighted: oppWeighted, fill: '#10b981' },
+    { name: 'Underperf.',  raw: underAum,weighted: underWeighted, fill: '#f59e0b' },
+    { name: 'At Risk',     raw: riskAum, weighted: riskWeighted, fill: '#f43f5e' },
   ];
 
   return (
-    <AppShell title="Possibility Engine" subtitle="Weighted opportunity calculation for AUM & Commission">
-      {/* Formula banner */}
-      <div style={{
-        marginBottom: 24, padding: '16px 24px',
-        background: 'linear-gradient(135deg, rgba(59,130,246,0.08), rgba(139,92,246,0.08))',
-        border: '1px solid rgba(59,130,246,0.2)', borderRadius: 14,
-        fontFamily: 'monospace', fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.8,
-      }}>
-        <span style={{ color: '#8b5cf6', fontWeight: 700 }}>Possibility</span> = (Opportunity × 0.6) + (Risk × 0.3) + (Underperforming × 0.5)
+    <AppShell title="Possibility Engine" subtitle="Predictive AUM growth potential and weighted harvesting strategy.">
+      
+      {/* ── Top Scoreboard ────────────────────────────────────────────── */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20, marginBottom: 24 }}>
+        {[
+          { label: 'Total AUM Possibility', value: formatCurrency(totalPossibility), sub: 'Next 30-day potential', icon: Zap, color: '#3b82f6', bg: 'rgba(59,130,246,0.08)' },
+          { label: 'Est. Commission Harvest', value: formatCurrency(commPossibility), sub: 'Based on 4% yield avg', icon: Coins, color: '#10b981', bg: 'rgba(16,185,129,0.08)' },
+        ].map(k => (
+          <div key={k.label} className="glass-card" style={{ padding: '32px 36px', display: 'flex', alignItems: 'center', gap: 24, position: 'relative', overflow: 'hidden' }}>
+            <div style={{ 
+              width: 64, height: 64, borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: k.bg, border: `1px solid ${k.color}30`, position: 'relative', zIndex: 2
+            }}>
+              <k.icon size={32} color={k.color} />
+            </div>
+            <div style={{ position: 'relative', zIndex: 2 }}>
+              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.5 }}>{k.label}</div>
+              <div style={{ fontSize: 42, fontWeight: 900, color: 'var(--text-primary)', letterSpacing: -1 }}>{k.value}</div>
+              <div style={{ fontSize: 12, color: k.color, fontWeight: 600, marginTop: 4 }}>{k.sub}</div>
+            </div>
+            {/* Glow background */}
+            <div style={{ position: 'absolute', right: -40, top: -40, width: 160, height: 160, background: k.color, opacity: 0.05, filter: 'blur(60px)', borderRadius: '50%' }} />
+          </div>
+        ))}
       </div>
 
-      {/* Breakdown Cards */}
+      {/* ── Segmentation Breakdown ───────────────────────────────────── */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 24 }}>
         {[
-          { seg: 'Opportunity', count: opp.length, raw: oppAum, weighted: oppWeighted, weight: '0.6', color: '#10b981' },
-          { seg: 'At Risk', count: risk.length, raw: riskAum, weighted: riskWeighted, weight: '0.3', color: '#f43f5e' },
-          { seg: 'Underperforming', count: under.length, raw: underAum, weighted: underWeighted, weight: '0.5', color: '#f59e0b' },
+          { seg: 'Opportunity', icon: Sparkles, count: opp.length, raw: oppAum, weighted: oppWeighted, weight: '60', color: '#10b981' },
+          { seg: 'Underperforming', icon:TrendingDown, count: under.length, raw: underAum, weighted: underWeighted, weight: '50', color: '#f59e0b' },
+          { seg: 'At Risk', icon: ShieldAlert, count: risk.length, raw: riskAum, weighted: riskWeighted, weight: '30', color: '#f43f5e' },
         ].map(item => (
-          <div key={item.seg} className="glass-card" style={{ padding: 22 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-              <div style={{ fontSize: 13, fontWeight: 600, color: item.color }}>{item.seg}</div>
-              <div style={{
-                fontSize: 12, padding: '3px 10px', borderRadius: 20,
-                background: `${item.color}20`, color: item.color, border: `1px solid ${item.color}30`,
-              }}>×{item.weight} weight</div>
+          <div key={item.seg} className="glass-card" style={{ padding: 24 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
+              <div style={{ padding: 10, borderRadius: 10, background: `${item.color}15`, border: `1px solid ${item.color}30` }}>
+                <item.icon size={20} color={item.color} />
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: item.color }}>{item.seg}</div>
+                <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{item.count} high-impact clients</div>
+              </div>
             </div>
-            <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 6 }}>{item.count} clients · Raw AUM Potential</div>
-            <div style={{ fontSize: 22, fontWeight: 800, color: 'var(--text-primary)' }}>{formatCurrency(item.raw)}</div>
-            <div style={{ marginTop: 10, padding: '8px 12px', background: `${item.color}10`, borderRadius: 8 }}>
-              <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>Weighted Contribution</div>
-              <div style={{ fontSize: 18, fontWeight: 700, color: item.color }}>{formatCurrency(item.weighted)}</div>
+            <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 4 }}>Unweighted Potential</div>
+            <div style={{ fontSize: 20, fontWeight: 800, color: 'var(--text-primary)', marginBottom: 12 }}>{formatCurrency(item.raw)}</div>
+            
+            <div style={{ padding: '12px 14px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-subtle)', borderRadius: 12 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)' }}>Weighted (Possibility)</div>
+                <div style={{ fontSize: 10, fontWeight: 700, color: item.color, background: `${item.color}15`, padding: '2px 8px', borderRadius: 20 }}>{item.weight}% prob.</div>
+              </div>
+              <div style={{ fontSize: 22, fontWeight: 900, color: item.color }}>{formatCurrency(item.weighted)}</div>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Total */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 28 }}>
-        <div className="glass-card" style={{
-          padding: 28, background: 'linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.1))',
-          border: '1px solid rgba(59,130,246,0.3)',
-        }}>
-          <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 6 }}>Total AUM Possibility</div>
-          <div style={{ fontSize: 38, fontWeight: 900, color: '#3b82f6', letterSpacing: -1 }}>{formatCurrency(totalPossibility)}</div>
-          <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 6 }}>
-            {formatCurrency(oppWeighted)} + {formatCurrency(riskWeighted)} + {formatCurrency(underWeighted)}
+      {/* ── Analytics Grid ───────────────────────────────────────────── */}
+      <div style={{ display: 'grid', gridTemplateColumns: '400px 1fr', gap: 20, marginBottom: 24 }}>
+        {/* Pie Chart: Mix */}
+        <div className="glass-card" style={{ padding: 24 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
+            <Brain size={16} color="#8b5cf6" />
+            <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Possibility Mix</div>
+          </div>
+          <div style={{ height: 260, position: 'relative' }}>
+            <div style={{
+              position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+              textAlign: 'center', pointerEvents: 'none', zIndex: 1
+            }}>
+              <div style={{ fontSize: 14, fontWeight: 900, color: 'var(--text-primary)' }}>
+                {formatCurrency(pieData.reduce((s, d) => s + d.value, 0))}
+              </div>
+              <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 1 }}>Total</div>
+            </div>
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={pieData}
+                  cx="50%" cy="50%"
+                  innerRadius={70}
+                  outerRadius={95}
+                  paddingAngle={5}
+                  dataKey="value"
+                  stroke="none"
+                >
+                  {pieData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip 
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                      const data = payload[0].payload;
+                      return (
+                        <div className="glass-card" style={{ padding: '10px 14px', border: '1px solid var(--border-glow)' }}>
+                          <div style={{ fontSize: 12, fontWeight: 700, color: data.color, marginBottom: 4 }}>{data.name}</div>
+                          <div style={{ fontSize: 14, fontWeight: 900, color: 'var(--text-primary)' }}>{formatCurrency(data.value)}</div>
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+
+          </div>
+          {/* Legend */}
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 16, marginTop: 10 }}>
+            {pieData.map(d => (
+              <div key={d.name} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <div style={{ width: 8, height: 8, borderRadius: 2, background: d.color }} />
+                <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)' }}>{d.name}</span>
+              </div>
+            ))}
           </div>
         </div>
-        <div className="glass-card" style={{
-          padding: 28, background: 'linear-gradient(135deg, rgba(16,185,129,0.1), rgba(59,130,246,0.1))',
-          border: '1px solid rgba(16,185,129,0.3)',
-        }}>
-          <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 6 }}>Commission Possibility</div>
-          <div style={{ fontSize: 38, fontWeight: 900, color: '#10b981', letterSpacing: -1 }}>{formatCurrency(commPossibility)}</div>
-          <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 6 }}>~4% of AUM Possibility (estimate)</div>
+
+        {/* Bar Chart: Raw vs Weighted */}
+        <div className="glass-card" style={{ padding: 24 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
+            <TrendingUp size={16} color="#3b82f6" />
+            <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Harvesting Gap Analysis (Raw vs Weighted)</div>
+          </div>
+          <ResponsiveContainer width="100%" height={260}>
+            <BarChart data={barData} barGap={12} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
+              <XAxis dataKey="name" tick={{ fill: 'var(--text-muted)', fontSize: 11, fontWeight: 500 }} axisLine={false} tickLine={false} dy={10} />
+              <YAxis tickFormatter={v => `₹${v/1000}k`} tick={{ fill: 'var(--text-muted)', fontSize: 10 }} axisLine={false} tickLine={false} />
+              <Tooltip 
+                cursor={false}
+                content={({ active, payload, label }) => {
+                  if (active && payload && payload.length) {
+                    return (
+                      <div className="glass-card" style={{ padding: '12px 14px', border: '1px solid var(--border-glow)', minWidth: 160 }}>
+                        <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 10 }}>{label}</div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                          {payload.map((p: any) => (
+                            <div key={p.name} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                <div style={{ width: 8, height: 8, borderRadius: 2, background: p.color }} />
+                                <span style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 500 }}>{p.name}</span>
+                              </div>
+                              <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-primary)' }}>{formatCurrency(p.value)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  }
+                  return null;
+                }}
+              />
+              <Bar dataKey="raw" name="Raw Potential" fill="rgba(255,255,255,0.1)" radius={[6, 6, 0, 0]} barSize={24} />
+              <Bar dataKey="weighted" name="Weighted Possibility" radius={[6, 6, 0, 0]} barSize={24}>
+                {barData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.fill} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+          {/* Legend */}
+          <div style={{ display: 'flex', gap: 20, marginTop: 12 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <div style={{ width: 8, height: 8, borderRadius: 2, background: 'rgba(255,255,255,0.1)' }} />
+              <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Raw Potential</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <div style={{ width: 8, height: 8, borderRadius: 2, background: '#10b981' }} />
+              <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Weighted Possibility</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Bar Chart */}
-      <div className="glass-card" style={{ padding: 24 }}>
-        <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 20 }}>Raw vs Weighted Contribution by Segment</div>
-        <ResponsiveContainer width="100%" height={220}>
-          <BarChart data={chartData} barGap={6}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(99,132,255,0.08)" />
-            <XAxis dataKey="name" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
-            <YAxis tickFormatter={v => formatCurrency(v)} tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
-            <Tooltip formatter={(v: any) => formatCurrency(v)} contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border-glow)', borderRadius: 8, fontSize: 12 }} />
-            {chartData.map(d => (
-              <Bar key={d.name} dataKey="raw" name="Raw" fill={`${d.fill}60`} radius={[4,4,0,0]} />
+      {/* ── Top Growth Engines ────────────────────────────────────────── */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: 20, marginBottom: 24 }}>
+        <div className="glass-card" style={{ padding: 24 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Target size={16} color="#f59e0b" />
+              <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Top Growth Candidates (High Potential)</div>
+            </div>
+            <button onClick={() => navigate('/clients')} style={{ background: 'none', border: 'none', color: '#3b82f6', fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
+              View all clients <ArrowRight size={14} />
+            </button>
+          </div>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+                <th style={{ padding: '10px 14px', textAlign: 'left', fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Client</th>
+                <th style={{ padding: '10px 14px', textAlign: 'left', fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Segment</th>
+                <th style={{ padding: '10px 14px', textAlign: 'right', fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Potential Δ</th>
+                <th style={{ padding: '10px 14px', textAlign: 'right', fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {topPotentialClients.map((c, i) => (
+                <tr key={c.id} style={{ borderBottom: i < 4 ? '1px solid var(--border-subtle)' : 'none' }}>
+                  <td style={{ padding: '14px 14px' }}>
+                    <div style={{ fontWeight: 600, fontSize: 13, color: 'var(--text-primary)' }}>{c.name}</div>
+                    <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>{c.goalTag}</div>
+                  </td>
+                  <td style={{ padding: '14px 14px' }}>
+                    <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 4, background: c.segment === 'Opportunity' ? 'rgba(16,185,129,0.1)' : c.segment === 'Risk' ? 'rgba(244,63,94,0.1)' : 'rgba(245,158,11,0.1)', color: c.segment === 'Opportunity' ? '#10b981' : c.segment === 'Risk' ? '#f43f5e' : '#f59e0b', fontWeight: 700 }}>
+                      {c.segment}
+                    </span>
+                  </td>
+                  <td style={{ padding: '14px 14px', textAlign: 'right', fontWeight: 700, color: '#10b981', fontSize: 13 }}>
+                    +{formatCurrency(c.aumPotential)}
+                  </td>
+                  <td style={{ padding: '14px 14px', textAlign: 'right' }}>
+                    <button
+                      onClick={() => setCopilotClient(c)}
+                      style={{
+                        display: 'inline-flex', alignItems: 'center', gap: 6,
+                        padding: '6px 14px', borderRadius: 8, cursor: 'pointer',
+                        background: 'linear-gradient(135deg, rgba(59,130,246,0.15), rgba(139,92,246,0.15))',
+                        color: '#a5b4fc',
+                        fontSize: 11, fontWeight: 700,
+                        border: '1px solid rgba(99,102,241,0.3)',
+                        transition: 'all 0.2s',
+                      }}
+                    >
+                      <Sparkles size={11} />
+                      Copilot
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Engine Logic Banner */}
+        <div className="glass-card" style={{ padding: 24, background: 'linear-gradient(135deg, rgba(139,92,246,0.1), rgba(59,130,246,0.1))', border: '1px solid rgba(139,92,246,0.25)', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+            <Code size={16} color="#8b5cf6" />
+            <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Engine Logic Configuration</div>
+          </div>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {[
+              { label: 'Opportunity Potential', val: '× 0.60', color: '#10b981', bg: 'rgba(16,185,129,0.08)' },
+              { label: 'Underperforming Potential', val: '× 0.50', color: '#f59e0b', bg: 'rgba(245,158,11,0.08)' },
+              { label: 'At Risk Potential', val: '× 0.30', color: '#f43f5e', bg: 'rgba(244,63,94,0.08)' },
+            ].map(calc => (
+              <div key={calc.label} style={{
+                display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                padding: '12px 14px', borderRadius: 10, background: calc.bg,
+                border: `1px solid ${calc.color}30`
+              }}>
+                <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)' }}>{calc.label}</span>
+                <span style={{ fontSize: 14, fontWeight: 800, color: 'var(--text-primary)' }}>{calc.val}</span>
+              </div>
             ))}
-            <Bar dataKey="weighted" name="Weighted" fill="transparent" radius={[4,4,0,0]} />
-          </BarChart>
-        </ResponsiveContainer>
+            <div style={{ 
+              marginTop: 6, paddingTop: 12, borderTop: '1px dashed var(--border-subtle)', 
+              display: 'flex', justifyContent: 'space-between', alignItems: 'center' 
+            }}>
+              <span style={{ fontSize: 13, fontWeight: 700, color: '#8b5cf6' }}>Final Weighted Possibility</span>
+              <span style={{ fontSize: 10, fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 0.5 }}>∑ Sum of Components</span>
+            </div>
+          </div>
+          <div style={{ marginTop: 16, fontSize: 11, color: 'var(--text-muted)', fontStyle: 'italic' }}>
+            Weights represent historically verified conversation-to-conversion probability per segment.
+          </div>
+        </div>
       </div>
+
+      {copilotClient && (
+        <CopilotDrawer client={copilotClient} onClose={() => setCopilotClient(null)} />
+      )}
     </AppShell>
   );
 }

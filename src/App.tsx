@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import DashboardPage from './pages/DashboardPage';
-import PortfolioHealthPage from './pages/PortfolioHealthPage';
 import PossibilityPage from './pages/PossibilityPage';
 import TargetsPage from './pages/TargetsPage';
 import PerformancePage from './pages/PerformancePage';
@@ -13,7 +12,6 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/"                  element={<DashboardPage />} />
-        <Route path="/portfolio-health"  element={<PortfolioHealthPage />} />
         <Route path="/possibility"       element={<PossibilityPage />} />
         <Route path="/targets"           element={<TargetsPage />} />
         <Route path="/performance"       element={<PerformancePage />} />

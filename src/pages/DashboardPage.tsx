@@ -42,27 +42,7 @@ function KpiCard({ label, value, sub, color, icon: Icon }: {
   );
 }
 
-// ─── Custom Tooltip ───────────────────────────────────────────────────────────
-function CustomTooltip({ active, payload, label }: {
-  readonly active?: boolean;
-  readonly payload?: { name: string; color: string; value: number }[];
-  readonly label?: string;
-}) {
-  if (!active || !payload?.length) return null;
-  return (
-    <div style={{
-      background: 'var(--bg-card)', border: '1px solid var(--border-glow)',
-      borderRadius: 10, padding: '10px 14px', fontSize: 12,
-    }}>
-      <div style={{ color: 'var(--text-muted)', marginBottom: 6 }}>{label}</div>
-      {payload.map((p) => (
-        <div key={p.name} style={{ color: p.color, marginBottom: 2 }}>
-          {p.name}: {formatCurrency(p.value)}
-        </div>
-      ))}
-    </div>
-  );
-}
+/* Tooltip now handled inline for consistency with PerformancePage */
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 export default function DashboardPage() {
@@ -236,7 +216,7 @@ export default function DashboardPage() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
           <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Portfolio Health Segmentation</div>
           <button
-            onClick={() => navigate('/portfolio-health')}
+            onClick={() => navigate('/clients')}
             style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#3b82f6', fontSize: 12, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}
           >
             All clients <ArrowRight size={14} />
@@ -247,7 +227,10 @@ export default function DashboardPage() {
             <div
               key={s.label}
               className="glass-card"
-              onClick={() => navigate('/portfolio-health')}
+              onClick={() => {
+                const segParam = s.label === 'At Risk' ? 'Risk' : s.label;
+                navigate(`/clients?segment=${segParam}`);
+              }}
               style={{ padding: '20px 22px', cursor: 'pointer', background: s.bg, position: 'relative', overflow: 'hidden' }}
             >
               {/* Icon — top right, borderless with glow */}
@@ -306,19 +289,44 @@ export default function DashboardPage() {
         <ResponsiveContainer width="100%" height={240}>
           <ComposedChart data={MONTHLY_TREND} margin={{ top: 4, right: 4, left: 0, bottom: 0 }} barGap={4} barCategoryGap="10%">
             <defs>
-              <linearGradient id="gradActualBar" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.85} />
-                <stop offset="100%" stopColor="#3b82f6" stopOpacity={0.4} />
+              <linearGradient id="colorTarget" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#10b981" stopOpacity={0.8}/>
+                <stop offset="100%" stopColor="#10b981" stopOpacity={0.2}/>
               </linearGradient>
-              <linearGradient id="gradPossBar" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.7} />
-                <stop offset="100%" stopColor="#8b5cf6" stopOpacity={0.2} />
+              <linearGradient id="colorActual" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.9}/>
+                <stop offset="100%" stopColor="#3b82f6" stopOpacity={0.4}/>
+              </linearGradient>
+              <linearGradient id="colorPoss" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.5}/>
+                <stop offset="100%" stopColor="#8b5cf6" stopOpacity={0.1}/>
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(99,132,255,0.08)" />
             <XAxis dataKey="month" tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} />
             <YAxis tickFormatter={v => formatCurrency(v)} tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} width={70} />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip 
+              content={({ active, payload, label }) => {
+                if (active && payload && payload.length) {
+                  return (
+                    <div className="glass-card" style={{ padding: '12px 16px', border: '1px solid var(--border-glow)', background: 'var(--bg-card)', boxShadow: '0 8px 32px rgba(0,0,0,0.4)', borderRadius: 12 }}>
+                      <div style={{ color: 'var(--text-muted)', marginBottom: 8, fontWeight: 600, textTransform: 'uppercase', fontSize: 11 }}>{label}</div>
+                      {payload.map((entry: any, index: number) => (
+                        <div key={`item-${index}`} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '4px 0' }}>
+                          <div style={{ width: 10, height: 10, background: entry.fill.includes('url') ? (entry.dataKey === 'target' ? '#10b981' : entry.dataKey === 'actual' ? '#3b82f6' : '#8b5cf6') : entry.fill, borderRadius: 2 }} />
+                          <div style={{ flex: 1, display: 'flex', justifyContent: 'space-between', gap: 20, alignItems: 'center' }}>
+                            <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)' }}>{entry.name}</span>
+                            <span style={{ fontSize: 14, fontWeight: 800, color: 'var(--text-primary)' }}>{formatCurrency(entry.value)}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                }
+                return null;
+              }}
+              cursor={{ fill: 'var(--bg-primary)', opacity: 0.4 }}
+            />
             <Legend
               wrapperStyle={{ fontSize: 12, color: 'var(--text-muted)', paddingTop: 12 }}
               iconType="circle"
@@ -327,15 +335,15 @@ export default function DashboardPage() {
 
             {chartTab === 'bar' ? (
               <>
-                <Bar dataKey="possibility" name="Possibility" fill="url(#gradPossBar)" radius={[4, 4, 0, 0]} barSize={28} />
-                <Bar dataKey="actual" name="Actual" fill="url(#gradActualBar)" radius={[4, 4, 0, 0]} barSize={28} />
-                <Bar dataKey="target" name="Target" fill="rgba(16,185,129,0.4)" radius={[4, 4, 0, 0]} barSize={28} />
+                <Bar dataKey="target" name="Target" fill="url(#colorTarget)" radius={[6, 6, 0, 0]} barSize={24} />
+                <Bar dataKey="actual" name="Actual" fill="url(#colorActual)" radius={[6, 6, 0, 0]} barSize={24} />
+                <Bar dataKey="possibility" name="Possibility" fill="url(#colorPoss)" radius={[6, 6, 0, 0]} barSize={24} />
               </>
             ) : (
               <>
-                <Line type="monotone" dataKey="possibility" name="Possibility" stroke="#8b5cf6" strokeWidth={2} strokeDasharray="5 4" dot={{ r: 3, fill: '#8b5cf6' }} />
-                <Line type="monotone" dataKey="actual" name="Actual" stroke="#3b82f6" strokeWidth={2.5} dot={{ r: 4, fill: '#3b82f6', strokeWidth: 2, stroke: '#1d4ed8' }} />
                 <Line type="monotone" dataKey="target" name="Target" stroke="#10b981" strokeWidth={1.5} strokeDasharray="4 3" dot={{ r: 3, fill: '#10b981' }} />
+                <Line type="monotone" dataKey="actual" name="Actual" stroke="#3b82f6" strokeWidth={2.5} dot={{ r: 4, fill: '#3b82f6', strokeWidth: 2, stroke: '#1d4ed8' }} />
+                <Line type="monotone" dataKey="possibility" name="Possibility" stroke="#8b5cf6" strokeWidth={2} strokeDasharray="5 4" dot={{ r: 3, fill: '#8b5cf6' }} />
               </>
             )}
           </ComposedChart>

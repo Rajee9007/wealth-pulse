@@ -140,16 +140,69 @@ export default function TargetsPage() {
         </div>
 
         {/* Slider track */}
-        <div style={{ position: 'relative', marginBottom: 12 }}>
+        <div style={{ position: 'relative', height: 32, marginBottom: 12, display: 'flex', alignItems: 'center' }}>
+          {/* Track Background */}
+          <div style={{ 
+            position: 'absolute', width: '100%', height: 6, 
+            background: 'rgba(255,255,255,0.06)', borderRadius: 99 
+          }} />
+
+          {/* Min (70%) and Optimal (100%) Markers */}
+          <div style={{ position: 'absolute', left: '0%', height: 12, width: 1.5, background: 'rgba(255,255,255,0.2)', borderRadius: 1 }} />
+          <div style={{ 
+            position: 'absolute', left: `${((possibility - minAllowed) / (maxSlider - minAllowed)) * 100}%`, 
+            height: 12, width: 2.5, background: '#f59e0b', 
+            boxShadow: '0 0 8px rgba(245,158,11,0.5)', borderRadius: 1 
+          }} />
+
+          {/* Progress Fill */}
+          <div style={{ 
+            position: 'absolute', 
+            width: `${((currentTarget - minAllowed) / (maxSlider - minAllowed)) * 100}%`, 
+            height: 6, 
+            background: 'linear-gradient(90deg, #10b981, #34d399)', 
+            borderRadius: 99, 
+            boxShadow: '0 0 10px rgba(16,185,129,0.4)',
+            transition: 'width 0.1s ease-out'
+          }} />
+
+          {/* Actual Range Input (Hidden styling, handle interactions) */}
           <input
             type="range"
             min={minAllowed}
             max={maxSlider}
             step={10000}
-            value={preset ? Math.round(possibility * PRESETS.find(p => p.key === preset)!.pct) : sliderVal}
+            value={currentTarget}
             onChange={e => handleSlider(Number(e.target.value))}
-            style={{ width: '100%', accentColor: '#10b981', cursor: 'pointer', height: 4 }}
+            style={{ 
+              position: 'absolute', width: '100%', height: 32, 
+              opacity: 0, cursor: 'pointer', zIndex: 10 
+            }}
           />
+
+          {/* Custom Thumb */}
+          <div style={{
+            position: 'absolute',
+            left: `${((currentTarget - minAllowed) / (maxSlider - minAllowed)) * 100}%`,
+            width: 18, height: 18, borderRadius: '50%',
+            background: '#fff', border: '3px solid #10b981',
+            boxShadow: '0 0 12px rgba(16,185,129,0.6)',
+            transform: 'translateX(-50%)',
+            pointerEvents: 'none', zIndex: 5,
+            transition: 'left 0.1s ease-out'
+          }} />
+        </div>
+
+        {/* Marker Labels */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 20, position: 'relative', height: 14 }}>
+          <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--text-muted)' }}>MIN (70%)</span>
+          <span style={{ 
+            position: 'absolute', 
+            left: `${((possibility - minAllowed) / (maxSlider - minAllowed)) * 100}%`, 
+            transform: 'translateX(-50%)',
+            fontSize: 10, fontWeight: 800, color: '#f59e0b'
+          }}>OPTIMAL (100%)</span>
+          <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--text-muted)' }}>MAX (150%)</span>
         </div>
 
         {/* Slider + number input row */}

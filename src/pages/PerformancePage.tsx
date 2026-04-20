@@ -1,6 +1,6 @@
 import AppShell from '../components/layout/AppShell';
 import { ADVISOR_PERFORMANCE, MONTHLY_TREND, formatCurrency, calcScore } from '../data/mockData';
-import { RadialBarChart, RadialBar, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
+import { RadialBarChart, RadialBar, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, PolarAngleAxis } from 'recharts';
 import { TrendingUp, Target, Zap, Activity } from 'lucide-react';
 
 export default function PerformancePage() {
@@ -20,7 +20,7 @@ export default function PerformancePage() {
           { label: 'Actual AUM',       value: formatCurrency(perf.actual),         icon: TrendingUp, color: '#3b82f6', bg: 'rgba(59,130,246,0.08)' },
           { label: 'Target AUM',       value: formatCurrency(perf.target),         icon: Target,     color: '#10b981', bg: 'rgba(16,185,129,0.08)' },
           { label: 'Possibility AUM',  value: formatCurrency(perf.possibilityAum), icon: Zap,        color: '#8b5cf6', bg: 'rgba(139,92,246,0.08)' },
-          { label: 'Performance Score',value: score.toString(),                    icon: Activity,   color: '#f59e0b', bg: 'rgba(245,158,11,0.08)' },
+          { label: 'Performance Score',value: `${score} / 100`,                    icon: Activity,   color: '#f59e0b', bg: 'rgba(245,158,11,0.08)' },
         ].map(k => (
           <div key={k.label} className="glass-card" style={{ padding: '20px 24px', display: 'flex', alignItems: 'flex-start', gap: 16, position: 'relative', overflow: 'hidden' }}>
             <div style={{ 
@@ -49,13 +49,14 @@ export default function PerformancePage() {
             <div style={{ width: 220, height: 220 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <RadialBarChart cx="50%" cy="50%" innerRadius="75%" outerRadius="100%" data={radialData} startAngle={90} endAngle={-270}>
+                  <PolarAngleAxis type="number" domain={[0, 100]} angleAxisId={0} tick={false} />
                   <RadialBar dataKey="value" cornerRadius={12} background={{ fill: 'var(--bg-primary)' }} />
                 </RadialBarChart>
               </ResponsiveContainer>
             </div>
             <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' }}>
               <div style={{ fontSize: 48, fontWeight: 900, color: '#10b981', letterSpacing: -2, lineHeight: 1 }}>{score}</div>
-              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 0.5, marginTop: 4 }}>Score</div>
+              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 0.5, marginTop: 4 }}>Score / 100</div>
             </div>
           </div>
 
@@ -123,10 +124,25 @@ export default function PerformancePage() {
                 <XAxis dataKey="month" tick={{ fill: 'var(--text-muted)', fontSize: 12, fontWeight: 600 }} axisLine={{ stroke: 'var(--border-subtle)' }} tickLine={false} tickMargin={12} />
                 <YAxis tickFormatter={v => formatCurrency(v)} tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} tickMargin={12} />
                 <Tooltip 
-                  formatter={(v: number, name: string) => [formatCurrency(v), name]} 
-                  contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border-glow)', borderRadius: 12, fontSize: 13, boxShadow: '0 8px 32px rgba(0,0,0,0.4)', padding: '12px 16px' }}
-                  itemStyle={{ fontWeight: 700, padding: '2px 0' }}
-                  labelStyle={{ color: 'var(--text-muted)', marginBottom: 8, fontWeight: 600, textTransform: 'uppercase', fontSize: 11 }}
+                  content={({ active, payload, label }) => {
+                    if (active && payload && payload.length) {
+                      return (
+                        <div className="glass-card" style={{ padding: '12px 16px', border: '1px solid var(--border-glow)', background: 'var(--bg-card)', boxShadow: '0 8px 32px rgba(0,0,0,0.4)', borderRadius: 12 }}>
+                          <div style={{ color: 'var(--text-muted)', marginBottom: 8, fontWeight: 600, textTransform: 'uppercase', fontSize: 11 }}>{label}</div>
+                          {payload.map((entry: any, index: number) => (
+                            <div key={`item-${index}`} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '4px 0' }}>
+                              <div style={{ width: 10, height: 10, background: entry.fill.includes('url') ? (entry.dataKey === 'target' ? '#10b981' : entry.dataKey === 'actual' ? '#3b82f6' : '#8b5cf6') : entry.fill, borderRadius: 2 }} />
+                              <div style={{ flex: 1, display: 'flex', justifyContent: 'space-between', gap: 20, alignItems: 'center' }}>
+                                <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)' }}>{entry.name}</span>
+                                <span style={{ fontSize: 14, fontWeight: 800, color: 'var(--text-primary)' }}>{formatCurrency(entry.value)}</span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
                   cursor={{ fill: 'var(--bg-primary)', opacity: 0.4 }}
                 />
                 <Bar dataKey="target" name="Target" fill="url(#colorTarget)" radius={[6,6,0,0]} />
