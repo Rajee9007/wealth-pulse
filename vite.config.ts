@@ -7,4 +7,12 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://rm-talking-copilot.vercel.app',
+        changeOrigin: true,
+      }
+    }
+  }
 })

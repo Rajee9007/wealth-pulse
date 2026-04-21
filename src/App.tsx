@@ -8,6 +8,7 @@ import ClientsPage from './pages/ClientsPage';
 import CopilotPage from './pages/CopilotPage';
 import PlaybooksPage from './pages/PlaybooksPage';
 import Client360Page from './pages/Client360Page';
+import ZeroTouchPage from './pages/ZeroTouchPage';
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
         <Route path="/clients"           element={<ClientsPage />} />
         <Route path="/copilot"           element={<CopilotPage />} />
         <Route path="/playbooks"         element={<PlaybooksPage />} />
+        <Route path="/zero-touch"        element={<ZeroTouchPage />} />
         <Route path="/clients/:id"       element={<Client360Page />} />
       </Routes>
     </BrowserRouter>

@@ -139,6 +139,7 @@ export const CURATED_CLIENTS: Client[] = [
     talkingPoints: ['Idle savings ₹2L detected', 'Portfolio doing well', 'Suggest SIP top-up ₹5,000/mo'],
     goalTag: 'Child Education', riskProfile: 'Aggressive', returns: 14.5,
     email: 'priya.sharma@example.com', phone: '+919988776655',
+    wealthScore: 82, netProfit: 104400,
   },
   {
     id: 'C003', name: 'Ramesh Iyer', segment: 'Underperforming',
@@ -149,6 +150,7 @@ export const CURATED_CLIENTS: Client[] = [
     talkingPoints: ['High AUM but returns 5.1% vs benchmark 11%', 'Sector over-concentration risk', 'Switch from underperforming fund to hybrid fund'],
     goalTag: 'Wealth Building', riskProfile: 'Moderate', returns: 5.1,
     email: 'ramesh.iyer@example.com', phone: '+919123456789',
+    wealthScore: 45, netProfit: 61200,
   },
   {
     id: 'C004', name: 'Kavita Nair', segment: 'Risk',
@@ -159,6 +161,7 @@ export const CURATED_CLIENTS: Client[] = [
     talkingPoints: ['No transactions in 46 days', 'AUM declining trend', 'Offer pause instead of stop'],
     goalTag: 'Home Purchase', riskProfile: 'Conservative', returns: 4.8,
     email: 'kavita.nair@example.com', phone: '+919000011122',
+    wealthScore: 38, netProfit: 15360,
   },
   {
     id: 'C005', name: 'Suresh Pillai', segment: 'Opportunity',
@@ -169,6 +172,7 @@ export const CURATED_CLIENTS: Client[] = [
     talkingPoints: ['₹1.5L idle in savings', 'Consistent investor', 'Present lump sum opportunity'],
     goalTag: 'Retirement', riskProfile: 'Moderate', returns: 12.3,
     email: 'suresh.pillai@example.com', phone: '+919222233344',
+    wealthScore: 73, netProfit: 68880,
   },
   {
     id: 'C006', name: 'Deepa Krishnan', segment: 'Underperforming',
@@ -179,6 +183,7 @@ export const CURATED_CLIENTS: Client[] = [
     talkingPoints: ['Poor allocation — 70% in debt, 30% equity', 'Risk appetite mismatch', 'Propose equity rebalancing'],
     goalTag: 'Wealth Building', riskProfile: 'Aggressive', returns: 6.8,
     email: 'deepa.k@example.com', phone: '+919555566677',
+    wealthScore: 52, netProfit: 57800,
   },
   {
     id: 'C007', name: 'Vijay Anand', segment: 'Risk',
@@ -189,6 +194,7 @@ export const CURATED_CLIENTS: Client[] = [
     talkingPoints: ['Review house goal progress', 'Discuss tax implications', 'Maintenance call only'],
     goalTag: 'Tax Saving', riskProfile: 'Conservative', returns: 3.2,
     email: 'vijay.anand@example.com', phone: '+919888877766',
+    wealthScore: 30, netProfit: 6400,
   },
   {
     id: 'C008', name: 'Ananya Bose', segment: 'Opportunity',
@@ -199,6 +205,7 @@ export const CURATED_CLIENTS: Client[] = [
     talkingPoints: ['Child education goal in 8 years', 'Current SIP insufficient for goal', 'Suggest SIP increase ₹3,000/mo'],
     goalTag: 'Child Education', riskProfile: 'Moderate', returns: 13.1,
     email: 'ananya.bose@example.com', phone: '+919777788899',
+    wealthScore: 69, netProfit: 56330,
   },
   {
     id: 'C009', name: 'Vikram Joshi', segment: 'Stable',
@@ -209,6 +216,7 @@ export const CURATED_CLIENTS: Client[] = [
     talkingPoints: ['Goals on track', 'Consistent 12% returns', 'Maintain current allocation'],
     goalTag: 'Retirement', riskProfile: 'Moderate', returns: 12.1,
     email: 'vikram.j@example.com', phone: '+919666655544',
+    wealthScore: 91, netProfit: 181500,
   },
   {
     id: 'C010', name: 'Meera Deshmukh', segment: 'Stable',
@@ -219,6 +227,7 @@ export const CURATED_CLIENTS: Client[] = [
     talkingPoints: ['Consistent investor', 'Portfolio resilience check', 'Collect feedback'],
     goalTag: 'Wealth Building', riskProfile: 'Conservative', returns: 8.5,
     email: 'meera.d@example.com', phone: '+919444433322',
+    wealthScore: 87, netProfit: 80750,
   },
   {
     id: 'C011', name: 'Zoya Khan', segment: 'Stable',
@@ -229,6 +238,7 @@ export const CURATED_CLIENTS: Client[] = [
     talkingPoints: ['18% CAGR over 3 years', 'High engagement', 'No action required'],
     goalTag: 'Wealth Building', riskProfile: 'Aggressive', returns: 18.2,
     email: 'zoya.k@example.com', phone: '+919333322211',
+    wealthScore: 96, netProfit: 400400,
   },
 ];
 

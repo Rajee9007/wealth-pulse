@@ -1,18 +1,19 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, PieChart, Zap, Target, BarChart3,
-  Award, Users, Bot, ChevronRight, Rocket,
+  Award, Users, Bot, ChevronRight, Rocket, Cpu,
 } from 'lucide-react';
 
 const NAV_ITEMS = [
-  { path: '/',                label: 'Dashboard',       icon: LayoutDashboard },
-  { path: '/clients',          label: 'Clients',           icon: Users },
-  { path: '/targets',          label: 'Targets',           icon: Target },
-  { path: '/performance',      label: 'Performance',       icon: BarChart3 },
-  { path: '/badge',            label: 'Badge System',      icon: Award },
-  { path: '/copilot',          label: 'Copilot',           icon: Bot },
-  { path: '/possibility',      label: 'Possibility',      icon: Zap },
-  { path: '/playbooks',        label: 'Playbooks',         icon: Rocket },
+  { path: '/',                label: 'Dashboard',         icon: LayoutDashboard },
+  { path: '/clients',         label: 'Clients',            icon: Users },
+  { path: '/targets',         label: 'Targets',            icon: Target },
+  { path: '/performance',     label: 'Performance',        icon: BarChart3 },
+  { path: '/badge',           label: 'Badge System',       icon: Award },
+  { path: '/copilot',         label: 'Copilot',            icon: Bot },
+  { path: '/zero-touch',      label: 'Zero Touch Agent',   icon: Cpu },
+  { path: '/possibility',     label: 'Possibility',        icon: Zap },
+  { path: '/playbooks',       label: 'Playbooks',          icon: Rocket },
 ];
 
 export default function Sidebar() {
