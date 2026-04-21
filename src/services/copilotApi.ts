@@ -1,6 +1,6 @@
 // src/services/copilotApi.ts
 
-const BASE_URL = '';
+const BASE_URL = 'https://rmtalkingcopilot.vercel.app';
 
 export interface ApiClientResponse {
   clients: ApiClient[];
