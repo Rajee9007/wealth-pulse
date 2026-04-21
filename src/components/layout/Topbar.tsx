@@ -1,15 +1,14 @@
 import { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Bell, Search, Sun, Moon, Settings, LogOut, ChevronDown, User } from 'lucide-react';
+import { Bell, Search, Sun, Moon, Settings, LogOut, ChevronDown } from 'lucide-react';
 import { 
   MOCK_NOTIFICATIONS, ADVISOR_PERFORMANCE, 
-  BADGE_TIERS, getBadge 
+  BADGE_TIERS, getBadge, formatCurrency
 } from '../../data/mockData';
 import { useData } from '../../context/DataContext';
 import { useTheme } from '../../context/ThemeContext';
 import NotificationDrawer from '../shared/NotificationDrawer';
-import { SEG_COLORS } from '../shared/CopilotDrawer';
-import { formatCurrency } from '../../data/mockData';
+import CopilotDrawer, { SEG_COLORS } from '../shared/CopilotDrawer';
 
 interface TopbarProps {
   readonly title: string;

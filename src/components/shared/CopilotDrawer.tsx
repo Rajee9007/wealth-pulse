@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   X, Sparkles, MessageSquare, Phone, TrendingUp, RefreshCw, 
-  CheckCircle, XCircle, Calendar, Clock, ChevronRight, Mail, MessageCircle,
+  CheckCircle, XCircle, Calendar, Clock, Mail, MessageCircle,
   RotateCcw, Loader2, Brain, Zap, Send
 } from 'lucide-react';
 import { formatCurrency } from '../../data/mockData';
@@ -15,11 +15,13 @@ export const SEG_COLORS: Record<Segment, string> = {
   Risk: '#f43f5e', Opportunity: '#10b981', Underperforming: '#f59e0b', Stable: '#3b82f6',
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const ACTION_ICONS: Record<string, React.ElementType> = {
   Risk: Phone, Opportunity: TrendingUp, Underperforming: RefreshCw, Stable: CheckCircle,
 };
 
 /* ─── AI Conversation guides ──────────────────── */
+// eslint-disable-next-line react-refresh/only-export-components
 export const CONVERSATION_GUIDES: Record<string, { topic: string; point: string }[]> = {
   Risk: [
     { topic: 'Open with empathy',     point: '"We noticed your SIP paused / no recent activity. Just checking in."' },
@@ -54,6 +56,7 @@ export const CONVERSATION_GUIDES: Record<string, { topic: string; point: string 
   ],
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const AI_INSIGHTS: Record<string, string[]> = {
   Risk: [
     'SIP interruption compounds over time — even 3 months of pause can erode ₹1–2L from goal corpus.',
