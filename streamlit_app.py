@@ -18,9 +18,15 @@ def render_react_app():
     html_path = os.path.join(os.path.dirname(__file__), "dist", "index.html")
     
     if not os.path.exists(html_path):
-        st.error(f"React build not found at `{html_path}`")
-        st.info("Make sure to build your React app first using `npm run build` and ensure the output is in the `dist` folder.")
-        return
+        st.info("React build not found. Installing Node.js dependencies and compiling the app automatically (This will take a minute on Streamlit Cloud)...")
+        import subprocess
+        try:
+            # Run npm install and npm build directly inside the Streamlit instance container!
+            subprocess.run(["npm", "install"], check=True)
+            subprocess.run(["npm", "run", "build"], check=True)
+        except Exception as e:
+            st.error(f"Failed to build React app: {e}")
+            return
 
     # In single-file builds or if components are inline, we can output directly.
     # But usually React on Streamlit requires an iframe. 
