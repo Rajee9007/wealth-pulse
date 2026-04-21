@@ -11,7 +11,7 @@ import {
   ArrowRight, TrendingUp, ShieldAlert,
   TrendingDown, CheckCircle
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import CopilotDrawer, { SEG_COLORS } from '../components/shared/CopilotDrawer';
 
 const COLORS = ['#10b981', '#f43f5e', '#f59e0b'];
@@ -258,7 +258,18 @@ export default function PossibilityPage() {
               {topPotentialClients.map((c, i) => (
                 <tr key={c.id} style={{ borderBottom: i < 4 ? '1px solid var(--border-subtle)' : 'none' }}>
                   <td style={{ padding: '14px 14px' }}>
-                    <div style={{ fontWeight: 600, fontSize: 13, color: 'var(--text-primary)' }}>{c.name}</div>
+                    <Link 
+                      to={`/clients/${c.id}`}
+                      style={{ 
+                        fontWeight: 700, fontSize: 13, color: 'var(--text-primary)', 
+                        textDecoration: 'none', transition: 'color 0.2s',
+                        display: 'block'
+                      }}
+                      onMouseEnter={e => e.currentTarget.style.color = '#3b82f6'}
+                      onMouseLeave={e => e.currentTarget.style.color = 'var(--text-primary)'}
+                    >
+                      {c.name}
+                    </Link>
                     <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>{c.goalTag}</div>
                   </td>
                   <td style={{ padding: '14px 14px' }}>

@@ -21,6 +21,79 @@ export interface Client {
   returns: number; // %
   email: string;
   phone: string;
+  equityAllocation?: number; // %
+  debtAllocation?: number;   // %
+  goldAllocation?: number;   // %
+  wealthScore: number;       // 0-100
+  netProfit: number;         // Amount
+}
+
+export interface Holding {
+  id: string;
+  name: string;
+  category: 'Equity' | 'Debt' | 'Gold';
+  value: number;
+  pnl: number;
+  pnlPct: number;
+}
+
+export interface ActivityLog {
+  id: string;
+  date: string;
+  type: string;
+  details: string;
+  status: 'Success' | 'Follow-up' | 'Pending';
+}
+
+export const SEG_COLORS: Record<Segment, string> = {
+  Risk: '#f43f5e', Opportunity: '#10b981', Underperforming: '#f59e0b', Stable: '#3b82f6',
+};
+
+export const CONVERSATION_GUIDES: Record<Segment, { topic: string; point: string }[]> = {
+  Risk: [
+    { topic: 'Open with empathy', point: '"We noticed your SIP paused / no recent activity. Just checking in to understand if everything is okay."' },
+    { topic: 'Understand reason', point: 'Was it a cash flow issue, or are you reconsidering your investment goals?' },
+    { topic: 'Offer alternatives', point: 'Suggest: Lower SIP amount, pause vs stop difference, switch to liquid fund temporarily.' },
+  ],
+  Opportunity: [
+    { topic: 'Acknowledge performance', point: '"Your portfolio is doing well. You\'ve been consistent — great job!"' },
+    { topic: 'Identify idle money', point: '"We noticed significant idle savings. It could be working harder for you."' },
+    { topic: 'Soft close', point: '"Shall I set up a top-up starting this month?"' },
+  ],
+  Underperforming: [
+    { topic: 'Start with review', point: '"Let\'s take a look at how your portfolio has been performing overall."' },
+    { topic: 'Highlight gaps', point: 'Show specific funds lagging benchmark or category peers.' },
+    { topic: 'Propose rebalancing', point: 'Suggest: Switch from underperforming fund → better alternative.' },
+  ],
+  Stable: [
+    { topic: 'The Good News', point: '"Your portfolio is performing exactly as planned. You are on track for your goal."' },
+    { topic: 'Goal Check', point: '"Have any of your life goals changed? Retirement, child education, or home purchase?"' },
+    { topic: 'Request Referrals', point: '"Since you are happy with the results, do you have friends or family who could benefit from this?"' },
+  ],
+};
+
+export interface PortfolioHistory {
+  date: string;
+  aum: number;
+}
+
+export interface FamilyLink {
+  id: string;
+  name: string;
+  relation: string;
+  aum: number;
+  segment: Segment;
+}
+
+export interface Playbook {
+  id: string;
+  title: string;
+  description: string;
+  targetSegment: Segment;
+  impactLabel: string;
+  successRate: number;
+  iconType: 'rocket' | 'shield' | 'zap' | 'crown';
+  color: string;
 }
 
 export interface Notification {
@@ -55,6 +128,7 @@ export const CURATED_CLIENTS: Client[] = [
     talkingPoints: ['SIP paused 52 days', 'Goal corpus at risk', 'Compound growth being lost'],
     goalTag: 'Retirement', riskProfile: 'Moderate', returns: 6.2,
     email: 'arjun.mehta@example.com', phone: '+919876543210',
+    wealthScore: 58, netProfit: 45000,
   },
   {
     id: 'C002', name: 'Priya Sharma', segment: 'Opportunity',
@@ -176,6 +250,7 @@ function generateMockClients(count: number): Client[] {
     const pot = Math.floor(Math.random() * 500000);
     const returns = +(Math.random() * 15 + 2).toFixed(1);
     const urgency = Math.floor(Math.random() * 100);
+    const wealthScore = Math.floor(Math.random() * 40) + 50; 
 
     generated.push({
       id: `GEN-${i}`,
@@ -196,6 +271,8 @@ function generateMockClients(count: number): Client[] {
       returns,
       email: `${fn.toLowerCase()}.${ln.toLowerCase()}${i}@example.com`,
       phone: `+91 ${Math.floor(8000000000 + Math.random() * 2000000000)}`,
+      wealthScore,
+      netProfit: Math.round(aum * 0.15),
     });
   }
   return generated;
@@ -204,7 +281,41 @@ function generateMockClients(count: number): Client[] {
 export const MOCK_CLIENTS: Client[] = [
   ...CURATED_CLIENTS,
   ...generateMockClients(100)
-];
+].map(c => ({
+  ...c,
+  equityAllocation: Math.floor(Math.random() * 40) + 40, // 40-80
+  debtAllocation: Math.floor(Math.random() * 20) + 10,   // 10-30
+  goldAllocation: Math.floor(Math.random() * 10) + 5,    // 5-15
+}));
+
+export const MOCK_HISTORY: Record<string, PortfolioHistory[]> = {
+  C001: [
+    { date: '2023-11', aum: 410000 },
+    { date: '2023-12', aum: 435000 },
+    { date: '2024-01', aum: 428000 },
+    { date: '2024-02', aum: 450000 },
+    { date: '2024-03', aum: 468000 },
+    { date: '2024-04', aum: 480000 },
+  ],
+  C002: [
+    { date: '2023-11', aum: 1100000 },
+    { date: '2023-12', aum: 1150000 },
+    { date: '2024-01', aum: 1180000 },
+    { date: '2024-02', aum: 1220000 },
+    { date: '2024-03', aum: 1210000 },
+    { date: '2024-04', aum: 1250000 },
+  ],
+};
+
+export const MOCK_FAMILY: Record<string, FamilyLink[]> = {
+  C001: [
+    { id: 'F001', name: 'Anita Mehta', relation: 'Spouse', aum: 245000, segment: 'Stable' },
+    { id: 'F002', name: 'Rohan Mehta', relation: 'Son', aum: 45000, segment: 'Opportunity' },
+  ],
+  C008: [
+    { id: 'F003', name: 'Sanjay Bose', relation: 'Spouse', aum: 890000, segment: 'Stable' },
+  ],
+};
 
 export const ADVISOR_PERFORMANCE: AdvisorPerformance = {
   month: 'April 2026',
@@ -266,6 +377,33 @@ export const MOCK_NOTIFICATIONS: Notification[] = [
   },
 ];
 
+export const MOCK_PLAYBOOKS: Playbook[] = [
+  {
+    id: 'p1', title: 'SIP Top-up Blitz',
+    description: 'Target high-potential Opportunity clients with significant idle cash reserves.',
+    targetSegment: 'Opportunity', impactLabel: '₹52L Potential', successRate: 85,
+    iconType: 'rocket', color: '#10b981'
+  },
+  {
+    id: 'p2', title: 'Retention Shield',
+    description: 'Automated nudge sequence for clients with paused SIPs or low engagement.',
+    targetSegment: 'Risk', impactLabel: '₹12L At Risk', successRate: 64,
+    iconType: 'shield', color: '#f43f5e'
+  },
+  {
+    id: 'p3', title: 'Equity Alpha Wave',
+    description: 'Identify Underperforming portfolios and propose switches to high-alpha funds.',
+    targetSegment: 'Underperforming', impactLabel: '₹28L Optimization', successRate: 72,
+    iconType: 'zap', color: '#f59e0b'
+  },
+  {
+    id: 'p4', title: 'Referral Harvest',
+    description: 'Request high-value referrals from your top-performing Stable clients.',
+    targetSegment: 'Stable', impactLabel: '5+ Qualified Leads', successRate: 45,
+    iconType: 'crown', color: '#3b82f6'
+  },
+];
+
 export const NUDGES = [
   { id: 'N1', type: 'risk',   message: '3 At-Risk clients not contacted in 7+ days', count: 3 },
   { id: 'N2', type: 'oppo',   message: '2 Opportunity clients have idle funds available', count: 2 },
@@ -296,3 +434,38 @@ export function formatCurrency(n: number): string {
   if (n >= 1000)     return `₹${(n / 1000).toFixed(1)}K`;
   return `₹${n}`;
 }
+
+export const MOCK_HOLDINGS: Record<string, Holding[]> = {
+  C001: [
+    { id: 'h1', name: 'SBI Bluechip Fund', category: 'Equity', value: 250000, pnl: 45000, pnlPct: 18.0 },
+    { id: 'h2', name: 'HDFC Midcap Opportunity', category: 'Equity', value: 150000, pnl: 12000, pnlPct: 8.0 },
+    { id: 'h3', name: 'ICICI Prudential Liquid', category: 'Debt', value: 80000, pnl: 2000, pnlPct: 2.5 },
+  ],
+  C002: [
+    { id: 'h4', name: 'Mirae Asset Large Cap', category: 'Equity', value: 400000, pnl: 85000, pnlPct: 21.2 },
+    { id: 'h5', name: 'Axis Small Cap Fund', category: 'Equity', value: 220000, pnl: 35000, pnlPct: 15.9 },
+    { id: 'h6', name: 'Nippon India Gold BeES', category: 'Gold', value: 100000, pnl: 14000, pnlPct: 14.0 },
+  ],
+  C003: [
+    { id: 'h7', name: 'Kotak Equity Arbitrage', category: 'Debt', value: 800000, pnl: 32000, pnlPct: 4.0 },
+    { id: 'h8', name: 'Parag Parikh Flexi Cap', category: 'Equity', value: 400000, pnl: 28000, pnlPct: 7.0 },
+  ],
+  C009: [
+    { id: 'h9', name: 'UTI Nifty 50 Index', category: 'Equity', value: 1000000, pnl: 320000, pnlPct: 32.0 },
+    { id: 'ha', name: 'Tata Digital India Fund', category: 'Equity', value: 500000, pnl: 130000, pnlPct: 26.0 },
+  ]
+};
+
+export const MOCK_ACTIVITY_LOGS: Record<string, ActivityLog[]> = {
+  C001: [
+    { id: 'l1', date: '2026-04-12', type: 'Call', details: 'Discussed SIP reactivation and market cycle benefits.', status: 'Success' },
+    { id: 'l2', date: '2026-03-20', type: 'Email', details: 'Sent portfolio performance report for Q1 2026.', status: 'Success' },
+    { id: 'l3', date: '2026-02-15', type: 'WhatsApp', details: 'Follow-up on paused SIP reason.', status: 'Follow-up' },
+  ],
+  C002: [
+    { id: 'l4', date: '2026-04-15', type: 'Call', details: 'Confirmed SIP top-up of ₹5,000 Starting next month.', status: 'Success' },
+  ],
+  C009: [
+    { id: 'l5', date: '2026-03-20', type: 'Call', details: 'Annual review completed. Client happy with 12%+ CAGR.', status: 'Success' },
+  ]
+};

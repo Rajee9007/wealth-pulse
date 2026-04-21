@@ -6,6 +6,8 @@ import PerformancePage from './pages/PerformancePage';
 import BadgePage from './pages/BadgePage';
 import ClientsPage from './pages/ClientsPage';
 import CopilotPage from './pages/CopilotPage';
+import PlaybooksPage from './pages/PlaybooksPage';
+import Client360Page from './pages/Client360Page';
 
 export default function App() {
   return (
@@ -18,6 +20,8 @@ export default function App() {
         <Route path="/badge"             element={<BadgePage />} />
         <Route path="/clients"           element={<ClientsPage />} />
         <Route path="/copilot"           element={<CopilotPage />} />
+        <Route path="/playbooks"         element={<PlaybooksPage />} />
+        <Route path="/clients/:id"       element={<Client360Page />} />
       </Routes>
     </BrowserRouter>
   );

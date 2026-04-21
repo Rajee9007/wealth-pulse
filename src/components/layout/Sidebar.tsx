@@ -1,7 +1,7 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, PieChart, Zap, Target, BarChart3,
-  Award, Users, Bot, ChevronRight,
+  Award, Users, Bot, ChevronRight, Rocket,
 } from 'lucide-react';
 
 const NAV_ITEMS = [
@@ -12,6 +12,7 @@ const NAV_ITEMS = [
   { path: '/badge',            label: 'Badge System',      icon: Award },
   { path: '/copilot',          label: 'Copilot',           icon: Bot },
   { path: '/possibility',      label: 'Possibility',      icon: Zap },
+  { path: '/playbooks',        label: 'Playbooks',         icon: Rocket },
 ];
 
 export default function Sidebar() {

@@ -13,7 +13,7 @@ import {
   ChevronRight, Phone, RefreshCw,
   ShieldAlert, Sparkles, BarChart3, Wallet, Crosshair, Lightbulb, CheckCircle
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 // ─── KPI Card ────────────────────────────────────────────────────────────────
 function KpiCard({ label, value, sub, color, icon: Icon }: {
@@ -397,7 +397,19 @@ export default function DashboardPage() {
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>{c.name}</span>
+                    <Link 
+                      to={`/clients/${c.id}`}
+                      onClick={(e) => e.stopPropagation()}
+                      style={{ 
+                        fontSize: 13, fontWeight: 800, color: 'var(--text-primary)', 
+                        textDecoration: 'none', transition: 'color 0.2s',
+                        zIndex: 2
+                      }}
+                      onMouseEnter={e => e.currentTarget.style.color = '#3b82f6'}
+                      onMouseLeave={e => e.currentTarget.style.color = 'var(--text-primary)'}
+                    >
+                      {c.name}
+                    </Link>
                     <span style={{ fontSize: 11, fontWeight: 700, color, background: `${color}15`, padding: '2px 8px', borderRadius: 20 }}>
                       Priority {c.urgencyScore}
                     </span>

@@ -7,7 +7,7 @@ import {
   Search, X, MessageSquare, CheckCircle, XCircle, Calendar,
   Clock, Sparkles, ChevronRight,
 } from 'lucide-react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import CopilotDrawer, { SEG_COLORS, ACTION_ICONS } from '../components/shared/CopilotDrawer';
 import type { OutcomeType } from '../components/shared/CopilotDrawer';
 
@@ -168,7 +168,17 @@ export default function ClientsPage() {
                         {c.name.split(' ').map(w => w[0]).join('').slice(0, 2)}
                       </div>
                       <div>
-                        <div style={{ fontWeight: 600, fontSize: 13, color: 'var(--text-primary)' }}>{c.name}</div>
+                        <Link 
+                          to={`/clients/${c.id}`}
+                          style={{ 
+                            fontWeight: 700, fontSize: 13, color: 'var(--text-primary)', 
+                            textDecoration: 'none', transition: 'color 0.2s',
+                          }}
+                          onMouseEnter={e => e.currentTarget.style.color = '#3b82f6'}
+                          onMouseLeave={e => e.currentTarget.style.color = 'var(--text-primary)'}
+                        >
+                          {c.name}
+                        </Link>
                         <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{c.lastContacted} · {c.sipActive ? '🟢 SIP Active' : '🔴 SIP Paused'}</div>
                       </div>
                     </div>
