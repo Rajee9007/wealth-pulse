@@ -9,7 +9,6 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import type { Client, Segment, KycStatus } from '../types/client.types';
-import { copilotApi } from './copilotApi';
 import rawData from '../data/mock_clients_reference.json';
 
 // ─── JSON fallback pool (50 curated clients) ──────────────────────────────────
