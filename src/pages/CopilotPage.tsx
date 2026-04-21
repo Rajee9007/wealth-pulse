@@ -90,7 +90,8 @@ export default function CopilotPage() {
     }
   }, [selected?.id]);
 
-  const [outcomes, setOutcomes] = useState<Outcome[]>([]);
+  const [, setOutcomes] = useState<Outcome[]>([]);
+
   const [outcomeFor, setOutcomeFor] = useState<OutcomeType | null>(null);
   const [outcomeNote, setOutcomeNote] = useState('');
   const guide = selected ? (CONVERSATION_GUIDES[selected.profile.segment as keyof typeof CONVERSATION_GUIDES] || []) : [];
@@ -131,21 +132,9 @@ export default function CopilotPage() {
       timestamp: new Date().toLocaleDateString() 
     };
     setOutcomes(prev => [...prev.filter(p => p.clientId !== selected.id), o]);
-    setSavedOutcome(o);
     setOutcomeNote('');
     setOutcomeFor(null);
   }
-
-  if (loading) {
-    return (
-      <AppShell title="Advisor Copilot" subtitle="Loading Intelligence Hub...">
-        <div style={{ height: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Loader2 className="animate-spin" size={48} color="var(--accent-blue)" />
-        </div>
-      </AppShell>
-    );
-  }
-
   return (
     <AppShell title="Advisor Copilot" subtitle="AI-driven intelligence for outbound and in-bound engagement">
       <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: 24, height: 'calc(100vh - 200px)', minHeight: 600 }}>
@@ -178,7 +167,7 @@ export default function CopilotPage() {
                 client={c}
                 rank={i + 1}
                 selected={selected.id === c.id}
-                onClick={() => { setSelectedId(c.id); setAiBrief(''); setAssistResponse(''); setSavedOutcome(null); setOutcomeFor(null); setWorkflowMode('prep'); }}
+                onClick={() => { setSelectedId(c.id); setAiBrief(''); setAssistResponse(''); setOutcomeFor(null); setWorkflowMode('prep'); }}
               />
             )) : (
               <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--text-muted)', fontSize: 13 }}>
