@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { 
   X, Sparkles, MessageSquare, Phone, TrendingUp, RefreshCw, 
-  CheckCircle, XCircle, Calendar, Clock, ChevronRight, Mail, MessageCircle
+  CheckCircle, XCircle, Calendar, Clock, ChevronRight, Mail, MessageCircle,
+  RotateCcw, Loader2, Brain, Zap, Send
 } from 'lucide-react';
 import { formatCurrency } from '../../data/mockData';
+import { copilotApi } from '../../services/copilotApi';
 import type { Client, Segment } from '../../types/client.types';
 
 export type OutcomeType = 'Interested' | 'Follow-up' | 'Not Interested';
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const SEG_COLORS: Record<Segment, string> = {
   Risk: '#f43f5e', Opportunity: '#10b981', Underperforming: '#f59e0b', Stable: '#3b82f6',
 };
@@ -79,16 +82,49 @@ export default function CopilotDrawer({ client, onClose }: {
   readonly client: Client; readonly onClose: () => void;
 }) {
   const color   = SEG_COLORS[client.profile.segment];
-  const guide   = CONVERSATION_GUIDES[client.profile.segment];
-  const insights = AI_INSIGHTS[client.profile.segment];
+  const guide   = CONVERSATION_GUIDES[client.profile.segment] || [];
+  const insights = AI_INSIGHTS[client.profile.segment] || [];
   const segLabel = client.profile.segment === 'Risk' ? '🔴 At Risk'
     : client.profile.segment === 'Opportunity' ? '🟢 Opportunity' 
     : client.profile.segment === 'Underperforming' ? '🟡 Underperforming'
     : '🔵 Stable';
 
+  const [workflowMode, setWorkflowMode] = useState<'prep' | 'ongoing'>('prep');
+  const [isRegenerating, setIsRegenerating] = useState(false);
+  const [aiBrief, setAiBrief] = useState('');
+  const [assistResponse, setAssistResponse] = useState('');
+  const [isAssisting, setIsAssisting] = useState(false);
+  const [question, setQuestion] = useState('');
+
   const [outcomeFor, setOutcomeFor]   = useState<OutcomeType | null>(null);
   const [outcomeNote, setOutcomeNote] = useState('');
   const [savedOutcome, setSavedOutcome] = useState<{ result: OutcomeType; note: string } | null>(null);
+
+  const handleRegenerate = () => {
+    setIsRegenerating(true);
+    setAiBrief('');
+    copilotApi.streamBrief(
+      client.id,
+      (chunk) => setAiBrief(prev => prev + chunk),
+      () => setIsRegenerating(false)
+    );
+  };
+
+  const handleAskAI = (e?: React.FormEvent) => {
+    e?.preventDefault();
+    if (!question.trim()) return;
+    setIsAssisting(true);
+    setAssistResponse('');
+    copilotApi.streamAssist(
+      client.id,
+      question,
+      (chunk) => setAssistResponse(prev => prev + chunk),
+      () => {
+        setIsAssisting(false);
+        setQuestion('');
+      }
+    );
+  };
 
   function logOutcome() {
     if (!outcomeFor) return;
@@ -96,6 +132,10 @@ export default function CopilotDrawer({ client, onClose }: {
     setOutcomeFor(null);
     setOutcomeNote('');
   }
+
+  React.useEffect(() => {
+    handleRegenerate();
+  }, [client.id]);
 
   return (
     <>
@@ -221,174 +261,249 @@ export default function CopilotDrawer({ client, onClose }: {
           </div>
         </div>
 
+        {/* Mode Switcher */}
+        <div style={{
+          padding: '12px 24px', background: 'rgba(0,0,0,0.1)', borderBottom: '1px solid var(--border-subtle)',
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+        }}>
+          <div style={{ display: 'flex', gap: 6 }}>
+            <button 
+              onClick={() => setWorkflowMode('prep')}
+              style={{ 
+                padding: '6px 14px', borderRadius: 99, border: 'none', cursor: 'pointer', fontSize: 11, fontWeight: 700,
+                background: workflowMode === 'prep' ? color : 'rgba(255,255,255,0.05)',
+                color: workflowMode === 'prep' ? '#fff' : 'var(--text-secondary)',
+                transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: 6
+              }}
+            >
+              <Brain size={13} /> Prep
+            </button>
+            <button 
+              onClick={() => setWorkflowMode('ongoing')}
+              style={{ 
+                padding: '6px 14px', borderRadius: 99, border: 'none', cursor: 'pointer', fontSize: 11, fontWeight: 700,
+                background: workflowMode === 'ongoing' ? '#f43f5e' : 'rgba(255,255,255,0.05)',
+                color: workflowMode === 'ongoing' ? '#fff' : 'var(--text-secondary)',
+                transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: 6
+              }}
+            >
+              <Phone size={13} /> Go Live
+            </button>
+          </div>
+
+          <button 
+            onClick={handleRegenerate}
+            disabled={isRegenerating}
+            style={{ 
+              background: 'none', border: 'none', color: color, cursor: 'pointer', 
+              display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, fontWeight: 700,
+              opacity: isRegenerating ? 0.5 : 1
+            }}
+          >
+            <RotateCcw size={14} className={isRegenerating ? 'animate-spin' : ''} />
+            {isRegenerating ? 'Briefing...' : 'Regenerate'}
+          </button>
+        </div>
         {/* Drawer Body */}
         <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 20 }}>
-
-          {/* Why this client */}
-          <div style={{
-            background: `${color}0d`, border: `1px solid ${color}25`, borderRadius: 12, padding: '14px 16px',
-            position: 'relative', overflow: 'hidden'
-          }}>
-            {/* Strategy Focus Badge */}
-            <div style={{
-              position: 'absolute', top: 12, right: 12,
-              fontSize: 9, fontWeight: 800, padding: '3px 8px', borderRadius: 4,
-              background: client.profile.urgency_score > 80 ? 'rgba(244,63,94,0.15)' : 'rgba(148,163,184,0.15)',
-              color: client.profile.urgency_score > 80 ? '#f43f5e' : 'var(--text-muted)',
-              border: `1px solid ${client.profile.urgency_score > 80 ? 'rgba(244,63,94,0.3)' : 'rgba(148,163,184,0.3)'}`,
-              textTransform: 'uppercase', letterSpacing: 0.5
-            }}>
-              {client.profile.reason.toLowerCase().includes('financial need') ? 'Maintenance' 
-                : client.profile.segment === 'Opportunity' ? 'Growth Focus' 
-                : 'Lapse Prevention'}
-            </div>
-
-            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 0.7, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: 6 }}>
-              Why this client now
-            </div>
-            <div style={{ fontSize: 13, color: 'var(--text-primary)', fontWeight: 600, marginBottom: 4, paddingRight: 80 }}>
-              {client.profile.reason}
-            </div>
-            <div style={{ fontSize: 12, color: color, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}>
-              <ChevronRight size={12} /> Suggested: {client.profile.action}
-            </div>
-          </div>
-
-          {/* AI Insights */}
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 10 }}>
-              <Sparkles size={14} color="#8b5cf6" />
-              <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-primary)' }}>AI Insights</span>
-              <span style={{ fontSize: 10, background: 'rgba(139,92,246,0.15)', color: '#8b5cf6', padding: '2px 8px', borderRadius: 20, fontWeight: 600 }}>3 signals</span>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
-              {insights.map((ins, i) => (
-                <div key={i} style={{
-                  display: 'flex', gap: 10, padding: '10px 12px',
-                  background: 'rgba(139,92,246,0.06)', borderRadius: 8,
-                  border: '1px solid rgba(139,92,246,0.15)',
-                }}>
-                  <div style={{
-                    width: 18, height: 18, borderRadius: 5, background: 'rgba(139,92,246,0.2)',
-                    color: '#8b5cf6', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 10, fontWeight: 800, flexShrink: 0, marginTop: 1,
-                  }}>{i + 1}</div>
-                  <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{ins}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Conversation Script */}
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 10 }}>
-              <MessageSquare size={14} color="#3b82f6" />
-              <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-primary)' }}>Conversation Script</span>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-              {client.profile.flags.map((pt, i) => (
-                <div key={i} style={{
-                  display: 'flex', gap: 10, padding: '10px 12px',
-                  background: 'var(--bg-card)', borderRadius: 8,
-                  border: '1px solid var(--border-subtle)',
-                }}>
-                  <div style={{
-                    width: 22, height: 22, borderRadius: 6, background: `${color}20`, color,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 11, fontWeight: 800, flexShrink: 0,
-                  }}>{i + 1}</div>
-                  <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{pt}</div>
-                </div>
-              ))}
-            </div>
-
-            {/* Full guide */}
-            <div style={{ marginTop: 12, padding: '12px 14px', background: 'var(--bg-card)', borderRadius: 8, border: '1px solid var(--border-subtle)' }}>
-              <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>Full Guide</div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                {guide.map((g, i) => (
-                  <div key={i} style={{ display: 'flex', gap: 8, fontSize: 11 }}>
-                    <span style={{ color, fontWeight: 700, minWidth: 18 }}>{i + 1}.</span>
-                    <span style={{ color: 'var(--text-secondary)', minWidth: 130, fontWeight: 600 }}>{g.topic}</span>
-                    <span style={{ color: 'var(--text-muted)', fontStyle: 'italic', flex: 1 }}>{g.point}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Log Outcome */}
-          <div style={{
-            background: 'var(--bg-card)', borderRadius: 12, padding: '16px',
-            border: '1px solid var(--border-subtle)',
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 12 }}>
-              <Phone size={14} color="#10b981" />
-              <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-primary)' }}>Log Call Outcome</span>
-            </div>
-
-            {savedOutcome ? (
+          {workflowMode === 'prep' ? (
+            <>
+              {/* Strategic Briefing */}
               <div style={{
-                display: 'flex', alignItems: 'center', gap: 10, padding: '12px 14px',
-                borderRadius: 10, background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.25)',
+                background: `${color}0d`, border: `1px solid ${color}25`, borderRadius: 12, padding: '16px',
+                position: 'relative', overflow: 'hidden'
               }}>
-                <CheckCircle size={18} color="#10b981" />
-                <div>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: '#10b981' }}>Logged: {savedOutcome.result}</div>
-                  {savedOutcome.note && <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>{savedOutcome.note}</div>}
+                <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 0.7, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: 10 }}>
+                  Strategic Briefing
                 </div>
+                <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.7, whiteSpace: 'pre-wrap', minHeight: 60 }}>
+                  {isRegenerating && !aiBrief 
+                    ? <span style={{ color: 'var(--text-muted)', fontStyle: 'italic' }}>Synthesizing advisor brief...</span>
+                    : (aiBrief || client.profile.reason)}
+                </div>
+                {isRegenerating && <Loader2 size={14} className="animate-spin" color={color} style={{ position: 'absolute', top: 16, right: 16 }} />}
+                
+                {!isRegenerating && (
+                   <div style={{ marginTop: 12, paddingTop: 10, borderTop: `1px solid ${color}20`, display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <Zap size={12} color={color} />
+                      <span style={{ fontSize: 11, fontWeight: 700, color }}>Suggested Action: {client.profile.action}</span>
+                   </div>
+                )}
               </div>
-            ) : (
-              <>
-                <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
-                  {([
-                    { ot: 'Interested',    icon: <CheckCircle size={13} />, clr: '#10b981' },
-                    { ot: 'Follow-up',     icon: <Calendar size={13} />,    clr: '#3b82f6' },
-                    { ot: 'Not Interested',icon: <XCircle size={13} />,     clr: '#f43f5e' },
-                  ] as { ot: OutcomeType; icon: React.ReactNode; clr: string }[]).map(({ ot, icon, clr }) => (
-                    <button
-                      key={ot}
-                      onClick={() => setOutcomeFor(ot)}
-                      style={{
-                        flex: 1, padding: '8px 12px', borderRadius: 8, border: `1px solid ${outcomeFor === ot ? clr : 'transparent'}`,
-                        cursor: 'pointer', fontSize: 12, fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5,
-                        background: outcomeFor === ot ? `${clr}20` : 'rgba(255,255,255,0.04)',
-                        color: outcomeFor === ot ? clr : 'var(--text-secondary)',
-                        transition: 'all 0.18s',
-                      }}
-                    >
-                      {icon} {ot}
-                    </button>
+
+              {/* AI Insights (Signals) */}
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 10 }}>
+                  <Sparkles size={14} color="#8b5cf6" />
+                  <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: 0.5 }}>AI Signals</span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+                  {insights.map((ins, i) => (
+                    <div key={i} style={{
+                      display: 'flex', gap: 10, padding: '10px 12px',
+                      background: 'rgba(139,92,246,0.06)', borderRadius: 8,
+                      border: '1px solid rgba(139,92,246,0.15)',
+                    }}>
+                      <div style={{
+                        width: 18, height: 18, borderRadius: 5, background: 'rgba(139,92,246,0.2)',
+                        color: '#8b5cf6', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: 10, fontWeight: 800, flexShrink: 0, marginTop: 1,
+                      }}>{i + 1}</div>
+                      <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{ins}</div>
+                    </div>
                   ))}
                 </div>
-                <textarea
-                  value={outcomeNote}
-                  onChange={e => setOutcomeNote(e.target.value)}
-                  placeholder="Add notes (optional)..."
-                  rows={2}
-                  style={{
-                    width: '100%', background: 'var(--bg-primary)', border: '1px solid var(--border-subtle)',
-                    borderRadius: 8, padding: '9px 12px', color: 'var(--text-primary)', fontSize: 12,
-                    outline: 'none', resize: 'none', fontFamily: 'Inter, sans-serif', boxSizing: 'border-box',
-                  }}
-                />
-                <button
-                  onClick={logOutcome}
-                  disabled={!outcomeFor}
-                  style={{
-                    marginTop: 10, width: '100%', padding: '10px', borderRadius: 8, border: 'none',
-                    cursor: outcomeFor ? 'pointer' : 'not-allowed',
-                    background: outcomeFor ? `linear-gradient(135deg, #10b981, #3b82f6)` : 'rgba(255,255,255,0.04)',
-                    color: outcomeFor ? '#fff' : 'var(--text-muted)',
-                    fontSize: 13, fontWeight: 700, opacity: outcomeFor ? 1 : 0.5, transition: 'all 0.2s',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                  }}
-                >
-                  <Clock size={14} /> Log Outcome
-                </button>
-              </>
-            )}
-          </div>
+              </div>
+            </>
+          ) : (
+            <>
+              {/* Go Live Assistant */}
+              <div style={{
+                background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-subtle)', borderRadius: 12, padding: '16px'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 14 }}>
+                  <div className="animate-pulse" style={{ width: 8, height: 8, borderRadius: '50%', background: '#f43f5e' }} />
+                  <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: 0.5 }}>Live Assistant</span>
+                </div>
+                
+                {assistResponse && (
+                  <div style={{ 
+                    fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.6, padding: '12px 14px', 
+                    background: `${color}10`, borderRadius: 10, border: `1px solid ${color}30`,
+                    marginBottom: 12, whiteSpace: 'pre-wrap', position: 'relative'
+                  }}>
+                    <div style={{ fontSize: 9, fontWeight: 800, color, marginBottom: 4, textTransform: 'uppercase' }}>AI Recommendation:</div>
+                    {assistResponse}
+                  </div>
+                )}
+
+                <form onSubmit={handleAskAI} style={{ position: 'relative' }}>
+                  <input 
+                    type="text"
+                    value={question}
+                    onChange={e => setQuestion(e.target.value)}
+                    placeholder="Type client concern... (e.g. 'high fees')"
+                    style={{
+                      width: '100%', background: 'var(--bg-primary)', border: '1px solid var(--border-subtle)',
+                      borderRadius: 10, padding: '10px 40px 10px 12px', color: 'var(--text-primary)', fontSize: 12,
+                      outline: 'none', transition: 'border-color 0.2s'
+                    }}
+                  />
+                  <button 
+                    type="submit"
+                    disabled={isAssisting || !question.trim()}
+                    style={{
+                      position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)',
+                      background: 'none', border: 'none', cursor: 'pointer', color: color,
+                      opacity: (isAssisting || !question.trim()) ? 0.3 : 1
+                    }}
+                  >
+                    {isAssisting ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+                  </button>
+                </form>
+              </div>
+
+              {/* Tactical Script / Playbook */}
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 12 }}>
+                  <MessageSquare size={14} color={color} />
+                  <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: 0.5 }}>Conversation Script</span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {guide.map((g, i) => (
+                    <div key={i} style={{
+                      padding: '10px 12px', background: 'var(--bg-card)', borderRadius: 8,
+                      border: '1px solid var(--border-subtle)', display: 'flex', gap: 10
+                    }}>
+                      <div style={{
+                        width: 20, height: 20, borderRadius: 6, background: `${color}15`, color,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: 10, fontWeight: 800, flexShrink: 0
+                      }}>{i + 1}</div>
+                      <div>
+                        <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 2 }}>{g.topic}</div>
+                        <div style={{ fontSize: 11, color: 'var(--text-muted)', fontStyle: 'italic', lineHeight: 1.4 }}>{g.point}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+
+          {workflowMode === 'ongoing' && (
+            <div style={{
+              background: 'var(--bg-card)', borderRadius: 12, padding: '16px',
+              border: '1px solid var(--border-subtle)',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 12 }}>
+                <Phone size={14} color="#10b981" />
+                <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-primary)' }}>Log Call Outcome</span>
+              </div>
+
+              {savedOutcome ? (
+                <div style={{
+                  display: 'flex', alignItems: 'center', gap: 10, padding: '12px 14px',
+                  borderRadius: 10, background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.25)',
+                }}>
+                  <CheckCircle size={18} color="#10b981" />
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: '#10b981' }}>Logged: {savedOutcome.result}</div>
+                    {savedOutcome.note && <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>{savedOutcome.note}</div>}
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
+                    {([
+                      { ot: 'Interested',    icon: <CheckCircle size={13} />, clr: '#10b981' },
+                      { ot: 'Follow-up',     icon: <Calendar size={13} />,    clr: '#3b82f6' },
+                      { ot: 'Not Interested',icon: <XCircle size={13} />,     clr: '#f43f5e' },
+                    ] as { ot: OutcomeType; icon: React.ReactNode; clr: string }[]).map(({ ot, icon, clr }) => (
+                      <button
+                        key={ot}
+                        onClick={() => setOutcomeFor(ot)}
+                        style={{
+                          flex: 1, padding: '8px 12px', borderRadius: 8, border: `1px solid ${outcomeFor === ot ? clr : 'transparent'}`,
+                          cursor: 'pointer', fontSize: 12, fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5,
+                          background: outcomeFor === ot ? `${clr}20` : 'rgba(255,255,255,0.04)',
+                          color: outcomeFor === ot ? clr : 'var(--text-secondary)',
+                          transition: 'all 0.18s',
+                        }}
+                      >
+                        {icon} {ot}
+                      </button>
+                    ))}
+                  </div>
+                  <textarea
+                    value={outcomeNote}
+                    onChange={e => setOutcomeNote(e.target.value)}
+                    placeholder="Add notes (optional)..."
+                    rows={2}
+                    style={{
+                      width: '100%', background: 'var(--bg-primary)', border: '1px solid var(--border-subtle)',
+                      borderRadius: 8, padding: '9px 12px', color: 'var(--text-primary)', fontSize: 12,
+                      outline: 'none', resize: 'none', fontFamily: 'Inter, sans-serif', boxSizing: 'border-box',
+                    }}
+                  />
+                  <button
+                    onClick={logOutcome}
+                    disabled={!outcomeFor}
+                    style={{
+                      marginTop: 10, width: '100%', padding: '10px', borderRadius: 8, border: 'none',
+                      cursor: outcomeFor ? 'pointer' : 'not-allowed',
+                      background: outcomeFor ? `linear-gradient(135deg, #10b981, #3b82f6)` : 'rgba(255,255,255,0.04)',
+                      color: outcomeFor ? '#fff' : 'var(--text-muted)',
+                      fontSize: 13, fontWeight: 700, opacity: outcomeFor ? 1 : 0.5, transition: 'all 0.2s',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                    }}
+                  >
+                    <Clock size={14} /> Log Outcome
+                  </button>
+                </>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </>
