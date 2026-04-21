@@ -37,8 +37,19 @@ export default function TargetsPage() {
   const minAllowed    = Math.round(possibility * 0.70);
   const maxSlider     = Math.round(possibility * 1.50);
 
-  const [preset,     setPreset]     = useState<Preset | null>('Optimal');
-  const [sliderVal,  setSliderVal]  = useState(Math.round(possibility * 1.00));
+  const [preset, setPreset] = useState<Preset | null>(() => {
+    if (targets.aum_target_inr > 0 && possibility > 0) {
+      const match = PRESETS.find(p => Math.abs(targets.aum_target_inr - Math.round(possibility * p.pct)) <= 10);
+      if (match) return match.key;
+      return null;
+    }
+    return 'Optimal';
+  });
+  
+  const [sliderVal, setSliderVal] = useState(() => 
+    targets.aum_target_inr > 0 ? targets.aum_target_inr : Math.round(possibility * 1.00)
+  );
+
   const [saved,      setSaved]      = useState(false);
   const [confirmed,  setConfirmed]  = useState(false);
 

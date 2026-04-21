@@ -75,6 +75,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       setDashboardSummary(getDashboardSummary());
       setPossibility(getPossibility());
       setNudges(getNudges());
+      setPerformance(getAdvisorPerformance());
     });
   }, []);
 
@@ -109,11 +110,12 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
 
   /* ── advisor ── */
   const [advisor]     = useState<AdvisorProfile>(() => getAdvisorProfile());
-  const [performance] = useState<AdvisorPerformance>(() => getAdvisorPerformance());
+  const [performance, setPerformance] = useState<AdvisorPerformance>(() => getAdvisorPerformance());
   const [targets, setTargetsState] = useState<Targets>(() => getTargets());
 
   const saveTargets = useCallback((patch: Partial<Targets>) => {
     setTargetsState(updateTargets(patch));
+    setPerformance(getAdvisorPerformance());
   }, []);
 
   /* ── playbooks ── */

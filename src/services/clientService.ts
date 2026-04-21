@@ -17,15 +17,37 @@ const JSON_CLIENTS: Client[] = (rawData as { clients: Client[] }).clients;
 
 // ─── In-memory runtime cache (populated by initClients) ───────────────────────
 let _clients: Client[] = JSON_CLIENTS; // default until async init completes
+let _initPromise: Promise<Client[]> | null = null;
 
 // ─── initClients() — called ONCE by DataContext on mount ─────────────────────
-export async function initClients(): Promise<Client[]> {
-  try {
-    const apiList = await copilotApi.fetchClients() as unknown as Client[];
+export function initClients(): Promise<Client[]> {
+  if (_initPromise) return _initPromise;
+
+  _initPromise = (async () => {
+    try {
+    const apiList = await copilotApi.fetchClients() as any[];
     if (apiList && apiList.length > 0) {
-      // The API now returns the full Client schema matching mock_clients_reference.json
-      _clients = apiList;
-      console.info(`[clientService] Loaded ${_clients.length} clients from live API`);
+      // The API may be missing certain fields compared to the robust JSON schema.
+      // Merge live data on top of the mock equivalent to guarantee schema shape.
+      _clients = apiList.map((apiItem, idx) => {
+        const fallback = JSON_CLIENTS.find(f => f.id === apiItem.id) || JSON_CLIENTS[idx % JSON_CLIENTS.length];
+        return {
+          ...fallback,
+          ...apiItem,
+          profile: {
+            ...fallback.profile,
+            ...apiItem.profile,
+            aum_potential_inr_cr: apiItem.profile?.aum_potential_inr_cr ?? fallback.profile.aum_potential_inr_cr,
+            commission_potential_inr: apiItem.profile?.commission_potential_inr ?? fallback.profile.commission_potential_inr,
+            net_profit_inr_cr: apiItem.profile?.net_profit_inr_cr ?? fallback.profile.net_profit_inr_cr,
+            goal_tag: apiItem.profile?.goal_tag ?? fallback.profile.goal_tag,
+            flags: apiItem.profile?.flags ?? fallback.profile.flags ?? [],
+            action: apiItem.profile?.action ?? fallback.profile.action,
+            reason: apiItem.profile?.reason ?? fallback.profile.reason,
+          }
+        } as Client;
+      });
+      console.info(`[clientService] Loaded ${_clients.length} clients from live API (merged with schema)`);
       return _clients;
     }
   } catch (err) {
@@ -34,6 +56,9 @@ export async function initClients(): Promise<Client[]> {
   _clients = JSON_CLIENTS;
   console.info(`[clientService] Loaded ${_clients.length} clients from JSON fallback`);
   return _clients;
+  })();
+
+  return _initPromise;
 }
 
 
