@@ -238,6 +238,16 @@ export default function ClientsPage() {
                 </tr>
               );
             })}
+            
+            {displayClients.length === 0 && (
+              <tr>
+                <td colSpan={6} style={{ padding: '80px 20px', textAlign: 'center' }}>
+                  <Search size={36} color="var(--text-muted)" style={{ margin: '0 auto 16px', opacity: 0.3 }} />
+                  <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8 }}>No clients found</div>
+                  <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>Try adjusting your search criteria or resetting filters.</div>
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

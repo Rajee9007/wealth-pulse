@@ -15,9 +15,9 @@ import { useNavigate, Link } from 'react-router-dom';
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function formatCurrency(v: number): string {
-  if (v >= 10_000_000) return `₹${(v / 10_000_000).toFixed(1)}Cr`;
-  if (v >= 100_000)    return `₹${(v / 100_000).toFixed(1)}L`;
-  if (v >= 1_000)      return `₹${(v / 1_000).toFixed(0)}K`;
+  if (v >= 10_000_000) return `₹${(v / 10_000_000).toFixed(1)} Cr`;
+  if (v >= 100_000)    return `₹${(v / 100_000).toFixed(1)} L`;
+  if (v >= 1_000)      return `₹${(v / 1_000).toFixed(0)} K`;
   return `₹${v}`;
 }
 
@@ -127,7 +127,7 @@ export default function DashboardPage() {
         />
         <KpiCard
           label="Total AUM"
-          value={`₹${total_aum_inr_cr.toFixed(1)}Cr`}
+          value={`₹${total_aum_inr_cr.toFixed(1)} Cr`}
           sub={`${total_clients} clients · ${active_sips} active SIPs`}
           color="#f59e0b"
           icon={Wallet}

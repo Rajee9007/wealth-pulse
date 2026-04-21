@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
-import { Bell, Search, Sun, Moon, Settings, LogOut, ChevronDown } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Bell, Search, Sun, Moon, Settings, LogOut, ChevronDown, User } from 'lucide-react';
 import { 
   MOCK_NOTIFICATIONS, ADVISOR_PERFORMANCE, 
   BADGE_TIERS, getBadge 
@@ -7,7 +8,8 @@ import {
 import { useData } from '../../context/DataContext';
 import { useTheme } from '../../context/ThemeContext';
 import NotificationDrawer from '../shared/NotificationDrawer';
-import CopilotDrawer from '../shared/CopilotDrawer';
+import { SEG_COLORS } from '../shared/CopilotDrawer';
+import { formatCurrency } from '../../data/mockData';
 
 interface TopbarProps {
   readonly title: string;
@@ -17,10 +19,18 @@ interface TopbarProps {
 export default function Topbar({ title, subtitle }: TopbarProps) {
   const { theme, toggleTheme } = useTheme();
   const { clients } = useData();
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [activeCopilotClient, setActiveCopilotClient] = useState<any>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  
+  const searchRef = useRef<HTMLDivElement>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSearch, setShowSearch] = useState(false);
+  const searchResults = searchQuery.trim().length > 0 
+    ? clients.filter(c => c.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    : [];
 
   const notifications = MOCK_NOTIFICATIONS;
   const unreadNotifications = notifications.filter(n => n.unread).length;
@@ -36,13 +46,16 @@ export default function Topbar({ title, subtitle }: TopbarProps) {
 
   // Close on outside click
   useEffect(() => {
-    function handler(e: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setMenuOpen(false);
       }
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setShowSearch(false);
+      }
     }
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   return (
@@ -65,19 +78,86 @@ export default function Topbar({ title, subtitle }: TopbarProps) {
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
         {/* Search */}
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: 8,
-          background: 'var(--bg-card)', border: '1px solid var(--border-subtle)',
-          borderRadius: 10, padding: '8px 14px',
-        }}>
-          <Search size={14} color="var(--text-muted)" />
-          <input
-            placeholder="Search clients..."
-            style={{
-              background: 'none', border: 'none', outline: 'none',
-              color: 'var(--text-primary)', fontSize: 13, width: 160,
-            }}
-          />
+        <div ref={searchRef} style={{ position: 'relative' }}>
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 8,
+            background: 'var(--bg-card)', border: '1px solid var(--border-subtle)',
+            borderRadius: 10, padding: '8px 14px',
+          }}>
+            <Search size={14} color="var(--text-muted)" />
+            <input
+              placeholder="Search by client name..."
+              value={searchQuery}
+              onChange={e => { setSearchQuery(e.target.value); setShowSearch(true); }}
+              onFocus={() => setShowSearch(true)}
+              style={{
+                background: 'none', border: 'none', outline: 'none',
+                color: 'var(--text-primary)', fontSize: 13, width: 220, transition: 'width 0.2s',
+              }}
+            />
+          </div>
+          
+          {showSearch && (
+            <div style={{
+              position: 'absolute', top: 'calc(100% + 12px)', left: 0, width: 340,
+              background: 'rgba(15, 23, 42, 0.85)', backdropFilter: 'blur(16px)',
+              border: '1px solid var(--border-subtle)',
+              borderRadius: 16, boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
+              overflow: 'hidden', padding: 12, zIndex: 100,
+            }}>
+              {searchQuery.length === 0 ? (
+                <div style={{ padding: '24px 12px', textAlign: 'center' }}>
+                  <Search size={24} color="var(--text-muted)" style={{ margin: '0 auto 12px', opacity: 0.5 }} />
+                  <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 4 }}>Search your network</div>
+                  <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Type a name to quickly pull up their 360 profile.</div>
+                </div>
+              ) : searchResults.length > 0 ? (
+                <>
+                  <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: 'var(--text-muted)', marginBottom: 8, padding: '0 8px' }}>
+                    Top Matches
+                  </div>
+                  {searchResults.slice(0, 5).map(c => (
+                    <div 
+                      key={c.id}
+                      onClick={() => {
+                        setShowSearch(false);
+                        setSearchQuery('');
+                        navigate(`/clients/${c.id}`);
+                      }}
+                      style={{
+                        padding: '10px 12px', borderRadius: 10, cursor: 'pointer',
+                        display: 'flex', alignItems: 'center', gap: 12, transition: 'all 0.15s',
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+                      onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                    >
+                      <div style={{
+                        width: 32, height: 32, borderRadius: '50%', background: `${SEG_COLORS[c.profile.segment as keyof typeof SEG_COLORS]}15`,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                        border: `1px solid ${SEG_COLORS[c.profile.segment as keyof typeof SEG_COLORS]}40`,
+                        fontSize: 12, fontWeight: 800, color: SEG_COLORS[c.profile.segment as keyof typeof SEG_COLORS]
+                      }}>
+                        {c.name.split(' ').map(w => w[0]).join('').slice(0, 2)}
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>{c.name}</div>
+                        <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{c.profile.segment}</div>
+                      </div>
+                      <div style={{ textAlign: 'right' }}>
+                        <div style={{ fontSize: 12, fontWeight: 800, color: 'var(--text-secondary)' }}>{formatCurrency(c.profile.aum_inr_cr * 10000000)}</div>
+                      </div>
+                    </div>
+                  ))}
+                </>
+              ) : (
+                <div style={{ padding: '24px 12px', textAlign: 'center' }}>
+                  <div style={{ fontSize: 24, marginBottom: 8 }}>🔍</div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 4 }}>No clients found</div>
+                  <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Try searching with a different name.</div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Theme toggle */}
