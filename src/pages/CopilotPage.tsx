@@ -1,16 +1,17 @@
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import AppShell from '../components/layout/AppShell';
 import { 
-  MOCK_CLIENTS, formatCurrency, SEG_COLORS, 
+  formatCurrency, SEG_COLORS, 
   CONVERSATION_GUIDES, MOCK_ACTIVITY_LOGS 
 } from '../data/mockData';
-import type { Client } from '../data/mockData';
-import { copilotApi, type ApiClient } from '../services/copilotApi';
+import { useData } from '../context/DataContext';
+import { copilotApi } from '../services/copilotApi';
+import type { Client } from '../types/client.types';
 import { 
-  Phone, Clock, CheckCircle, XCircle, Calendar, 
-  ChevronRight, AlertTriangle, MessageSquare, 
+  Phone,  
+  ChevronRight, MessageSquare, 
   Search, RotateCcw, Sparkles, Zap, Brain, Activity,
-  Info, CornerRightDown, ExternalLink, Wallet, TrendingUp,
+  CornerRightDown,  Wallet,
   Loader2, Send
 } from 'lucide-react';
 
@@ -18,43 +19,12 @@ type OutcomeType = 'Interested' | 'Not Interested' | 'Follow-up';
 
 interface Outcome { clientId: string; result: OutcomeType; note: string; timestamp: string; }
 
-// Mapping helper to bridge API data with our premium UI
-const mapApiToUI = (apiClient: ApiClient): Client => {
-  // Simple heuristic for segments based on recommendations
-  const recs = apiClient.recommendations?.join(' ') || '';
-  let segment: Client['segment'] = 'Stable';
-  if (recs.includes('risk') || recs.includes('churn')) segment = 'Risk';
-  else if (recs.includes('opportunity') || recs.includes('idle')) segment = 'Opportunity';
-  else if (recs.includes('underperform')) segment = 'Underperforming';
 
-  return {
-    id: apiClient.id,
-    name: apiClient.name,
-    segment,
-    aum: apiClient.profile?.aum || Math.floor(Math.random() * 5000000) + 500000,
-    aumPotential: Math.floor(Math.random() * 1000000) + 100000,
-    commissionPotential: 1200,
-    sipActive: true,
-    lastActivity: '2026-04-18',
-    lastContacted: '2026-04-20',
-    urgencyScore: Math.floor(Math.random() * 30) + 70,
-    action: apiClient.recommendations?.[0] || 'Schedule Review',
-    reason: 'Strategic opportunity detected by AI...',
-    talkingPoints: apiClient.recommendations || [],
-    goalTag: apiClient.profile?.goal || 'Retirement',
-    riskProfile: (apiClient.profile?.risk as any) || 'Moderate',
-    returns: apiClient.profile?.returns || 12.4,
-    email: `${apiClient.id.toLowerCase()}@client.com`,
-    phone: '+91 999 888 7777',
-    wealthScore: 85,
-    netProfit: 14500,
-  };
-};
 
 function PriorityRow({ client, rank, selected, onClick }: {
   client: Client; rank: number; selected: boolean; onClick: () => void;
 }) {
-  const color = SEG_COLORS[client.segment] || '#3b82f6';
+  const color = SEG_COLORS[client.profile.segment] || '#3b82f6';
   return (
     <div
       onClick={onClick}
@@ -72,13 +42,13 @@ function PriorityRow({ client, rank, selected, onClick }: {
       }}>#{rank}</div>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontWeight: 600, fontSize: 13, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{client.name}</div>
-        <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{client.id} · {formatCurrency(client.aum)}</div>
+        <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{client.id} · {formatCurrency(client.profile.aum_inr_cr * 10_000_000)}</div>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
         <div style={{
           fontSize: 12, fontWeight: 700, color,
           background: `${color}15`, padding: '2px 8px', borderRadius: 20,
-        }}>⚡{client.urgencyScore}</div>
+        }}>⚡{client.profile.urgency_score}</div>
         <ChevronRight size={14} color="var(--text-muted)" />
       </div>
     </div>
@@ -86,33 +56,18 @@ function PriorityRow({ client, rank, selected, onClick }: {
 }
 
 export default function CopilotPage() {
-  const [clients, setClients] = useState<Client[]>([]);
+  const { clients: allClients, loading } = useData();
+  // Ensure we sort locally but don't mutate original
+  const clients = [...allClients].sort((a,b) => b.profile.aum_potential_inr_cr - a.profile.aum_potential_inr_cr);
   const [searchTerm, setSearchTerm] = useState('');
   const [workflowMode, setWorkflowMode] = useState<'prep' | 'ongoing'>('prep');
   const [isRegenerating, setIsRegenerating] = useState(false);
-  const [loading, setLoading] = useState(true);
 
   // Streaming states
   const [aiBrief, setAiBrief] = useState('');
   const [assistResponse, setAssistResponse] = useState('');
   const [isAssisting, setIsAssisting] = useState(false);
   const [question, setQuestion] = useState('');
-
-  // Initial fetch — falls back to MOCK_CLIENTS when API is unavailable
-  useEffect(() => {
-    async function load() {
-      setLoading(true);
-      const apiClients = await copilotApi.fetchClients();
-      if (apiClients.length > 0) {
-        setClients(apiClients.map(mapApiToUI));
-      } else {
-        // API unreachable or returned empty — use local mock data
-        setClients([...MOCK_CLIENTS].sort((a, b) => b.aumPotential - a.aumPotential));
-      }
-      setLoading(false);
-    }
-    load();
-  }, []);
 
   // Filtered list
   const filteredList = useMemo(() => {
@@ -140,8 +95,8 @@ export default function CopilotPage() {
   const [outcomeNote, setOutcomeNote] = useState('');
   const [savedOutcome, setSavedOutcome] = useState<Outcome | null>(null);
 
-  const guide = selected ? (CONVERSATION_GUIDES[selected.segment] || []) : [];
-  const color = selected ? (SEG_COLORS[selected.segment] || '#3b82f6') : '#3b82f6';
+  const guide = selected ? (CONVERSATION_GUIDES[selected.profile.segment] || []) : [];
+  const color = selected ? (SEG_COLORS[selected.profile.segment] || '#3b82f6') : '#3b82f6';
   const existingOutcome = outcomes.find(o => o.clientId === selected?.id);
   const clientLogs = selected ? (MOCK_ACTIVITY_LOGS[selected.id] || []) : [];
 
@@ -291,11 +246,11 @@ export default function CopilotPage() {
                   <div>
                     <div style={{ fontSize: 22, fontWeight: 900, color: 'var(--text-primary)', letterSpacing: '-0.5px' }}>{selected.name}</div>
                     <div style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 3 }}>
-                      {selected.goalTag} · {selected.riskProfile} Risk · ID: {selected.id}
+                      {selected.profile.goal_tag} · {selected.profile.risk_profile} Risk · ID: {selected.id}
                     </div>
                   </div>
                   <span style={{ fontSize: 11, padding: '4px 14px', borderRadius: 20, background: color, color: '#fff', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                    {selected.segment}
+                    {selected.profile.segment}
                   </span>
                 </div>
               </div>
@@ -318,7 +273,7 @@ export default function CopilotPage() {
                 }}>
                   {isRegenerating && !aiBrief
                     ? <span style={{ color: 'var(--text-muted)', fontStyle: 'italic' }}>Generating AI brief for {selected.name}...</span>
-                    : (aiBrief || selected.reason)}
+                    : (aiBrief || selected.profile.reason)}
                 </div>
               </div>
 
@@ -330,10 +285,10 @@ export default function CopilotPage() {
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
                   {[
-                    { label: 'AUM',         value: formatCurrency(selected.aum),              color: 'var(--text-primary)', sub: 'Total invested' },
-                    { label: 'Potential',   value: `+${formatCurrency(selected.aumPotential)}`, color,                       sub: 'Opportunity size' },
-                    { label: 'Returns',     value: `${selected.returns}%`,                     color: selected.returns >= 10 ? 'var(--accent-emerald)' : selected.returns >= 7 ? 'var(--accent-amber)' : '#f43f5e', sub: 'YTD performance' },
-                    { label: 'Urgency',     value: `⚡ ${selected.urgencyScore}`,              color: selected.urgencyScore >= 80 ? '#f43f5e' : selected.urgencyScore >= 60 ? 'var(--accent-amber)' : 'var(--accent-emerald)', sub: 'Priority score' },
+                    { label: 'AUM',         value: formatCurrency(selected.profile.aum_inr_cr * 10_000_000),              color: 'var(--text-primary)', sub: 'Total invested' },
+                    { label: 'Potential',   value: `+${formatCurrency(selected.profile.aum_potential_inr_cr * 10_000_000)}`, color,                       sub: 'Opportunity size' },
+                    { label: 'Returns',     value: `${selected.profile.ytd_return_pct}%`,                     color: selected.profile.ytd_return_pct >= 10 ? 'var(--accent-emerald)' : selected.profile.ytd_return_pct >= 7 ? 'var(--accent-amber)' : '#f43f5e', sub: 'YTD performance' },
+                    { label: 'Urgency',     value: `⚡ ${selected.profile.urgency_score}`,              color: selected.profile.urgency_score >= 80 ? '#f43f5e' : selected.profile.urgency_score >= 60 ? 'var(--accent-amber)' : 'var(--accent-emerald)', sub: 'Priority score' },
                   ].map((m, i) => (
                     <div key={i} style={{ padding: '14px 16px', background: 'var(--bg-primary)', borderRadius: 12, border: '1px solid var(--border-subtle)' }}>
                       <div style={{ fontSize: 10, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 6 }}>{m.label}</div>
@@ -347,15 +302,15 @@ export default function CopilotPage() {
                 <div style={{ marginTop: 16 }}>
                   <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 6, fontWeight: 600 }}>Allocation Mix</div>
                   <div style={{ display: 'flex', height: 8, borderRadius: 8, overflow: 'hidden', gap: 2 }}>
-                    <div style={{ flex: selected.equityAllocation || 65, background: 'var(--accent-emerald)', borderRadius: '4px 0 0 4px' }} title="Equity" />
-                    <div style={{ flex: selected.debtAllocation || 25, background: 'var(--accent-blue)' }} title="Debt" />
-                    <div style={{ flex: selected.goldAllocation || 10, background: 'var(--accent-amber)', borderRadius: '0 4px 4px 0' }} title="Gold" />
+                    <div style={{ flex: Math.round(selected.profile.allocation.equity * 100) || 65, background: 'var(--accent-emerald)', borderRadius: '4px 0 0 4px' }} title="Equity" />
+                    <div style={{ flex: Math.round(selected.profile.allocation.debt * 100) || 25, background: 'var(--accent-blue)' }} title="Debt" />
+                    <div style={{ flex: Math.round(selected.profile.allocation.alternatives * 100) || 10, background: 'var(--accent-amber)', borderRadius: '0 4px 4px 0' }} title="Gold" />
                   </div>
                   <div style={{ display: 'flex', gap: 16, marginTop: 6 }}>
                     {[
-                      { label: 'Equity', pct: selected.equityAllocation || 65, col: 'var(--accent-emerald)' },
-                      { label: 'Debt',   pct: selected.debtAllocation   || 25, col: 'var(--accent-blue)' },
-                      { label: 'Gold',   pct: selected.goldAllocation   || 10, col: 'var(--accent-amber)' },
+                      { label: 'Equity', pct: Math.round(selected.profile.allocation.equity * 100) || 65, col: 'var(--accent-emerald)' },
+                      { label: 'Debt',   pct: Math.round(selected.profile.allocation.debt * 100)   || 25, col: 'var(--accent-blue)' },
+                      { label: 'Gold',   pct: Math.round(selected.profile.allocation.alternatives * 100)   || 10, col: 'var(--accent-amber)' },
                     ].map(a => (
                       <div key={a.label} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, color: 'var(--text-muted)' }}>
                         <div style={{ width: 8, height: 8, borderRadius: 2, background: a.col }} />
@@ -376,7 +331,7 @@ export default function CopilotPage() {
                     <span style={{ fontSize: 13, fontWeight: 800, color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Talking Points</span>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                    {selected.talkingPoints.length > 0 ? selected.talkingPoints.map((pt, i) => (
+                    {selected.profile.flags.length > 0 ? selected.profile.flags.map((pt, i) => (
                       <div key={i} style={{ display: 'flex', gap: 12, padding: '10px 14px', background: 'var(--bg-primary)', borderRadius: 10, border: '1px solid var(--border-subtle)', alignItems: 'flex-start' }}>
                         <div style={{ width: 22, height: 22, borderRadius: 6, background: `${color}20`, color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, flexShrink: 0, marginTop: 1 }}>{i + 1}</div>
                         <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{pt}</div>
@@ -551,12 +506,12 @@ export default function CopilotPage() {
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>AUM Allocation</span>
-                        <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>{selected.equityAllocation}% Equity</span>
+                        <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>{Math.round(selected.profile.allocation.equity * 100)}% Equity</span>
                      </div>
                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Pending SIPs</span>
-                        <span style={{ fontSize: 13, fontWeight: 700, color: selected.sipActive ? 'var(--accent-emerald)' : 'var(--accent-rose)' }}>
-                          {selected.sipActive ? 'None' : '1 Paused'}
+                        <span style={{ fontSize: 13, fontWeight: 700, color: selected.profile.sip_active ? 'var(--accent-emerald)' : 'var(--accent-rose)' }}>
+                          {selected.profile.sip_active ? 'None' : '1 Paused'}
                         </span>
                      </div>
                   </div>

@@ -1,0 +1,641 @@
+openapi: 3.0.3
+
+info:
+  title: WealthPulse Client API
+  description: Backend API specification for WealthPulse Advisor Copilot — Client domain
+  version: 1.0.0
+
+servers:
+  - url: https://api.wealthpulse.in/v1
+    description: Production
+  - url: http://localhost:3000/v1
+    description: Local development
+
+tags:
+  - name: Clients
+    description: Client list, search, and profile management
+  - name: Client Sub-resources
+    description: Per-client holdings, history, activity logs, and family
+
+paths:
+
+  /clients:
+    get:
+      tags: [Clients]
+      summary: List clients
+      description: Paginated, filterable, searchable list of advisor's clients.
+      parameters:
+        - name: segment
+          in: query
+          schema:
+            $ref: '#/components/schemas/Segment'
+        - name: sip_active
+          in: query
+          schema:
+            type: boolean
+        - name: kyc_status
+          in: query
+          schema:
+            $ref: '#/components/schemas/KycStatus'
+        - name: sortBy
+          in: query
+          schema:
+            type: string
+            enum: [urgency_score, aum_inr_cr, ytd_return_pct, last_activity, name]
+        - name: order
+          in: query
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Search by name or email
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          clients:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/Client'
+                          total:
+                            type: integer
+                            example: 111
+                          page:
+                            type: integer
+                            example: 1
+                          limit:
+                            type: integer
+                            example: 20
+
+  /clients/{id}:
+    get:
+      tags: [Clients]
+      summary: Get single client
+      parameters:
+        - $ref: '#/components/parameters/ClientId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Client'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags: [Clients]
+      summary: Update client profile fields
+      parameters:
+        - $ref: '#/components/parameters/ClientId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientProfileUpdate'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Client'
+
+  /clients/{id}/holdings:
+    get:
+      tags: [Client Sub-resources]
+      summary: Get client fund holdings
+      parameters:
+        - $ref: '#/components/parameters/ClientId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Holding'
+
+  /clients/{id}/portfolio-history:
+    get:
+      tags: [Client Sub-resources]
+      summary: Get monthly AUM history
+      parameters:
+        - $ref: '#/components/parameters/ClientId'
+        - name: months
+          in: query
+          schema:
+            type: integer
+            default: 6
+            maximum: 36
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/PortfolioHistoryPoint'
+
+  /clients/{id}/activity-logs:
+    get:
+      tags: [Client Sub-resources]
+      summary: Get interaction history
+      parameters:
+        - $ref: '#/components/parameters/ClientId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/ActivityLog'
+
+    post:
+      tags: [Client Sub-resources]
+      summary: Log a new interaction
+      parameters:
+        - $ref: '#/components/parameters/ClientId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActivityLogCreate'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ActivityLog'
+
+  /clients/{id}/family:
+    get:
+      tags: [Client Sub-resources]
+      summary: Get linked family members
+      parameters:
+        - $ref: '#/components/parameters/ClientId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/FamilyMember'
+
+components:
+
+  parameters:
+    ClientId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        example: W001
+
+  responses:
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiResponse'
+          example:
+            success: false
+            data: null
+            message: Client not found
+
+  schemas:
+
+    # ── Standard envelope ─────────────────────────────────────────────────────
+    ApiResponse:
+      type: object
+      required: [success, data, message]
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          nullable: true
+        message:
+          type: string
+          example: ""
+
+    # ── Enums ─────────────────────────────────────────────────────────────────
+    Segment:
+      type: string
+      enum: [Risk, Opportunity, Underperforming, Stable]
+      example: Opportunity
+
+    RiskProfile:
+      type: string
+      enum: [Conservative, Moderate, Aggressive]
+      example: Moderate
+
+    KycStatus:
+      type: string
+      enum: [Completed, Pending, "In Progress", "Update Required"]
+      example: Completed
+
+    HoldingType:
+      type: string
+      enum: [equity_mf, debt_mf, hybrid_mf, gold_etf, equity_etf]
+      example: equity_mf
+
+    GoalTag:
+      type: string
+      enum: [Retirement, "Child Education", "Wealth Building", "Home Purchase", "Tax Saving"]
+      example: Retirement
+
+    ActivityStatus:
+      type: string
+      enum: [Success, Follow-up, Pending]
+      example: Success
+
+    # ── Allocation ────────────────────────────────────────────────────────────
+    Allocation:
+      type: object
+      required: [cash, debt, equity, alternatives]
+      properties:
+        cash:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          example: 0.05
+        debt:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          example: 0.25
+        equity:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          example: 0.65
+        alternatives:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          example: 0.05
+
+    # ── TopHolding ────────────────────────────────────────────────────────────
+    TopHolding:
+      type: object
+      required: [name, type, weight]
+      properties:
+        name:
+          type: string
+          example: SBI Bluechip Fund
+        type:
+          $ref: '#/components/schemas/HoldingType'
+        weight:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          example: 0.35
+
+    # ── ClientProfile ─────────────────────────────────────────────────────────
+    ClientProfile:
+      type: object
+      required:
+        - age
+        - email
+        - phone
+        - occupation
+        - kyc_status
+        - segment
+        - risk_profile
+        - goal_tag
+        - action
+        - reason
+        - flags
+        - sip_active
+        - urgency_score
+        - aum_inr_cr
+        - aum_potential_inr_cr
+        - net_profit_inr_cr
+        - commission_potential_inr
+        - wealth_score
+        - ytd_return_pct
+        - benchmark_ytd_pct
+        - last_activity
+        - last_contacted
+        - allocation
+        - top_holdings
+      properties:
+        age:
+          type: integer
+          minimum: 18
+          maximum: 100
+          example: 42
+        email:
+          type: string
+          format: email
+          example: arjun.mehta@example.com
+        phone:
+          type: string
+          example: "+91 9876543210"
+        occupation:
+          type: string
+          example: Software Engineer
+        kyc_status:
+          $ref: '#/components/schemas/KycStatus'
+        segment:
+          $ref: '#/components/schemas/Segment'
+        risk_profile:
+          $ref: '#/components/schemas/RiskProfile'
+        goal_tag:
+          $ref: '#/components/schemas/GoalTag'
+        action:
+          type: string
+          example: Reactivate SIP
+        reason:
+          type: string
+          example: SIP paused 52 days. High-value long-term investor missing growth cycle.
+        flags:
+          type: array
+          minItems: 1
+          maxItems: 5
+          items:
+            type: string
+          example:
+            - SIP paused 52 days
+            - Goal corpus at risk
+            - Compound growth being lost
+        sip_active:
+          type: boolean
+          example: false
+        urgency_score:
+          type: integer
+          minimum: 0
+          maximum: 100
+          example: 95
+        aum_inr_cr:
+          type: number
+          format: float
+          example: 0.48
+          description: AUM in Indian Crores (1 Cr = 10,000,000 INR)
+        aum_potential_inr_cr:
+          type: number
+          format: float
+          minimum: 0
+          example: 0.08
+        net_profit_inr_cr:
+          type: number
+          format: float
+          example: 0.03
+          description: Can be negative
+        commission_potential_inr:
+          type: number
+          format: float
+          minimum: 0
+          example: 3200
+        wealth_score:
+          type: integer
+          minimum: 0
+          maximum: 100
+          example: 38
+        ytd_return_pct:
+          type: number
+          format: float
+          example: 6.2
+          description: YTD return %. Can be negative.
+        benchmark_ytd_pct:
+          type: number
+          format: float
+          example: 11.0
+        last_activity:
+          type: string
+          format: date
+          example: "2026-02-28"
+        last_contacted:
+          type: string
+          format: date
+          example: "2026-04-01"
+        allocation:
+          $ref: '#/components/schemas/Allocation'
+        top_holdings:
+          type: array
+          items:
+            $ref: '#/components/schemas/TopHolding'
+
+    # ── Client ────────────────────────────────────────────────────────────────
+    Client:
+      type: object
+      required: [id, name, profile]
+      properties:
+        id:
+          type: string
+          pattern: '^W\d{3}$'
+          example: W001
+        name:
+          type: string
+          example: Arjun Mehta
+        profile:
+          $ref: '#/components/schemas/ClientProfile'
+
+    # ── ClientProfileUpdate (PUT — all optional) ──────────────────────────────
+    ClientProfileUpdate:
+      type: object
+      properties:
+        action:
+          type: string
+        reason:
+          type: string
+        flags:
+          type: array
+          items:
+            type: string
+        kyc_status:
+          $ref: '#/components/schemas/KycStatus'
+        risk_profile:
+          $ref: '#/components/schemas/RiskProfile'
+        goal_tag:
+          $ref: '#/components/schemas/GoalTag'
+        sip_active:
+          type: boolean
+
+    # ── Holding ───────────────────────────────────────────────────────────────
+    Holding:
+      type: object
+      required: [id, name, type, value_inr, pnl_inr, pnl_pct, weight]
+      properties:
+        id:
+          type: string
+          example: h1
+        name:
+          type: string
+          example: SBI Bluechip Fund
+        type:
+          $ref: '#/components/schemas/HoldingType'
+        value_inr:
+          type: number
+          format: float
+          example: 250000
+        pnl_inr:
+          type: number
+          format: float
+          example: 45000
+          description: Can be negative
+        pnl_pct:
+          type: number
+          format: float
+          example: 18.0
+          description: Can be negative
+        weight:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          example: 0.35
+
+    # ── PortfolioHistoryPoint ─────────────────────────────────────────────────
+    PortfolioHistoryPoint:
+      type: object
+      required: [date, aum_inr_cr]
+      properties:
+        date:
+          type: string
+          pattern: '^\d{4}-\d{2}$'
+          example: "2025-11"
+          description: Month in YYYY-MM format
+        aum_inr_cr:
+          type: number
+          format: float
+          example: 0.41
+
+    # ── ActivityLog ───────────────────────────────────────────────────────────
+    ActivityLog:
+      type: object
+      required: [id, date, type, details, status]
+      properties:
+        id:
+          type: string
+          example: l1
+        date:
+          type: string
+          format: date
+          example: "2026-04-12"
+        type:
+          type: string
+          enum: [Call, Email, WhatsApp, Meeting, Note]
+          example: Call
+        details:
+          type: string
+          example: Discussed SIP reactivation and market cycle benefits.
+        status:
+          $ref: '#/components/schemas/ActivityStatus'
+
+    # ── ActivityLogCreate ─────────────────────────────────────────────────────
+    ActivityLogCreate:
+      type: object
+      required: [type, details, status]
+      properties:
+        type:
+          type: string
+          enum: [Call, Email, WhatsApp, Meeting, Note]
+          example: Call
+        details:
+          type: string
+          example: Client agreed to top-up SIP by Rs.3,000/mo.
+        status:
+          $ref: '#/components/schemas/ActivityStatus'
+
+    # ── FamilyMember ──────────────────────────────────────────────────────────
+    FamilyMember:
+      type: object
+      required: [id, name, relation, aum_inr_cr, segment]
+      properties:
+        id:
+          type: string
+          example: F001
+        name:
+          type: string
+          example: Anita Mehta
+        relation:
+          type: string
+          enum: [Spouse, Son, Daughter, Father, Mother, Sibling, Other]
+          example: Spouse
+        email:
+          type: string
+          format: email
+          example: anita.mehta@example.com
+        aum_inr_cr:
+          type: number
+          format: float
+          example: 0.25
+        segment:
+          $ref: '#/components/schemas/Segment'

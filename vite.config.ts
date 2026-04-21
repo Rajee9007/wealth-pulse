@@ -10,7 +10,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://rm-talking-copilot.vercel.app',
+        target: 'https://rmtalkingcopilot.vercel.app',
         changeOrigin: true,
       }
     }

@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import AppShell from '../components/layout/AppShell';
-import { MOCK_CLIENTS, formatCurrency } from '../data/mockData';
-import type { Segment, Client } from '../data/mockData';
+import { useData } from '../context/DataContext';
+import type { Client, Segment } from '../types/client.types';
+import { formatCurrency } from '../data/mockData';
 import {
   Phone, TrendingUp, RefreshCw, ChevronUp, ChevronDown,
   Search, X, MessageSquare, CheckCircle, XCircle, Calendar,
@@ -12,7 +13,7 @@ import CopilotDrawer, { SEG_COLORS, ACTION_ICONS } from '../components/shared/Co
 import type { OutcomeType } from '../components/shared/CopilotDrawer';
 
 /* ─── Types ──────────────────────────────────────────────────────────── */
-type SortKey = keyof Pick<Client, 'name' | 'aum' | 'urgencyScore' | 'aumPotential' | 'returns'>;
+type SortKey = 'name' | 'aum_inr_cr' | 'urgency_score' | 'aum_potential_inr_cr' | 'ytd_return_pct';
 
 function SortIcon({ k, sortKey, sortDir }: {
   readonly k: SortKey; readonly sortKey: SortKey; readonly sortDir: 'asc' | 'desc';
@@ -33,9 +34,10 @@ function thStyle(k: SortKey, sortKey: SortKey): React.CSSProperties {
 
 /* ─── Main Page ──────────────────────────────────────────────────────── */
 export default function ClientsPage() {
+  const { clients } = useData();
   const [segFilter, setSegFilter] = useState<Segment | 'All'>('All');
   const [searchQ,   setSearchQ]   = useState('');
-  const [sortKey,   setSortKey]   = useState<SortKey>('aumPotential');
+  const [sortKey,   setSortKey]   = useState<SortKey>('aum_potential_inr_cr');
   const [sortDir,   setSortDir]   = useState<'asc' | 'desc'>('desc');
   const [copilotClient, setCopilotClient] = useState<Client | null>(null);
   const [visibleCount, setVisibleCount] = useState(20);
@@ -78,12 +80,14 @@ export default function ClientsPage() {
     else { setSortKey(key); setSortDir('desc'); }
   };
 
-  const filtered = MOCK_CLIENTS
-    .filter(c => segFilter === 'All' || c.segment === segFilter)
+  const filtered = clients
+    .filter(c => segFilter === 'All' || c.profile.segment === segFilter)
     .filter(c => c.name.toLowerCase().includes(searchQ.toLowerCase()))
     .sort((a, b) => {
-      const av = a[sortKey] as number | string;
-      const bv = b[sortKey] as number | string;
+      let av: number | string = 0; let bv: number | string = 0;
+      if (sortKey === 'name') { av = a.name; bv = b.name; }
+      else { av = a.profile[sortKey] as number; bv = b.profile[sortKey] as number; }
+      
       if (typeof av === 'string') return sortDir === 'asc' ? av.localeCompare(bv as string) : (bv as string).localeCompare(av);
       return sortDir === 'asc' ? (av as number) - (bv as number) : (bv as number) - (av as number);
     });
@@ -134,16 +138,16 @@ export default function ClientsPage() {
             <tr style={{ borderBottom: '1px solid var(--border-subtle)' }}>
               <th style={thStyle('name', sortKey)} onClick={() => handleSort('name')}><span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>Client <SortIcon k="name" sortKey={sortKey} sortDir={sortDir} /></span></th>
               <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', textAlign: 'left' }}>Segment</th>
-              <th style={thStyle('aum', sortKey)} onClick={() => handleSort('aum')}><span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>AUM <SortIcon k="aum" sortKey={sortKey} sortDir={sortDir} /></span></th>
-              <th style={thStyle('aumPotential', sortKey)} onClick={() => handleSort('aumPotential')}><span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>Expected Δ <SortIcon k="aumPotential" sortKey={sortKey} sortDir={sortDir} /></span></th>
+              <th style={thStyle('aum_inr_cr', sortKey)} onClick={() => handleSort('aum_inr_cr')}><span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>AUM <SortIcon k="aum_inr_cr" sortKey={sortKey} sortDir={sortDir} /></span></th>
+              <th style={thStyle('aum_potential_inr_cr', sortKey)} onClick={() => handleSort('aum_potential_inr_cr')}><span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>Expected Δ <SortIcon k="aum_potential_inr_cr" sortKey={sortKey} sortDir={sortDir} /></span></th>
               <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', textAlign: 'left' }}>Reason</th>
               <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', textAlign: 'right' }}>Action</th>
             </tr>
           </thead>
           <tbody>
             {displayClients.map((c, i) => {
-              const color = SEG_COLORS[c.segment];
-              const ActionIcon = ACTION_ICONS[c.segment];
+              const color = SEG_COLORS[c.profile.segment];
+              const ActionIcon = ACTION_ICONS[c.profile.segment];
               const isSelected = copilotClient?.id === c.id;
               return (
                 <tr
@@ -179,7 +183,7 @@ export default function ClientsPage() {
                         >
                           {c.name}
                         </Link>
-                        <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{c.lastContacted} · {c.sipActive ? '🟢 SIP Active' : '🔴 SIP Paused'}</div>
+                        <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{c.profile.last_contacted} · {c.profile.sip_active ? '🟢 SIP Active' : '🔴 SIP Paused'}</div>
                       </div>
                     </div>
                   </td>
@@ -190,25 +194,25 @@ export default function ClientsPage() {
                       fontSize: 11, padding: '3px 10px', borderRadius: 20, fontWeight: 600,
                       background: `${color}15`, color, border: `1px solid ${color}30`,
                     }}>
-                      {c.segment === 'Risk' ? '🔴 At Risk' : c.segment === 'Opportunity' ? '🟢 Opportunity' : c.segment === 'Underperforming' ? '🟡 Underperforming' : '🔵 Stable'}
+                      {c.profile.segment === 'Risk' ? '🔴 At Risk' : c.profile.segment === 'Opportunity' ? '🟢 Opportunity' : c.profile.segment === 'Underperforming' ? '🟡 Underperforming' : '🔵 Stable'}
                     </span>
                   </td>
 
                   {/* AUM */}
                   <td style={{ padding: '14px 16px', fontWeight: 700, color: 'var(--text-primary)', fontSize: 13 }}>
-                    {formatCurrency(c.aum)}
+                    {formatCurrency(c.profile.aum_inr_cr * 10_000_000)}
                   </td>
 
                   {/* Expected Δ */}
                   <td style={{ padding: '14px 16px', fontWeight: 700, color, fontSize: 13 }}>
-                    +{formatCurrency(c.aumPotential)}
+                    +{formatCurrency(c.profile.aum_potential_inr_cr * 10_000_000)}
                   </td>
 
                   {/* Reason */}
                   <td style={{ padding: '14px 16px', fontSize: 12, color: 'var(--text-muted)', maxWidth: 240 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                       <ActionIcon size={13} color={color} />
-                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{c.reason}</span>
+                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{c.profile.reason}</span>
                     </div>
                   </td>
 

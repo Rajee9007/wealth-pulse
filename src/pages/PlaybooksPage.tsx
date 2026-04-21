@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import AppShell from '../components/layout/AppShell';
-import { MOCK_PLAYBOOKS, MOCK_CLIENTS, formatCurrency, type Playbook, type Client } from '../data/mockData';
+import { useData } from '../context/DataContext';
+import { MOCK_PLAYBOOKS, formatCurrency, type Playbook } from '../data/mockData';
 import { 
   Rocket, Shield, Zap, Crown,
   Users, ArrowRight, MessageSquare, 
@@ -19,9 +20,11 @@ export default function PlaybooksPage() {
   const [isLaunching, setIsLaunching] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
+  const { clients } = useData();
+
   // Filter clients for the selected playbook
   const targetClients = selectedPlaybook 
-    ? MOCK_CLIENTS.filter(c => c.segment === selectedPlaybook.targetSegment)
+    ? clients.filter(c => c.profile.segment === selectedPlaybook.targetSegment)
     : [];
 
   const handleLaunch = () => {
@@ -90,7 +93,7 @@ export default function PlaybooksPage() {
                     {p.impactLabel}
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: 'var(--text-muted)', fontSize: 12, fontWeight: 600 }}>
-                    <Users size={14} /> {MOCK_CLIENTS.filter(c => c.segment === p.targetSegment).length} targets
+                    <Users size={14} /> {clients.filter(c => c.profile.segment === p.targetSegment).length} targets
                   </div>
                 </div>
 
@@ -191,7 +194,7 @@ export default function PlaybooksPage() {
                   <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>{targetClients.length} clients in {selectedPlaybook.targetSegment} segment</div>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 12px', background: 'rgba(255,255,255,0.05)', borderRadius: 8, fontSize: 12, border: '1px solid var(--border-subtle)' }}>
-                  <LayoutGrid size={14} /> Total Impact: <span style={{ fontWeight: 800, color: selectedPlaybook.color }}>{formatCurrency(targetClients.reduce((s, c) => s + c.aumPotential, 0))}</span>
+                  <LayoutGrid size={14} /> Total Impact: <span style={{ fontWeight: 800, color: selectedPlaybook.color }}>{formatCurrency(targetClients.reduce((s, c) => s + c.profile.aum_potential_inr_cr * 10_000_000, 0))}</span>
                 </div>
               </div>
 
@@ -210,11 +213,11 @@ export default function PlaybooksPage() {
                       <tr key={c.id} style={{ borderBottom: i < targetClients.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
                         <td style={{ padding: '14px 24px' }}>
                           <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--text-primary)' }}>{c.name}</div>
-                          <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{c.goalTag}</div>
+                          <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{c.profile.goal_tag}</div>
                         </td>
-                        <td style={{ padding: '14px 24px', textAlign: 'right', fontSize: 13, color: 'var(--text-secondary)' }}>{formatCurrency(c.aum)}</td>
+                        <td style={{ padding: '14px 24px', textAlign: 'right', fontSize: 13, color: 'var(--text-secondary)' }}>{formatCurrency(c.profile.aum_inr_cr * 10_000_000)}</td>
                         <td style={{ padding: '14px 24px', textAlign: 'right', fontSize: 14, fontWeight: 700, color: selectedPlaybook.color }}>
-                          +{formatCurrency(c.aumPotential)}
+                          +{formatCurrency(c.profile.aum_potential_inr_cr * 10_000_000)}
                         </td>
                         <td style={{ padding: '14px 24px', textAlign: 'center' }}>
                           <input type="checkbox" defaultChecked style={{ width: 18, height: 18, cursor: 'pointer' }} />

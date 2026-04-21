@@ -2,8 +2,9 @@ import { useRef, useState, useEffect } from 'react';
 import { Bell, Search, Sun, Moon, Settings, LogOut, ChevronDown } from 'lucide-react';
 import { 
   MOCK_NOTIFICATIONS, NUDGES, ADVISOR_PERFORMANCE, 
-  BADGE_TIERS, getBadge, MOCK_CLIENTS 
+  BADGE_TIERS, getBadge 
 } from '../../data/mockData';
+import { useData } from '../../context/DataContext';
 import { useTheme } from '../../context/ThemeContext';
 import NotificationDrawer from '../shared/NotificationDrawer';
 import CopilotDrawer from '../shared/CopilotDrawer';
@@ -16,6 +17,7 @@ interface TopbarProps {
 export default function Topbar({ title, subtitle }: TopbarProps) {
   const urgentCount = NUDGES.filter(n => n.type === 'risk').reduce((s, n) => s + n.count, 0);
   const { theme, toggleTheme } = useTheme();
+  const { clients } = useData();
   const [menuOpen, setMenuOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [activeCopilotClient, setActiveCopilotClient] = useState<any>(null);
@@ -300,7 +302,7 @@ export default function Topbar({ title, subtitle }: TopbarProps) {
         <NotificationDrawer 
           onClose={() => setShowNotifications(false)} 
           onOpenCopilot={(id) => {
-            const client = MOCK_CLIENTS.find(c => c.id === id);
+            const client = clients.find(c => c.id === id);
             if (client) {
               setActiveCopilotClient(client);
               setShowNotifications(false);

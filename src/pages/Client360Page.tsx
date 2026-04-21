@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { 
-  MOCK_CLIENTS, MOCK_HISTORY, MOCK_FAMILY, 
+  MOCK_HISTORY, MOCK_FAMILY, 
   MOCK_HOLDINGS, MOCK_ACTIVITY_LOGS,
-  formatCurrency, type Client, type Segment,
-  SEG_COLORS
+  formatCurrency, SEG_COLORS
 } from '../data/mockData';
+import { useData } from '../context/DataContext';
 import AppShell from '../components/layout/AppShell';
 import { 
   AreaChart, Area, XAxis, YAxis, Tooltip, 
@@ -24,11 +24,12 @@ const FALLBACK_COLOR = '#94a3b8';
 export default function Client360Page() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { clients } = useData();
   const [activeTab, setActiveTab] = useState<'overview' | 'holdings' | 'performance' | 'engagement'>('overview');
   
-  const client = MOCK_CLIENTS.find(c => c.id === id);
+  const rawClient = clients.find(c => c.id === id);
 
-  if (!client) return (
+  if (!rawClient) return (
     <AppShell title="Client Not Found">
       <div style={{ padding: 40, textAlign: 'center' }}>
         <h2 style={{ color: 'var(--text-primary)' }}>Client record not found.</h2>
@@ -36,6 +37,25 @@ export default function Client360Page() {
       </div>
     </AppShell>
   );
+
+  const client = {
+    ...rawClient,
+    segment: rawClient.profile.segment,
+    aum: +(rawClient.profile.aum_inr_cr * 10_000_000).toFixed(0),
+    aumPotential: +(rawClient.profile.aum_potential_inr_cr * 10_000_000).toFixed(0),
+    returns: rawClient.profile.ytd_return_pct,
+    wealthScore: rawClient.profile.wealth_score,
+    netProfit: +(rawClient.profile.net_profit_inr_cr * 10_000_000).toFixed(0),
+    goalTag: rawClient.profile.goal_tag,
+    riskProfile: rawClient.profile.risk_profile,
+    action: rawClient.profile.action,
+    reason: rawClient.profile.reason,
+    email: rawClient.profile.email,
+    phone: rawClient.profile.phone,
+    equityAllocation: Math.round(rawClient.profile.allocation.equity * 100),
+    debtAllocation: Math.round(rawClient.profile.allocation.debt * 100),
+    goldAllocation: Math.round(rawClient.profile.allocation.alternatives * 100),
+  };
 
   const history = MOCK_HISTORY[client.id] || MOCK_HISTORY.C001 || [];
   const family = MOCK_FAMILY[client.id] || [];

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import AppShell from '../components/layout/AppShell';
-import { ADVISOR_PERFORMANCE, formatCurrency, calcPossibility, MOCK_CLIENTS } from '../data/mockData';
+import { useData } from '../context/DataContext';
+import { formatCurrency } from '../data/mockData';
 import { CheckCircle, XCircle, Zap, Shield, Rocket, Target } from 'lucide-react';
 
 type Preset = 'Conservative' | 'Optimal' | 'Aggressive';
@@ -31,7 +32,8 @@ const PRESETS: PresetCard[] = [
 ];
 
 export default function TargetsPage() {
-  const possibility   = calcPossibility(MOCK_CLIENTS);
+  const { possibility: possResult, targets, saveTargets, performance } = useData();
+  const possibility   = possResult.total_possibility_inr_cr * 10_000_000;
   const minAllowed    = Math.round(possibility * 0.70);
   const maxSlider     = Math.round(possibility * 1.50);
 
@@ -61,8 +63,17 @@ export default function TargetsPage() {
   }
 
   function handleConfirm() {
-    if (isValid) { setConfirmed(true); setSaved(false); }
-    else          { setSaved(true);    setConfirmed(false); }
+    if (isValid) {
+      setConfirmed(true);
+      setSaved(false);
+      saveTargets({
+        aum_target_inr: currentTarget,
+        commission_target_inr: Math.round(currentTarget * 0.04)
+      });
+    } else {
+      setSaved(true);
+      setConfirmed(false);
+    }
   }
 
   return (
@@ -290,9 +301,9 @@ export default function TargetsPage() {
       {/* ── Previous Target reference ─────────────────────────────── */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: 'var(--text-muted)' }}>
         <span>Previous target:</span>
-        <span style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>{formatCurrency(ADVISOR_PERFORMANCE.target)}</span>
+        <span style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>{formatCurrency(performance.previous_target_inr)}</span>
         <span>·</span>
-        <span>{Math.round((ADVISOR_PERFORMANCE.target / possibility) * 100)}% of current possibility</span>
+        <span>{Math.round((performance.previous_target_inr / possibility) * 100)}% of current possibility</span>
       </div>
     </AppShell>
   );

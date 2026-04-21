@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import AppShell from '../components/layout/AppShell';
-import { MOCK_CLIENTS, formatCurrency, calcPossibility } from '../data/mockData';
-import type { Client } from '../data/mockData';
+import { useData } from '../context/DataContext';
+import { formatCurrency } from '../data/mockData';
+import type { Client } from '../types/client.types';
 import { 
   PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, 
   Tooltip, ResponsiveContainer, CartesianGrid 
@@ -19,26 +20,28 @@ const COLORS = ['#10b981', '#f43f5e', '#f59e0b'];
 export default function PossibilityPage() {
   const navigate = useNavigate();
   const [copilotClient, setCopilotClient] = useState<Client | null>(null);
-  const clients = MOCK_CLIENTS;
-  const opp   = clients.filter(c => c.segment === 'Opportunity');
-  const risk  = clients.filter(c => c.segment === 'Risk');
-  const under = clients.filter(c => c.segment === 'Underperforming');
-  const stable = clients.filter(c => c.segment === 'Stable');
+  const { clients, possibility } = useData();
 
-  const oppAum   = opp.reduce((s,c) => s + c.aumPotential, 0);
-  const riskAum  = risk.reduce((s,c) => s + c.aumPotential, 0);
-  const underAum = under.reduce((s,c) => s + c.aumPotential, 0);
-  const stableAum = stable.reduce((s,c) => s + c.aumPotential, 0);
+  const oppData   = possibility.breakdown.find(b => b.segment === 'Opportunity')!;
+  const underData = possibility.breakdown.find(b => b.segment === 'Underperforming')!;
+  const riskData  = possibility.breakdown.find(b => b.segment === 'Risk')!;
+  const stableData = possibility.breakdown.find(b => b.segment === 'Stable')!;
 
-  const oppWeighted   = Math.round(oppAum * 0.6);
-  const riskWeighted  = Math.round(riskAum * 0.3);
-  const underWeighted = Math.round(underAum * 0.5);
-  const stableWeighted = Math.round(stableAum * 0.1);
-  const totalPossibility = calcPossibility(clients);
+  const oppAum   = oppData.potential_aum_inr_cr * 10_000_000;
+  const riskAum  = riskData.potential_aum_inr_cr * 10_000_000;
+  const underAum = underData.potential_aum_inr_cr * 10_000_000;
+  const stableAum = stableData.potential_aum_inr_cr * 10_000_000;
+
+  const oppWeighted   = Math.round(oppData.weighted_inr_cr * 10_000_000);
+  const riskWeighted  = Math.round(riskData.weighted_inr_cr * 10_000_000);
+  const underWeighted = Math.round(underData.weighted_inr_cr * 10_000_000);
+  const stableWeighted = Math.round(stableData.weighted_inr_cr * 10_000_000);
+  
+  const totalPossibility = possibility.total_possibility_inr_cr * 10_000_000;
   const commPossibility = Math.round(totalPossibility * 0.04);
 
   const topPotentialClients = [...clients]
-    .sort((a,b) => b.aumPotential - a.aumPotential)
+    .sort((a,b) => b.profile.aum_potential_inr_cr - a.profile.aum_potential_inr_cr)
     .slice(0, 5);
 
   const pieData = [
@@ -85,10 +88,10 @@ export default function PossibilityPage() {
       {/* ── Segmentation Breakdown ───────────────────────────────────── */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 24 }}>
         {[
-          { seg: 'Opportunity', icon: Sparkles, count: opp.length, raw: oppAum, weighted: oppWeighted, weight: '60', color: '#10b981' },
-          { seg: 'Underperforming', icon:TrendingDown, count: under.length, raw: underAum, weighted: underWeighted, weight: '50', color: '#f59e0b' },
-          { seg: 'At Risk', icon: ShieldAlert, count: risk.length, raw: riskAum, weighted: riskWeighted, weight: '30', color: '#f43f5e' },
-          { seg: 'Stable', icon: CheckCircle, count: stable.length, raw: stableAum, weighted: stableWeighted, weight: '10', color: '#3b82f6' },
+          { seg: 'Opportunity', icon: Sparkles, count: oppData.clients, raw: oppAum, weighted: oppWeighted, weight: '60', color: '#10b981' },
+          { seg: 'Underperforming', icon:TrendingDown, count: underData.clients, raw: underAum, weighted: underWeighted, weight: '50', color: '#f59e0b' },
+          { seg: 'At Risk', icon: ShieldAlert, count: riskData.clients, raw: riskAum, weighted: riskWeighted, weight: '30', color: '#f43f5e' },
+          { seg: 'Stable', icon: CheckCircle, count: stableData.clients, raw: stableAum, weighted: stableWeighted, weight: '10', color: '#3b82f6' },
         ].map(item => (
           <div key={item.seg} className="glass-card" style={{ padding: 24 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
@@ -270,26 +273,26 @@ export default function PossibilityPage() {
                     >
                       {c.name}
                     </Link>
-                    <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>{c.goalTag}</div>
+                    <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>{c.profile.goal_tag}</div>
                   </td>
                   <td style={{ padding: '14px 14px' }}>
                     <span style={{ 
                       fontSize: 10, padding: '2px 8px', borderRadius: 4, 
-                      background: c.segment === 'Opportunity' ? 'rgba(16,185,129,0.1)' 
-                        : c.segment === 'Risk' ? 'rgba(244,63,94,0.1)' 
-                        : c.segment === 'Stable' ? 'rgba(59,130,246,0.1)'
+                      background: c.profile.segment === 'Opportunity' ? 'rgba(16,185,129,0.1)' 
+                        : c.profile.segment === 'Risk' ? 'rgba(244,63,94,0.1)' 
+                        : c.profile.segment === 'Stable' ? 'rgba(59,130,246,0.1)'
                         : 'rgba(245,158,11,0.1)', 
-                      color: c.segment === 'Opportunity' ? '#10b981' 
-                        : c.segment === 'Risk' ? '#f43f5e' 
-                        : c.segment === 'Stable' ? '#3b82f6'
+                      color: c.profile.segment === 'Opportunity' ? '#10b981' 
+                        : c.profile.segment === 'Risk' ? '#f43f5e' 
+                        : c.profile.segment === 'Stable' ? '#3b82f6'
                         : '#f59e0b', 
                       fontWeight: 700 
                     }}>
-                      {c.segment === 'Risk' ? '🔴 At Risk' : c.segment === 'Opportunity' ? '🟢 Opportunity' : c.segment === 'Underperforming' ? '🟡 Underperforming' : '🔵 Stable'}
+                      {c.profile.segment === 'Risk' ? '🔴 At Risk' : c.profile.segment === 'Opportunity' ? '🟢 Opportunity' : c.profile.segment === 'Underperforming' ? '🟡 Underperforming' : '🔵 Stable'}
                     </span>
                   </td>
                   <td style={{ padding: '14px 14px', textAlign: 'right', fontWeight: 700, color: '#10b981', fontSize: 13 }}>
-                    +{formatCurrency(c.aumPotential)}
+                    +{formatCurrency(c.profile.aum_potential_inr_cr * 10_000_000)}
                   </td>
                   <td style={{ padding: '14px 14px', textAlign: 'right' }}>
                     <button

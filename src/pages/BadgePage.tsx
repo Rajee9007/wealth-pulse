@@ -1,18 +1,22 @@
 import AppShell from '../components/layout/AppShell';
-import { ADVISOR_PERFORMANCE, BADGE_TIERS, getBadge, calcScore, formatCurrency } from '../data/mockData';
+import { useData } from '../context/DataContext';
+import { formatCurrency } from '../data/mockData';
 import { CheckCircle } from 'lucide-react';
 
 export default function BadgePage() {
-  const perf        = ADVISOR_PERFORMANCE;
-  const pct         = perf.possibilityAchievement;
-  const targetPct   = perf.targetAchievement;
-  const badge       = getBadge(pct);
-  const emoji       = badge.label.split(' ')[0];
-  const badgeName   = badge.label.split(' ').slice(1).join(' ');
-  const score       = calcScore(perf.actual, perf.possibilityAum);
+  const { performance: perf, badgeTiers, getBadge } = useData();
+  
+  // Previous achievement determines the badge
+  const prevPct       = perf.previous_target_inr > 0 ? (perf.previous_actual_inr / perf.previous_target_inr) * 100 : 0;
+  const badgeTier     = getBadge(prevPct);
+  const emoji         = badgeTier.emoji;
+  const badgeName     = badgeTier.label;
+  const score         = perf.performance_score;
+  const targetPct     = perf.target_achievement_pct;
+  const pct           = perf.possibility_achievement_pct;
 
   const antiGaming = [
-    { rule: 'Target ≥ 70% of possibility',        pass: perf.target >= perf.possibilityAum * 0.7 },
+    { rule: 'Target ≥ 70% of possibility',        pass: perf.target_inr >= perf.possibility_aum_inr * 0.7 },
     { rule: 'Minimum 5 active clients in pipeline', pass: true },
     { rule: 'Consistent activity across the month', pass: true },
   ];
@@ -24,8 +28,8 @@ export default function BadgePage() {
       <div style={{
         borderRadius: 20, padding: '32px 36px', marginBottom: 20,
         background: 'linear-gradient(135deg, #0f1f3d 0%, #0e2d2a 60%, #061a16 100%)',
-        border: `1px solid ${badge.color}35`,
-        boxShadow: `0 0 48px ${badge.color}18`,
+        border: `1px solid ${badgeTier.color}35`,
+        boxShadow: `0 0 48px ${badgeTier.color}18`,
         display: 'grid', gridTemplateColumns: '220px 1fr auto', gap: 40, alignItems: 'center',
       }}>
         {/* Badge identity */}
@@ -38,16 +42,16 @@ export default function BadgePage() {
         {/* Performance Score */}
         <div style={{ borderLeft: '1px solid rgba(255,255,255,0.08)', paddingLeft: 40 }}>
           <div style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.4)', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 6 }}>Performance Score</div>
-          <div style={{ fontSize: 56, fontWeight: 900, color: badge.color, letterSpacing: -2, lineHeight: 1, marginBottom: 6 }}>{score.toFixed(2)}</div>
+          <div style={{ fontSize: 56, fontWeight: 900, color: badgeTier.color, letterSpacing: -2, lineHeight: 1, marginBottom: 6 }}>{score.toFixed(2)}</div>
           <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>100 × log₁₀(1 + actual / possibility)</div>
         </div>
 
         {/* KPI rows */}
         <div style={{ borderLeft: '1px solid rgba(255,255,255,0.08)', paddingLeft: 40, display: 'flex', flexDirection: 'column', gap: 12, minWidth: 180 }}>
           {[
-            { label: 'Actual MTD',  value: formatCurrency(perf.actual) },
-            { label: 'Target',      value: formatCurrency(perf.target) },
-            { label: 'Possibility', value: formatCurrency(perf.possibilityAum) },
+            { label: 'Actual MTD',  value: formatCurrency(perf.actual_inr) },
+            { label: 'Target',      value: formatCurrency(perf.target_inr) },
+            { label: 'Possibility', value: formatCurrency(perf.possibility_aum_inr) },
           ].map(k => (
             <div key={k.label} style={{ display: 'flex', justifyContent: 'space-between', gap: 24, alignItems: 'center' }}>
               <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>{k.label}</span>
@@ -61,7 +65,7 @@ export default function BadgePage() {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 20 }}>
         {[
           { label: 'Target Achievement', sub: 'Actual / Target', value: Math.min(targetPct, 200), display: `${targetPct.toFixed(1)}%`, color: '#10b981' },
-          { label: 'Possibility Achievement', sub: 'Actual / Possibility', value: Math.min(pct, 200), display: `${pct.toFixed(1)}%`, color: badge.color },
+          { label: 'Possibility Achievement', sub: 'Actual / Possibility', value: Math.min(pct, 200), display: `${pct.toFixed(1)}%`, color: badgeTier.color },
         ].map(bar => (
           <div key={bar.label} className="glass-card" style={{ padding: '20px 24px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
@@ -91,12 +95,12 @@ export default function BadgePage() {
         </div>
 
         <div style={{ display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 4 }}>
-          {BADGE_TIERS.map((tier, i) => {
-            const tierEmoji = tier.label.split(' ')[0];
-            const tierName  = tier.label.split(' ').slice(1).join(' ');
-            const isActive  = badge.label === tier.label;
-            const isPast    = pct >= tier.max;
-            const maxLabel  = tier.max === Infinity ? '∞%' : `${tier.max}%`;
+          {badgeTiers.map((tier, i) => {
+            const tierEmoji = tier.emoji;
+            const tierName  = tier.label;
+            const isActive  = badgeTier.label === tier.label;
+            const isPast    = prevPct >= (tier.max_pct ?? Infinity);
+            const maxLabel  = tier.max_pct === null ? '∞%' : `${tier.max_pct}%`;
 
             return (
               <div
@@ -125,7 +129,7 @@ export default function BadgePage() {
                   {tierName}
                 </div>
                 <div style={{ fontSize: 10, color: 'var(--text-muted)', textAlign: 'center' }}>
-                  {tier.min}–{maxLabel}
+                  {tier.min_pct}–{maxLabel}
                 </div>
               </div>
             );

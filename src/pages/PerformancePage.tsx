@@ -1,15 +1,20 @@
 import AppShell from '../components/layout/AppShell';
-import { ADVISOR_PERFORMANCE, MONTHLY_TREND, formatCurrency, calcScore } from '../data/mockData';
+import { useData } from '../context/DataContext';
+import { formatCurrency, calcScore } from '../data/mockData';
 import { RadialBarChart, RadialBar, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, PolarAngleAxis } from 'recharts';
-import { TrendingUp, Target, Zap, Activity } from 'lucide-react';
+import { TrendingUp, Target, Zap, Activity, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 
 export default function PerformancePage() {
-  const perf = ADVISOR_PERFORMANCE;
-  const score = calcScore(perf.actual, perf.possibilityAum);
+  const { performance: perf, monthlyTrend } = useData();
+  const score = perf.performance_score; // calculated in advisorService
 
   const radialData = [
     { name: 'Score', value: score, fill: '#10b981' },
   ];
+
+  // Compare previous to current
+  const actualGrowth = perf.previous_actual_inr > 0 ? ((perf.actual_inr - perf.previous_actual_inr) / perf.previous_actual_inr) * 100 : 0;
+  const isActualUp = actualGrowth >= 0;
 
   return (
     <AppShell title="Performance Intelligence" subtitle="Deep dive into your monthly achievements and historical trends.">
@@ -17,9 +22,9 @@ export default function PerformancePage() {
       {/* ── KPI Grid ─────────────────────────────────────────────── */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 20 }}>
         {[
-          { label: 'Actual AUM',       value: formatCurrency(perf.actual),         icon: TrendingUp, color: '#3b82f6', bg: 'rgba(59,130,246,0.08)' },
-          { label: 'Target AUM',       value: formatCurrency(perf.target),         icon: Target,     color: '#10b981', bg: 'rgba(16,185,129,0.08)' },
-          { label: 'Possibility AUM',  value: formatCurrency(perf.possibilityAum), icon: Zap,        color: '#8b5cf6', bg: 'rgba(139,92,246,0.08)' },
+          { label: 'Actual AUM',       value: formatCurrency(perf.actual_inr),         icon: TrendingUp, color: '#3b82f6', bg: 'rgba(59,130,246,0.08)', prev: formatCurrency(perf.previous_actual_inr) },
+          { label: 'Target AUM',       value: formatCurrency(perf.target_inr),         icon: Target,     color: '#10b981', bg: 'rgba(16,185,129,0.08)', prev: formatCurrency(perf.previous_target_inr) },
+          { label: 'Possibility AUM',  value: formatCurrency(perf.possibility_aum_inr), icon: Zap,        color: '#8b5cf6', bg: 'rgba(139,92,246,0.08)' },
           { label: 'Performance Score',value: `${score} / 100`,                    icon: Activity,   color: '#f59e0b', bg: 'rgba(245,158,11,0.08)' },
         ].map(k => (
           <div key={k.label} className="glass-card" style={{ padding: '20px 24px', display: 'flex', alignItems: 'flex-start', gap: 16, position: 'relative', overflow: 'hidden' }}>
@@ -32,6 +37,11 @@ export default function PerformancePage() {
             <div>
               <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>{k.label}</div>
               <div style={{ fontSize: 24, fontWeight: 900, color: 'var(--text-primary)', letterSpacing: -0.5 }}>{k.value}</div>
+              {k.prev && (
+                <div style={{ fontSize: 11, color: 'var(--text-secondary)', marginTop: 4 }}>
+                  Prev: <span style={{ fontWeight: 600 }}>{k.prev}</span>
+                </div>
+              )}
             </div>
             {/* Subtle glow background */}
             <div style={{ position: 'absolute', right: -20, bottom: -20, width: 80, height: 80, background: k.color, opacity: 0.05, filter: 'blur(30px)', borderRadius: '50%' }} />
@@ -62,8 +72,8 @@ export default function PerformancePage() {
 
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 20, justifyContent: 'flex-end' }}>
             {[
-              { label: 'Target Achievement', value: perf.targetAchievement, suffix: '%', color: '#10b981' },
-              { label: 'Possibility Harvested', value: perf.possibilityAchievement, suffix: '%', color: '#8b5cf6' },
+              { label: 'Target Achievement', value: perf.target_achievement_pct, suffix: '%', color: '#10b981' },
+              { label: 'Possibility Harvested', value: perf.possibility_achievement_pct, suffix: '%', color: '#8b5cf6' },
             ].map(bar => (
               <div key={bar.label}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
@@ -105,7 +115,7 @@ export default function PerformancePage() {
           
           <div style={{ flex: 1, minHeight: 300 }}>
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={MONTHLY_TREND} barGap={4} barCategoryGap="25%" margin={{ top: 10, right: 0, left: 10, bottom: 0 }}>
+              <BarChart data={monthlyTrend} barGap={4} barCategoryGap="25%" margin={{ top: 10, right: 0, left: 10, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorTarget" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stopColor="#10b981" stopOpacity={0.8}/>
@@ -158,8 +168,8 @@ export default function PerformancePage() {
         <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 16 }}>Intelligence & Insights</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
           {[
-            { tag: 'Momentum',  text: 'Actual MTD performance is tracking 12.5% ahead of the 6-month historical average.', color: '#3b82f6' },
-            { tag: 'Efficiency', text: 'Target achievement reached 120% this month, the highest execution rate this quarter.', color: '#10b981' },
+            { tag: 'Momentum',  text: `Actual MTD performance grew by ${Math.abs(actualGrowth).toFixed(1)}% compared to the previous month.`, color: isActualUp ? '#10b981' : '#f43f5e' },
+            { tag: 'Efficiency', text: `Target achievement reached ${perf.target_achievement_pct}% this month, optimizing effort towards possibility.`, color: '#3b82f6' },
             { tag: 'Opportunity',text: 'Possibility harvest gap remains at 15.3%. Prioritize high AUM-potential clients to close this gap.', color: '#8b5cf6' },
           ].map(insight => (
             <div key={insight.tag} style={{ display: 'flex', gap: 12, padding: '16px', background: `${insight.color}08`, border: `1px solid ${insight.color}25`, borderRadius: 12 }}>

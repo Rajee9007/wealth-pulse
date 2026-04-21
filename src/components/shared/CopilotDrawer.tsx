@@ -3,7 +3,8 @@ import {
   X, Sparkles, MessageSquare, Phone, TrendingUp, RefreshCw, 
   CheckCircle, XCircle, Calendar, Clock, ChevronRight, Mail, MessageCircle
 } from 'lucide-react';
-import { type Client, type Segment, formatCurrency } from '../../data/mockData';
+import { formatCurrency } from '../../data/mockData';
+import type { Client, Segment } from '../../types/client.types';
 
 export type OutcomeType = 'Interested' | 'Follow-up' | 'Not Interested';
 
@@ -77,12 +78,12 @@ export const AI_INSIGHTS: Record<string, string[]> = {
 export default function CopilotDrawer({ client, onClose }: {
   readonly client: Client; readonly onClose: () => void;
 }) {
-  const color   = SEG_COLORS[client.segment];
-  const guide   = CONVERSATION_GUIDES[client.segment];
-  const insights = AI_INSIGHTS[client.segment];
-  const segLabel = client.segment === 'Risk' ? '🔴 At Risk'
-    : client.segment === 'Opportunity' ? '🟢 Opportunity' 
-    : client.segment === 'Underperforming' ? '🟡 Underperforming'
+  const color   = SEG_COLORS[client.profile.segment];
+  const guide   = CONVERSATION_GUIDES[client.profile.segment];
+  const insights = AI_INSIGHTS[client.profile.segment];
+  const segLabel = client.profile.segment === 'Risk' ? '🔴 At Risk'
+    : client.profile.segment === 'Opportunity' ? '🟢 Opportunity' 
+    : client.profile.segment === 'Underperforming' ? '🟡 Underperforming'
     : '🔵 Stable';
 
   const [outcomeFor, setOutcomeFor]   = useState<OutcomeType | null>(null);
@@ -159,7 +160,7 @@ export default function CopilotDrawer({ client, onClose }: {
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: 18, fontWeight: 800, color: 'var(--text-primary)' }}>{client.name}</div>
               <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>
-                {client.goalTag} · {client.riskProfile} Risk · {client.lastContacted}
+                {client.profile.goal_tag} · {client.profile.risk_profile} Risk · {client.profile.last_contacted}
               </div>
             </div>
             <span style={{
@@ -171,8 +172,8 @@ export default function CopilotDrawer({ client, onClose }: {
           {/* Quick Contact Actions */}
           <div style={{ display: 'flex', gap: 10, marginTop: 14 }}>
             <a 
-              href={`mailto:${client.email}?subject=Portfolio Update: WealthPulse`}
-              title={client.email}
+              href={`mailto:${client.profile.email}?subject=Portfolio Update: WealthPulse`}
+              title={client.profile.email}
               style={{
                 flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                 padding: '8px 12px', borderRadius: 10, background: 'rgba(59,130,246,0.1)',
@@ -185,7 +186,7 @@ export default function CopilotDrawer({ client, onClose }: {
               <Mail size={14} /> Email
             </a>
             <a 
-              href={`https://wa.me/${client.phone.replace('+', '')}`}
+              href={`https://wa.me/${client.profile.phone.replace('+', '')}`}
               target="_blank"
               rel="noopener noreferrer"
               style={{
@@ -204,10 +205,10 @@ export default function CopilotDrawer({ client, onClose }: {
           {/* KPI mini row */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginTop: 14 }}>
             {[
-              { label: 'AUM',         value: formatCurrency(client.aum),        col: 'var(--text-primary)' },
-              { label: 'Potential Δ', value: `+${formatCurrency(client.aumPotential)}`, col: color },
-              { label: 'Returns',     value: `${client.returns}%`,              col: client.returns < 8 ? '#f43f5e' : '#10b981' },
-              { label: 'Urgency',     value: `⚡${client.urgencyScore}`,          col: client.urgencyScore > 85 ? '#f43f5e' : '#f59e0b' },
+              { label: 'AUM',         value: formatCurrency(client.profile.aum_inr_cr * 10_000_000),        col: 'var(--text-primary)' },
+              { label: 'Potential Δ', value: `+${formatCurrency(client.profile.aum_potential_inr_cr * 10_000_000)}`, col: color },
+              { label: 'Returns',     value: `${client.profile.ytd_return_pct}%`,              col: client.profile.ytd_return_pct < 8 ? '#f43f5e' : '#10b981' },
+              { label: 'Urgency',     value: `⚡${client.profile.urgency_score}`,          col: client.profile.urgency_score > 85 ? '#f43f5e' : '#f59e0b' },
             ].map(m => (
               <div key={m.label} style={{
                 background: 'var(--bg-card)', borderRadius: 8, padding: '8px 10px',
@@ -232,13 +233,13 @@ export default function CopilotDrawer({ client, onClose }: {
             <div style={{
               position: 'absolute', top: 12, right: 12,
               fontSize: 9, fontWeight: 800, padding: '3px 8px', borderRadius: 4,
-              background: client.urgencyScore > 80 ? 'rgba(244,63,94,0.15)' : 'rgba(148,163,184,0.15)',
-              color: client.urgencyScore > 80 ? '#f43f5e' : 'var(--text-muted)',
-              border: `1px solid ${client.urgencyScore > 80 ? 'rgba(244,63,94,0.3)' : 'rgba(148,163,184,0.3)'}`,
+              background: client.profile.urgency_score > 80 ? 'rgba(244,63,94,0.15)' : 'rgba(148,163,184,0.15)',
+              color: client.profile.urgency_score > 80 ? '#f43f5e' : 'var(--text-muted)',
+              border: `1px solid ${client.profile.urgency_score > 80 ? 'rgba(244,63,94,0.3)' : 'rgba(148,163,184,0.3)'}`,
               textTransform: 'uppercase', letterSpacing: 0.5
             }}>
-              {client.reason.toLowerCase().includes('financial need') ? 'Maintenance' 
-                : client.segment === 'Opportunity' ? 'Growth Focus' 
+              {client.profile.reason.toLowerCase().includes('financial need') ? 'Maintenance' 
+                : client.profile.segment === 'Opportunity' ? 'Growth Focus' 
                 : 'Lapse Prevention'}
             </div>
 
@@ -246,10 +247,10 @@ export default function CopilotDrawer({ client, onClose }: {
               Why this client now
             </div>
             <div style={{ fontSize: 13, color: 'var(--text-primary)', fontWeight: 600, marginBottom: 4, paddingRight: 80 }}>
-              {client.reason}
+              {client.profile.reason}
             </div>
             <div style={{ fontSize: 12, color: color, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}>
-              <ChevronRight size={12} /> Suggested: {client.action}
+              <ChevronRight size={12} /> Suggested: {client.profile.action}
             </div>
           </div>
 
@@ -285,7 +286,7 @@ export default function CopilotDrawer({ client, onClose }: {
               <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-primary)' }}>Conversation Script</span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-              {client.talkingPoints.map((pt, i) => (
+              {client.profile.flags.map((pt, i) => (
                 <div key={i} style={{
                   display: 'flex', gap: 10, padding: '10px 12px',
                   background: 'var(--bg-card)', borderRadius: 8,

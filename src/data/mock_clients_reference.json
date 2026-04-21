@@ -5,12 +5,17 @@
       "name": "Arjun Mehta",
       "profile": {
         "age": 42,
+        "email": "arjun.mehta@example.com",
+        "phone": "+91 9876543210",
+        "goal_tag": "Retirement",
+        "wealth_score": 38,
         "flags": [
           "SIP paused 52 days",
           "Goal corpus at risk",
           "Compound growth being lost"
         ],
         "action": "Reactivate SIP",
+        "reason": "SIP paused 52 days. High-value long-term investor missing growth cycle.",
         "segment": "Risk",
         "allocation": {
           "cash": 0.05,
@@ -19,6 +24,9 @@
           "alternatives": 0.05
         },
         "aum_inr_cr": 0.48,
+        "aum_potential_inr_cr": 0.08,
+        "net_profit_inr_cr": 0.03,
+        "commission_potential_inr": 3200,
         "kyc_status": "Completed",
         "occupation": "Software Engineer",
         "sip_active": false,
@@ -29,6 +37,7 @@
           { "name": "ICICI Prudential Liquid", "type": "debt_mf", "weight": 0.15 }
         ],
         "last_activity": "2026-02-28",
+        "last_contacted": "2026-04-01",
         "urgency_score": 95,
         "ytd_return_pct": 6.2,
         "benchmark_ytd_pct": 11.0
@@ -39,12 +48,17 @@
       "name": "Priya Sharma",
       "profile": {
         "age": 35,
+        "email": "priya.sharma@example.com",
+        "phone": "+91 9988776655",
+        "goal_tag": "Child Education",
+        "wealth_score": 82,
         "flags": [
           "₹2L idle savings detected",
           "Portfolio doing well",
           "Suggest SIP top-up ₹5,000/mo"
         ],
         "action": "Upsell SIP",
+        "reason": "₹2L idle savings detected. High investment possibility with strong portfolio performance.",
         "segment": "Opportunity",
         "allocation": {
           "cash": 0.08,
@@ -53,6 +67,9 @@
           "alternatives": 0.05
         },
         "aum_inr_cr": 0.72,
+        "aum_potential_inr_cr": 0.15,
+        "net_profit_inr_cr": 0.10,
+        "commission_potential_inr": 6000,
         "kyc_status": "Completed",
         "occupation": "Marketing Manager",
         "sip_active": true,
@@ -63,6 +80,7 @@
           { "name": "Nippon India Gold BeES", "type": "gold_etf", "weight": 0.12 }
         ],
         "last_activity": "2026-04-18",
+        "last_contacted": "2026-04-15",
         "urgency_score": 92,
         "ytd_return_pct": 14.5,
         "benchmark_ytd_pct": 12.0
@@ -73,12 +91,17 @@
       "name": "Ramesh Iyer",
       "profile": {
         "age": 51,
+        "email": "ramesh.iyer@example.com",
+        "phone": "+91 9123456789",
+        "goal_tag": "Wealth Building",
+        "wealth_score": 45,
         "flags": [
           "Returns 5.1% vs benchmark 11%",
           "Sector over-concentration risk",
           "Switch to hybrid fund recommended"
         ],
         "action": "Rebalance Portfolio",
+        "reason": "Underperforming strategy. ₹1.2Cr AUM at risk of goal mismatch due to excess debt allocation.",
         "segment": "Underperforming",
         "allocation": {
           "cash": 0.05,
@@ -87,6 +110,9 @@
           "alternatives": 0.05
         },
         "aum_inr_cr": 1.2,
+        "aum_potential_inr_cr": 0.20,
+        "net_profit_inr_cr": 0.06,
+        "commission_potential_inr": 8000,
         "kyc_status": "Completed",
         "occupation": "Business Owner",
         "sip_active": true,
@@ -97,6 +123,7 @@
           { "name": "HDFC Short Term Debt", "type": "debt_mf", "weight": 0.20 }
         ],
         "last_activity": "2026-04-10",
+        "last_contacted": "2026-03-25",
         "urgency_score": 75,
         "ytd_return_pct": 5.1,
         "benchmark_ytd_pct": 11.0
@@ -107,12 +134,17 @@
       "name": "Kavita Nair",
       "profile": {
         "age": 38,
+        "email": "kavita.nair@example.com",
+        "phone": "+91 9000011122",
+        "goal_tag": "Home Purchase",
+        "wealth_score": 35,
         "flags": [
           "No transactions in 46 days",
           "AUM declining trend",
           "Offer pause instead of stop"
         ],
         "action": "Re-engagement Call",
+        "reason": "No transactions in 46 days with AUM declining. Risk of full churn if not contacted.",
         "segment": "Risk",
         "allocation": {
           "cash": 0.20,
@@ -121,6 +153,9 @@
           "alternatives": 0.05
         },
         "aum_inr_cr": 0.32,
+        "aum_potential_inr_cr": 0.05,
+        "net_profit_inr_cr": 0.02,
+        "commission_potential_inr": 2000,
         "kyc_status": "Completed",
         "occupation": "Doctor",
         "sip_active": false,
@@ -131,6 +166,7 @@
           { "name": "ICICI Prudential Liquid", "type": "debt_mf", "weight": 0.20 }
         ],
         "last_activity": "2026-03-05",
+        "last_contacted": "2026-04-05",
         "urgency_score": 89,
         "ytd_return_pct": 4.8,
         "benchmark_ytd_pct": 7.5
@@ -141,12 +177,17 @@
       "name": "Suresh Pillai",
       "profile": {
         "age": 44,
+        "email": "suresh.pillai@example.com",
+        "phone": "+91 9222233344",
+        "goal_tag": "Retirement",
+        "wealth_score": 73,
         "flags": [
           "₹1.5L idle in savings account",
           "Consistent investor history",
           "Lump sum deployment opportunity"
         ],
         "action": "Lump Sum Deployment",
+        "reason": "Bonus credited, ₹1.5L parked in liquid fund. Consistent investor ready for deployment.",
         "segment": "Opportunity",
         "allocation": {
           "cash": 0.12,
@@ -155,6 +196,9 @@
           "alternatives": 0.06
         },
         "aum_inr_cr": 0.56,
+        "aum_potential_inr_cr": 0.12,
+        "net_profit_inr_cr": 0.07,
+        "commission_potential_inr": 4800,
         "kyc_status": "Completed",
         "occupation": "Government Officer",
         "sip_active": true,
@@ -165,6 +209,7 @@
           { "name": "Aditya Birla Sun Life Savings", "type": "debt_mf", "weight": 0.15 }
         ],
         "last_activity": "2026-04-19",
+        "last_contacted": "2026-04-10",
         "urgency_score": 72,
         "ytd_return_pct": 12.3,
         "benchmark_ytd_pct": 11.0
@@ -175,12 +220,17 @@
       "name": "Deepa Krishnan",
       "profile": {
         "age": 47,
+        "email": "deepa.krishnan@example.com",
+        "phone": "+91 9555566677",
+        "goal_tag": "Wealth Building",
+        "wealth_score": 52,
         "flags": [
           "70% in debt during bull run",
           "Risk appetite mismatch",
           "Equity rebalancing overdue"
         ],
         "action": "Portfolio Optimization",
+        "reason": "High AUM but 70% in debt during bull run. Risk profile is Aggressive — severe mismatch.",
         "segment": "Underperforming",
         "allocation": {
           "cash": 0.05,
@@ -189,6 +239,9 @@
           "alternatives": 0.05
         },
         "aum_inr_cr": 0.85,
+        "aum_potential_inr_cr": 0.13,
+        "net_profit_inr_cr": 0.06,
+        "commission_potential_inr": 5200,
         "kyc_status": "Completed",
         "occupation": "HR Director",
         "sip_active": true,
@@ -199,6 +252,7 @@
           { "name": "Axis Long Term Equity", "type": "equity_mf", "weight": 0.15 }
         ],
         "last_activity": "2026-04-08",
+        "last_contacted": "2026-03-30",
         "urgency_score": 81,
         "ytd_return_pct": 6.8,
         "benchmark_ytd_pct": 11.0
@@ -209,12 +263,17 @@
       "name": "Vikram Joshi",
       "profile": {
         "age": 55,
+        "email": "vikram.joshi@example.com",
+        "phone": "+91 9666655544",
+        "goal_tag": "Retirement",
+        "wealth_score": 91,
         "flags": [
           "12% CAGR vs 10% goal target",
           "Goals on track",
           "Semi-annual review due"
         ],
         "action": "Anniversary Review",
+        "reason": "Portfolio on track with 12% CAGR vs 10% goal. Maintenance call to collect referrals.",
         "segment": "Stable",
         "allocation": {
           "cash": 0.05,
@@ -223,6 +282,9 @@
           "alternatives": 0.05
         },
         "aum_inr_cr": 1.5,
+        "aum_potential_inr_cr": 0.02,
+        "net_profit_inr_cr": 0.18,
+        "commission_potential_inr": 800,
         "kyc_status": "Completed",
         "occupation": "Operations Head",
         "sip_active": true,
@@ -233,6 +295,7 @@
           { "name": "ICICI Prudential All Seasons Bond", "type": "debt_mf", "weight": 0.18 }
         ],
         "last_activity": "2026-04-10",
+        "last_contacted": "2026-03-20",
         "urgency_score": 15,
         "ytd_return_pct": 12.1,
         "benchmark_ytd_pct": 11.0
@@ -243,12 +306,17 @@
       "name": "Ananya Bose",
       "profile": {
         "age": 33,
+        "email": "ananya.bose@example.com",
+        "phone": "+91 9777788899",
+        "goal_tag": "Child Education",
+        "wealth_score": 69,
         "flags": [
           "Child education goal in 8 years",
           "Current SIP insufficient for corpus",
           "Suggest SIP increase ₹3,000/mo"
         ],
         "action": "Goal-based Upsell",
+        "reason": "Child education goal in 8 years. Current SIP falls ₹12L short of required corpus.",
         "segment": "Opportunity",
         "allocation": {
           "cash": 0.05,
@@ -257,6 +325,9 @@
           "alternatives": 0.05
         },
         "aum_inr_cr": 0.43,
+        "aum_potential_inr_cr": 0.09,
+        "net_profit_inr_cr": 0.06,
+        "commission_potential_inr": 3600,
         "kyc_status": "Completed",
         "occupation": "Architect",
         "sip_active": true,
@@ -267,6 +338,7 @@
           { "name": "Reliance Liquid Fund", "type": "debt_mf", "weight": 0.15 }
         ],
         "last_activity": "2026-04-17",
+        "last_contacted": "2026-04-12",
         "urgency_score": 68,
         "ytd_return_pct": 13.1,
         "benchmark_ytd_pct": 12.0
@@ -277,12 +349,17 @@
       "name": "Meera Deshmukh",
       "profile": {
         "age": 49,
+        "email": "meera.deshmukh@example.com",
+        "phone": "+91 9444433322",
+        "goal_tag": "Wealth Building",
+        "wealth_score": 87,
         "flags": [
           "Consistent SIP history 5 years",
           "Portfolio resilience check",
           "High client satisfaction score"
         ],
         "action": "Retention & Referral",
+        "reason": "High satisfaction, consistent SIP activity. Strong referral candidate.",
         "segment": "Stable",
         "allocation": {
           "cash": 0.08,
@@ -291,6 +368,9 @@
           "alternatives": 0.04
         },
         "aum_inr_cr": 0.95,
+        "aum_potential_inr_cr": 0.02,
+        "net_profit_inr_cr": 0.08,
+        "commission_potential_inr": 600,
         "kyc_status": "Completed",
         "occupation": "School Principal",
         "sip_active": true,
@@ -301,6 +381,7 @@
           { "name": "Axis Bluechip Fund", "type": "equity_mf", "weight": 0.18 }
         ],
         "last_activity": "2026-04-12",
+        "last_contacted": "2026-03-15",
         "urgency_score": 12,
         "ytd_return_pct": 8.5,
         "benchmark_ytd_pct": 7.5
@@ -311,12 +392,17 @@
       "name": "Zoya Khan",
       "profile": {
         "age": 40,
+        "email": "zoya.khan@example.com",
+        "phone": "+91 9333322211",
+        "goal_tag": "Wealth Building",
+        "wealth_score": 96,
         "flags": [
           "18% CAGR sustained over 3 years",
           "Aggressive profile well matched",
           "Referral potential: High"
         ],
         "action": "Portfolio Maintenance",
+        "reason": "Strong performance at 18% CAGR. Aggressive profile matched. No action required.",
         "segment": "Stable",
         "allocation": {
           "cash": 0.03,
@@ -325,6 +411,9 @@
           "alternatives": 0.05
         },
         "aum_inr_cr": 2.2,
+        "aum_potential_inr_cr": 0.00,
+        "net_profit_inr_cr": 0.40,
+        "commission_potential_inr": 0,
         "kyc_status": "Completed",
         "occupation": "Startup Founder",
         "sip_active": true,
@@ -335,6 +424,7 @@
           { "name": "Tata Digital India Fund", "type": "equity_mf", "weight": 0.18 }
         ],
         "last_activity": "2026-04-20",
+        "last_contacted": "2026-04-05",
         "urgency_score": 5,
         "ytd_return_pct": 18.2,
         "benchmark_ytd_pct": 15.0
@@ -345,12 +435,17 @@
       "name": "Rohit Gupta",
       "profile": {
         "age": 29,
+        "email": "rohit.gupta@example.com",
+        "phone": "+91 9812345670",
+        "goal_tag": "Wealth Building",
+        "wealth_score": 42,
         "flags": [
           "First job salary hike received",
           "No investments yet",
           "High saving potential"
         ],
         "action": "New Investor Onboarding",
+        "reason": "First job salary hike. No meaningful investment yet. High probability of quick SIP activation.",
         "segment": "Opportunity",
         "allocation": {
           "cash": 0.85,
@@ -359,6 +454,9 @@
           "alternatives": 0.00
         },
         "aum_inr_cr": 0.05,
+        "aum_potential_inr_cr": 0.18,
+        "net_profit_inr_cr": 0.00,
+        "commission_potential_inr": 7200,
         "kyc_status": "Pending",
         "occupation": "Junior Developer",
         "sip_active": false,
@@ -367,6 +465,7 @@
           { "name": "SBI Liquid Fund", "type": "debt_mf", "weight": 0.90 }
         ],
         "last_activity": "2026-03-15",
+        "last_contacted": "2026-03-20",
         "urgency_score": 85,
         "ytd_return_pct": 4.5,
         "benchmark_ytd_pct": 12.0
@@ -377,12 +476,17 @@
       "name": "Sunita Reddy",
       "profile": {
         "age": 53,
+        "email": "sunita.reddy@example.com",
+        "phone": "+91 9700012345",
+        "goal_tag": "Retirement",
+        "wealth_score": 28,
         "flags": [
           "Redemption requested last month",
           "Portfolio partially liquidated",
           "Re-engagement critical"
         ],
         "action": "Churn Prevention Call",
+        "reason": "Partial redemption last month. High churn risk — immediate retention call required.",
         "segment": "Risk",
         "allocation": {
           "cash": 0.35,
@@ -391,6 +495,9 @@
           "alternatives": 0.05
         },
         "aum_inr_cr": 0.38,
+        "aum_potential_inr_cr": 0.04,
+        "net_profit_inr_cr": 0.02,
+        "commission_potential_inr": 1500,
         "kyc_status": "Completed",
         "occupation": "Teacher",
         "sip_active": false,
@@ -400,6 +507,7 @@
           { "name": "HDFC Balanced Advantage", "type": "hybrid_mf", "weight": 0.20 }
         ],
         "last_activity": "2026-03-10",
+        "last_contacted": "2026-03-18",
         "urgency_score": 91,
         "ytd_return_pct": 4.1,
         "benchmark_ytd_pct": 7.5
@@ -410,12 +518,17 @@
       "name": "Prakash Venkatesh",
       "profile": {
         "age": 46,
+        "email": "prakash.venkatesh@example.com",
+        "phone": "+91 9600098765",
+        "goal_tag": "Tax Saving",
+        "wealth_score": 61,
         "flags": [
           "NRI returning to India",
           "Large idle FD maturity ₹25L",
           "Tax-efficient deployment needed"
         ],
         "action": "Lump Sum Deployment",
+        "reason": "NRI returning with ₹25L FD maturity. KYC in progress. Time-sensitive tax-efficient deployment.",
         "segment": "Opportunity",
         "allocation": {
           "cash": 0.55,
@@ -424,6 +537,9 @@
           "alternatives": 0.05
         },
         "aum_inr_cr": 0.80,
+        "aum_potential_inr_cr": 0.25,
+        "net_profit_inr_cr": 0.04,
+        "commission_potential_inr": 10000,
         "kyc_status": "In Progress",
         "occupation": "NRI - IT Professional",
         "sip_active": false,
@@ -433,6 +549,7 @@
           { "name": "HDFC Corporate Bond", "type": "debt_mf", "weight": 0.25 }
         ],
         "last_activity": "2026-04-05",
+        "last_contacted": "2026-04-08",
         "urgency_score": 88,
         "ytd_return_pct": 5.5,
         "benchmark_ytd_pct": 11.0
@@ -443,12 +560,17 @@
       "name": "Amit Verma",
       "profile": {
         "age": 58,
+        "email": "amit.verma@example.com",
+        "phone": "+91 9500056789",
+        "goal_tag": "Retirement",
+        "wealth_score": 78,
         "flags": [
           "Monthly income requirement ₹45k",
           "Withdrawal SWP active",
           "Pension adequacy review"
         ],
         "action": "Withdrawal Monitoring",
+        "reason": "Retired client with active SWP of ₹45k/month. Pension adequacy review due to ensure longevity.",
         "segment": "Stable",
         "allocation": {
           "cash": 0.10,
@@ -457,6 +579,9 @@
           "alternatives": 0.05
         },
         "aum_inr_cr": 11.2,
+        "aum_potential_inr_cr": 0.00,
+        "net_profit_inr_cr": 0.66,
+        "commission_potential_inr": 0,
         "kyc_status": "Completed",
         "occupation": "Retired Engineer",
         "sip_active": false,
@@ -468,6 +593,7 @@
           { "name": "Balanced Fund", "type": "hybrid_mf", "weight": 0.12 }
         ],
         "last_activity": "2026-04-11",
+        "last_contacted": "2026-04-02",
         "urgency_score": 25,
         "ytd_return_pct": 5.9,
         "benchmark_ytd_pct": 5.2
@@ -478,12 +604,17 @@
       "name": "Nisha Kapoor",
       "profile": {
         "age": 31,
+        "email": "nisha.kapoor@example.com",
+        "phone": "+91 9400067890",
+        "goal_tag": "Home Purchase",
+        "wealth_score": 55,
         "flags": [
           "Marriage goal in 18 months",
           "SIP for wedding corpus insufficient",
           "Suggest short-duration debt top-up"
         ],
         "action": "Goal Corpus Boost",
+        "reason": "Wedding goal in 18 months. Current corpus ₹2.8L short. Debt top-up recommended.",
         "segment": "Opportunity",
         "allocation": {
           "cash": 0.15,
@@ -492,6 +623,9 @@
           "alternatives": 0.05
         },
         "aum_inr_cr": 0.28,
+        "aum_potential_inr_cr": 0.08,
+        "net_profit_inr_cr": 0.03,
+        "commission_potential_inr": 3200,
         "kyc_status": "Completed",
         "occupation": "Fashion Designer",
         "sip_active": true,
@@ -502,6 +636,7 @@
           { "name": "ICICI Prudential Savings", "type": "debt_mf", "weight": 0.20 }
         ],
         "last_activity": "2026-04-16",
+        "last_contacted": "2026-04-10",
         "urgency_score": 79,
         "ytd_return_pct": 9.2,
         "benchmark_ytd_pct": 10.0
@@ -512,12 +647,17 @@
       "name": "Dinesh Malhotra",
       "profile": {
         "age": 60,
+        "email": "dinesh.malhotra@example.com",
+        "phone": "+91 9300078901",
+        "goal_tag": "Retirement",
+        "wealth_score": 48,
         "flags": [
           "Retirement corpus 20% below target",
           "5 years to retirement",
           "Aggressive SIP top-up required"
         ],
         "action": "Retirement Planning Review",
+        "reason": "Retirement corpus 20% below target with 5 years to go. Conservative allocation limits growth.",
         "segment": "Underperforming",
         "allocation": {
           "cash": 0.10,
@@ -526,6 +666,9 @@
           "alternatives": 0.05
         },
         "aum_inr_cr": 0.92,
+        "aum_potential_inr_cr": 0.15,
+        "net_profit_inr_cr": 0.06,
+        "commission_potential_inr": 6000,
         "kyc_status": "Completed",
         "occupation": "Bank Manager",
         "sip_active": true,
@@ -536,6 +679,7 @@
           { "name": "Axis Bluechip Fund", "type": "equity_mf", "weight": 0.15 }
         ],
         "last_activity": "2026-04-07",
+        "last_contacted": "2026-03-28",
         "urgency_score": 77,
         "ytd_return_pct": 6.1,
         "benchmark_ytd_pct": 9.5
@@ -546,12 +690,17 @@
       "name": "Lavanya Srinivasan",
       "profile": {
         "age": 36,
+        "email": "lavanya.srinivasan@example.com",
+        "phone": "+91 9200089012",
+        "goal_tag": "Wealth Building",
+        "wealth_score": 76,
         "flags": [
           "Salary doubled post-promotion",
           "Portfolio not updated in 6 months",
           "Opportunity to top-up equity allocation"
         ],
         "action": "SIP Upsell",
+        "reason": "Salary doubled after promotion. Portfolio unchanged for 6 months — significant upsell opportunity.",
         "segment": "Opportunity",
         "allocation": {
           "cash": 0.20,
@@ -560,6 +709,9 @@
           "alternatives": 0.05
         },
         "aum_inr_cr": 0.65,
+        "aum_potential_inr_cr": 0.20,
+        "net_profit_inr_cr": 0.10,
+        "commission_potential_inr": 8000,
         "kyc_status": "Completed",
         "occupation": "Product Manager",
         "sip_active": true,
@@ -570,6 +722,7 @@
           { "name": "SBI Liquid Fund", "type": "debt_mf", "weight": 0.15 }
         ],
         "last_activity": "2026-04-14",
+        "last_contacted": "2026-04-05",
         "urgency_score": 84,
         "ytd_return_pct": 15.3,
         "benchmark_ytd_pct": 13.0
@@ -580,12 +733,17 @@
       "name": "Manoj Saxena",
       "profile": {
         "age": 50,
+        "email": "manoj.saxena@example.com",
+        "phone": "+91 9100090123",
+        "goal_tag": "Tax Saving",
+        "wealth_score": 43,
         "flags": [
           "Portfolio heavily in underperforming sectoral funds",
           "IT sector overweight 60%",
           "Rebalance to diversified equity"
         ],
         "action": "Fund Switch",
+        "reason": "IT sector 60% overweight. Returns lagging benchmark by 7.8%. Diversification switch needed.",
         "segment": "Underperforming",
         "allocation": {
           "cash": 0.05,
@@ -594,6 +752,9 @@
           "alternatives": 0.05
         },
         "aum_inr_cr": 1.05,
+        "aum_potential_inr_cr": 0.18,
+        "net_profit_inr_cr": 0.04,
+        "commission_potential_inr": 7200,
         "kyc_status": "Completed",
         "occupation": "IT Consultant",
         "sip_active": true,
@@ -604,6 +765,7 @@
           { "name": "DSP Midcap Fund", "type": "equity_mf", "weight": 0.15 }
         ],
         "last_activity": "2026-04-06",
+        "last_contacted": "2026-03-22",
         "urgency_score": 73,
         "ytd_return_pct": 4.2,
         "benchmark_ytd_pct": 12.0
@@ -614,12 +776,17 @@
       "name": "Pooja Agarwal",
       "profile": {
         "age": 27,
+        "email": "pooja.agarwal@example.com",
+        "phone": "+91 9050001234",
+        "goal_tag": "Wealth Building",
+        "wealth_score": 58,
         "flags": [
           "New investor — 8 months tenure",
           "Strong SIP discipline",
           "Ready for equity SIP upgrade"
         ],
         "action": "Portfolio Upgrade",
+        "reason": "8 months of consistent SIP. Portfolio now mature enough for equity fund upgrade.",
         "segment": "Opportunity",
         "allocation": {
           "cash": 0.10,
@@ -628,6 +795,9 @@
           "alternatives": 0.05
         },
         "aum_inr_cr": 0.12,
+        "aum_potential_inr_cr": 0.10,
+        "net_profit_inr_cr": 0.01,
+        "commission_potential_inr": 4000,
         "kyc_status": "Completed",
         "occupation": "Content Creator",
         "sip_active": true,
@@ -638,6 +808,7 @@
           { "name": "ICICI Prudential Savings", "type": "debt_mf", "weight": 0.20 }
         ],
         "last_activity": "2026-04-19",
+        "last_contacted": "2026-04-12",
         "urgency_score": 61,
         "ytd_return_pct": 11.8,
         "benchmark_ytd_pct": 12.0
@@ -648,12 +819,17 @@
       "name": "Chandra Sekhar Rao",
       "profile": {
         "age": 62,
+        "email": "chandra.rao@example.com",
+        "phone": "+91 9040002345",
+        "goal_tag": "Retirement",
+        "wealth_score": 54,
         "flags": [
           "Portfolio correlated to market — high beta",
           "Risk reduction required post-retirement",
           "Shift to low-vol hybrid funds"
         ],
         "action": "Risk Reduction",
+        "reason": "Post-retirement investor with 70% equity — too aggressive. Needs low-volatility rebalancing.",
         "segment": "Underperforming",
         "allocation": {
           "cash": 0.05,
@@ -662,6 +838,9 @@
           "alternatives": 0.05
         },
         "aum_inr_cr": 2.8,
+        "aum_potential_inr_cr": 0.10,
+        "net_profit_inr_cr": 0.21,
+        "commission_potential_inr": 4000,
         "kyc_status": "Completed",
         "occupation": "Retired IAS Officer",
         "sip_active": false,
@@ -672,6 +851,7 @@
           { "name": "Axis Small Cap Fund", "type": "equity_mf", "weight": 0.15 }
         ],
         "last_activity": "2026-04-03",
+        "last_contacted": "2026-03-20",
         "urgency_score": 70,
         "ytd_return_pct": 7.4,
         "benchmark_ytd_pct": 9.0
@@ -682,12 +862,17 @@
       "name": "Tanvi Shah",
       "profile": {
         "age": 34,
+        "email": "tanvi.shah@example.com",
+        "phone": "+91 9030003456",
+        "goal_tag": "Home Purchase",
+        "wealth_score": 31,
         "flags": [
           "3 consecutive missed SIP payments",
           "No response to last 2 calls",
           "High churn risk"
         ],
         "action": "Lapse Prevention",
+        "reason": "3 consecutive missed SIPs + 2 unanswered calls. Immediate intervention required.",
         "segment": "Risk",
         "allocation": {
           "cash": 0.30,
@@ -696,6 +881,9 @@
           "alternatives": 0.05
         },
         "aum_inr_cr": 0.22,
+        "aum_potential_inr_cr": 0.03,
+        "net_profit_inr_cr": 0.01,
+        "commission_potential_inr": 1200,
         "kyc_status": "Completed",
         "occupation": "Pharmacist",
         "sip_active": false,
@@ -705,6 +893,7 @@
           { "name": "SBI Liquid Fund", "type": "debt_mf", "weight": 0.25 }
         ],
         "last_activity": "2026-02-20",
+        "last_contacted": "2026-03-10",
         "urgency_score": 93,
         "ytd_return_pct": 5.5,
         "benchmark_ytd_pct": 9.5
@@ -715,12 +904,17 @@
       "name": "Rajkumar Pillai",
       "profile": {
         "age": 45,
+        "email": "rajkumar.pillai@example.com",
+        "phone": "+91 9020004567",
+        "goal_tag": "Tax Saving",
+        "wealth_score": 67,
         "flags": [
           "Tax-saving ELSS investment due",
           "Year-end planning deadline March 31",
           "₹1.5L Section 80C investment required"
         ],
         "action": "ELSS Investment Drive",
+        "reason": "₹1.5L Section 80C limit unused. Year-end ELSS deployment needed before March 31.",
         "segment": "Opportunity",
         "allocation": {
           "cash": 0.15,
@@ -729,6 +923,9 @@
           "alternatives": 0.05
         },
         "aum_inr_cr": 0.55,
+        "aum_potential_inr_cr": 0.15,
+        "net_profit_inr_cr": 0.07,
+        "commission_potential_inr": 6000,
         "kyc_status": "Completed",
         "occupation": "Chartered Accountant",
         "sip_active": true,
@@ -739,6 +936,7 @@
           { "name": "ICICI Prudential Liquid", "type": "debt_mf", "weight": 0.18 }
         ],
         "last_activity": "2026-04-13",
+        "last_contacted": "2026-04-06",
         "urgency_score": 78,
         "ytd_return_pct": 12.5,
         "benchmark_ytd_pct": 12.0
@@ -749,12 +947,17 @@
       "name": "Hema Krishnaswamy",
       "profile": {
         "age": 57,
+        "email": "hema.krishnaswamy@example.com",
+        "phone": "+91 9010005678",
+        "goal_tag": "Child Education",
+        "wealth_score": 88,
         "flags": [
           "Consistent 10-year investor",
           "Compounding at peak effectiveness",
           "Refer 2 college-going children"
         ],
         "action": "Family Wealth Planning",
+        "reason": "10-year consistent investor. Children approaching college — family wealth expansion opportunity.",
         "segment": "Stable",
         "allocation": {
           "cash": 0.05,
@@ -763,6 +966,9 @@
           "alternatives": 0.05
         },
         "aum_inr_cr": 3.4,
+        "aum_potential_inr_cr": 0.10,
+        "net_profit_inr_cr": 0.45,
+        "commission_potential_inr": 4000,
         "kyc_status": "Completed",
         "occupation": "Professor",
         "sip_active": true,
@@ -773,6 +979,7 @@
           { "name": "Aditya Birla Corporate Bond", "type": "debt_mf", "weight": 0.18 }
         ],
         "last_activity": "2026-04-09",
+        "last_contacted": "2026-03-25",
         "urgency_score": 18,
         "ytd_return_pct": 13.2,
         "benchmark_ytd_pct": 12.0
@@ -783,12 +990,17 @@
       "name": "Farhan Shaikh",
       "profile": {
         "age": 32,
+        "email": "farhan.shaikh@example.com",
+        "phone": "+91 9001006789",
+        "goal_tag": "Wealth Building",
+        "wealth_score": 44,
         "flags": [
           "SIP active but return below liquid rate",
           "Wrong fund selection at onboarding",
           "Migrate to index fund"
         ],
         "action": "Fund Upgrade",
+        "reason": "Returns below liquid rate due to poor fund selection at onboarding. Index fund migration needed.",
         "segment": "Underperforming",
         "allocation": {
           "cash": 0.05,
@@ -797,401 +1009,210 @@
           "alternatives": 0.05
         },
         "aum_inr_cr": 0.18,
+        "aum_potential_inr_cr": 0.06,
+        "net_profit_inr_cr": 0.01,
+        "commission_potential_inr": 2400,
         "kyc_status": "Completed",
         "occupation": "Sales Executive",
         "sip_active": true,
         "risk_profile": "Moderate",
         "top_holdings": [
-          { "name": "HDFC Liquid Fund", "type": "debt_mf", "weight": 0.40 },
-          { "name": "Kotak Standard Multicap", "type": "equity_mf", "weight": 0.25 }
+          { "name": "Aditya Birla FMP", "type": "debt_mf", "weight": 0.40 },
+          { "name": "UTI Nifty 50 Index", "type": "equity_mf", "weight": 0.22 }
         ],
         "last_activity": "2026-04-11",
-        "urgency_score": 62,
-        "ytd_return_pct": 5.8,
-        "benchmark_ytd_pct": 10.0
+        "last_contacted": "2026-04-04",
+        "urgency_score": 66,
+        "ytd_return_pct": 3.8,
+        "benchmark_ytd_pct": 11.0
       }
     },
     {
       "id": "W025",
-      "name": "Anjali Desai",
+      "name": "Ishaan Verma",
       "profile": {
-        "age": 39,
+        "age": 26,
+        "email": "ishaan.verma@example.com",
+        "phone": "+91 8900017890",
+        "goal_tag": "Wealth Building",
+        "wealth_score": 50,
         "flags": [
-          "Maternity break — income paused",
-          "SIP paused temporarily",
-          "Re-activate after 3 months"
+          "Just started career — first SIP",
+          "₹5,000/mo SIP running for 3 months",
+          "High growth potential"
         ],
-        "action": "SIP Revival Planning",
-        "segment": "Risk",
+        "action": "SIP Nurture",
+        "reason": "Early investor with strong discipline. Needs guidance on fund selection for long-term wealth.",
+        "segment": "Opportunity",
         "allocation": {
-          "cash": 0.25,
-          "debt": 0.40,
-          "equity": 0.30,
-          "alternatives": 0.05
+          "cash": 0.70,
+          "debt": 0.10,
+          "equity": 0.20,
+          "alternatives": 0.00
         },
-        "aum_inr_cr": 0.41,
+        "aum_inr_cr": 0.04,
+        "aum_potential_inr_cr": 0.30,
+        "net_profit_inr_cr": 0.00,
+        "commission_potential_inr": 12000,
         "kyc_status": "Completed",
-        "occupation": "Pediatrician",
-        "sip_active": false,
-        "risk_profile": "Conservative",
+        "occupation": "Graduate Trainee",
+        "sip_active": true,
+        "risk_profile": "Aggressive",
         "top_holdings": [
-          { "name": "HDFC Balanced Advantage", "type": "hybrid_mf", "weight": 0.35 },
-          { "name": "SBI Magnum Income Fund", "type": "debt_mf", "weight": 0.30 }
+          { "name": "Mirae Asset Large Cap", "type": "equity_mf", "weight": 0.70 },
+          { "name": "SBI Liquid Fund", "type": "debt_mf", "weight": 0.20 }
         ],
-        "last_activity": "2026-03-01",
-        "urgency_score": 82,
-        "ytd_return_pct": 5.9,
-        "benchmark_ytd_pct": 8.0
+        "last_activity": "2026-04-18",
+        "last_contacted": "2026-04-10",
+        "urgency_score": 55,
+        "ytd_return_pct": 10.5,
+        "benchmark_ytd_pct": 12.0
       }
     },
     {
       "id": "W026",
-      "name": "Gautam Menon",
+      "name": "Smita Joshi",
       "profile": {
-        "age": 48,
+        "age": 43,
+        "email": "smita.joshi@example.com",
+        "phone": "+91 8800028901",
+        "goal_tag": "Child Education",
+        "wealth_score": 63,
         "flags": [
-          "Business expansion — ₹50L liquidity need",
-          "Need SWP set up",
-          "Preserve equity corpus"
+          "Education goal in 4 years",
+          "Returns underperforming inflation",
+          "Shift to dynamic bond allocation"
         ],
-        "action": "Liquidity Planning",
-        "segment": "Stable",
+        "action": "Goal Re-alignment",
+        "reason": "Education goal in 4 years with returns below inflation. Corpus at risk without rebalancing.",
+        "segment": "Underperforming",
         "allocation": {
-          "cash": 0.08,
-          "debt": 0.35,
-          "equity": 0.52,
+          "cash": 0.10,
+          "debt": 0.50,
+          "equity": 0.35,
           "alternatives": 0.05
         },
-        "aum_inr_cr": 4.1,
+        "aum_inr_cr": 0.72,
+        "aum_potential_inr_cr": 0.12,
+        "net_profit_inr_cr": 0.04,
+        "commission_potential_inr": 4800,
         "kyc_status": "Completed",
-        "occupation": "Entrepreneur",
+        "occupation": "Lawyer",
         "sip_active": true,
-        "risk_profile": "Aggressive",
+        "risk_profile": "Moderate",
         "top_holdings": [
-          { "name": "Nippon India Small Cap", "type": "equity_mf", "weight": 0.28 },
-          { "name": "Parag Parikh Flexi Cap", "type": "equity_mf", "weight": 0.22 },
-          { "name": "ICICI Prudential Ultra Short Term", "type": "debt_mf", "weight": 0.18 }
+          { "name": "HDFC Corporate Bond", "type": "debt_mf", "weight": 0.35 },
+          { "name": "Axis Bluechip Fund", "type": "equity_mf", "weight": 0.25 },
+          { "name": "SBI Short Duration", "type": "debt_mf", "weight": 0.18 }
         ],
-        "last_activity": "2026-04-18",
-        "urgency_score": 45,
-        "ytd_return_pct": 16.8,
-        "benchmark_ytd_pct": 14.0
+        "last_activity": "2026-04-09",
+        "last_contacted": "2026-04-01",
+        "urgency_score": 74,
+        "ytd_return_pct": 5.6,
+        "benchmark_ytd_pct": 9.0
       }
     },
     {
       "id": "W027",
-      "name": "Shalini Pandey",
+      "name": "Arvind Nambiar",
       "profile": {
-        "age": 26,
+        "age": 39,
+        "email": "arvind.nambiar@example.com",
+        "phone": "+91 8700039012",
+        "goal_tag": "Wealth Building",
+        "wealth_score": 80,
         "flags": [
-          "First investment — high enthusiasm",
-          "Tax planning virgin",
-          "Onboard to SIP + ELSS combo"
+          "Windfall from property sale ₹40L",
+          "Staggered investment plan needed",
+          "STP from liquid to equity recommended"
         ],
-        "action": "First Investment Setup",
+        "action": "Windfall Deployment",
+        "reason": "₹40L from property sale sitting idle. Systematic Transfer Plan needs setup urgently.",
         "segment": "Opportunity",
         "allocation": {
-          "cash": 0.70,
+          "cash": 0.60,
           "debt": 0.20,
-          "equity": 0.10,
-          "alternatives": 0.00
+          "equity": 0.15,
+          "alternatives": 0.05
         },
-        "aum_inr_cr": 0.03,
+        "aum_inr_cr": 1.20,
+        "aum_potential_inr_cr": 0.40,
+        "net_profit_inr_cr": 0.09,
+        "commission_potential_inr": 16000,
         "kyc_status": "Completed",
-        "occupation": "Junior Analyst",
+        "occupation": "Entrepreneur",
         "sip_active": false,
-        "risk_profile": "Moderate",
+        "risk_profile": "Aggressive",
         "top_holdings": [
-          { "name": "SBI Liquid Fund", "type": "debt_mf", "weight": 0.70 }
+          { "name": "Kotak Liquid Fund", "type": "debt_mf", "weight": 0.55 },
+          { "name": "Parag Parikh Flexi Cap", "type": "equity_mf", "weight": 0.18 }
         ],
-        "last_activity": "2026-04-20",
+        "last_activity": "2026-04-15",
+        "last_contacted": "2026-04-12",
         "urgency_score": 90,
-        "ytd_return_pct": 4.2,
+        "ytd_return_pct": 6.2,
         "benchmark_ytd_pct": 12.0
       }
     },
     {
       "id": "W028",
-      "name": "Naresh Batra",
+      "name": "Rekha Patel",
       "profile": {
-        "age": 54,
+        "age": 52,
+        "email": "rekha.patel@example.com",
+        "phone": "+91 8600040123",
+        "goal_tag": "Retirement",
+        "wealth_score": 72,
         "flags": [
-          "Returns 4% below benchmark 3 years running",
-          "Active trading habit hurting returns",
-          "Switch to passive index strategy"
+          "Consistent 8-year investor",
+          "On track for retirement goal",
+          "Schedule annual review"
         ],
-        "action": "Strategy Overhaul",
-        "segment": "Underperforming",
+        "action": "Annual Review Call",
+        "reason": "8-year investor on track for retirement goal. Annual review needed to validate plan.",
+        "segment": "Stable",
         "allocation": {
-          "cash": 0.10,
-          "debt": 0.25,
-          "equity": 0.60,
+          "cash": 0.07,
+          "debt": 0.38,
+          "equity": 0.50,
           "alternatives": 0.05
         },
-        "aum_inr_cr": 1.8,
+        "aum_inr_cr": 1.85,
+        "aum_potential_inr_cr": 0.05,
+        "net_profit_inr_cr": 0.17,
+        "commission_potential_inr": 2000,
         "kyc_status": "Completed",
-        "occupation": "Stock Trader",
-        "sip_active": false,
-        "risk_profile": "Aggressive",
+        "occupation": "Textile Businesswoman",
+        "sip_active": true,
+        "risk_profile": "Moderate",
         "top_holdings": [
-          { "name": "DSP Focus Fund", "type": "equity_mf", "weight": 0.30 },
-          { "name": "Franklin India Opportunities", "type": "equity_mf", "weight": 0.22 },
-          { "name": "HSBC Value Fund", "type": "equity_mf", "weight": 0.18 }
+          { "name": "SBI Bluechip Fund", "type": "equity_mf", "weight": 0.28 },
+          { "name": "Kotak Balanced Advantage", "type": "hybrid_mf", "weight": 0.22 },
+          { "name": "HDFC Short Duration", "type": "debt_mf", "weight": 0.18 }
         ],
-        "last_activity": "2026-04-02",
-        "urgency_score": 68,
-        "ytd_return_pct": 5.3,
-        "benchmark_ytd_pct": 12.0
+        "last_activity": "2026-04-11",
+        "last_contacted": "2026-03-18",
+        "urgency_score": 20,
+        "ytd_return_pct": 9.3,
+        "benchmark_ytd_pct": 9.5
       }
     },
     {
       "id": "W029",
-      "name": "Devika Nambiar",
-      "profile": {
-        "age": 43,
-        "flags": [
-          "Inheritance of ₹30L last month",
-          "Looking for wealth management advice",
-          "Structured deployment needed"
-        ],
-        "action": "Wealth Structuring",
-        "segment": "Opportunity",
-        "allocation": {
-          "cash": 0.60,
-          "debt": 0.25,
-          "equity": 0.10,
-          "alternatives": 0.05
-        },
-        "aum_inr_cr": 0.35,
-        "kyc_status": "Completed",
-        "occupation": "Homemaker",
-        "sip_active": false,
-        "risk_profile": "Moderate",
-        "top_holdings": [
-          { "name": "SBI Liquid Fund", "type": "debt_mf", "weight": 0.60 },
-          { "name": "HDFC Corporate Bond", "type": "debt_mf", "weight": 0.22 }
-        ],
-        "last_activity": "2026-04-17",
-        "urgency_score": 86,
-        "ytd_return_pct": 5.1,
-        "benchmark_ytd_pct": 11.0
-      }
-    },
-    {
-      "id": "W030",
-      "name": "Sameer Joshi",
+      "name": "Karan Mehrotra",
       "profile": {
         "age": 37,
+        "email": "karan.mehrotra@example.com",
+        "phone": "+91 8500051234",
+        "goal_tag": "Wealth Building",
+        "wealth_score": 41,
         "flags": [
-          "Consistent performer — CAGR 14%",
-          "Portfolio exceeding all goals",
-          "Introduce PMS or AIF"
+          "KYC update required since Nov 2025",
+          "SIP on hold",
+          "Compliance risk if not resolved"
         ],
-        "action": "Premium Product Pitch",
-        "segment": "Stable",
-        "allocation": {
-          "cash": 0.05,
-          "debt": 0.15,
-          "equity": 0.75,
-          "alternatives": 0.05
-        },
-        "aum_inr_cr": 1.95,
-        "kyc_status": "Completed",
-        "occupation": "Investment Banker",
-        "sip_active": true,
-        "risk_profile": "Aggressive",
-        "top_holdings": [
-          { "name": "Mirae Asset Emerging Bluechip", "type": "equity_mf", "weight": 0.30 },
-          { "name": "Nippon India Small Cap", "type": "equity_mf", "weight": 0.25 },
-          { "name": "Axis Growth Opportunities", "type": "equity_mf", "weight": 0.18 }
-        ],
-        "last_activity": "2026-04-20",
-        "urgency_score": 20,
-        "ytd_return_pct": 17.4,
-        "benchmark_ytd_pct": 14.0
-      }
-    },
-    {
-      "id": "W031",
-      "name": "Geetha Rajan",
-      "profile": {
-        "age": 66,
-        "flags": [
-          "SWP drawing down corpus too fast",
-          "Corpus projected to exhaust in 8 years",
-          "Reduce SWP or increase equity exposure"
-        ],
-        "action": "SWP Restructure",
-        "segment": "Risk",
-        "allocation": {
-          "cash": 0.10,
-          "debt": 0.60,
-          "equity": 0.25,
-          "alternatives": 0.05
-        },
-        "aum_inr_cr": 0.95,
-        "kyc_status": "Completed",
-        "occupation": "Retired Teacher",
-        "sip_active": false,
-        "risk_profile": "Conservative",
-        "top_holdings": [
-          { "name": "HDFC Short Term Debt", "type": "debt_mf", "weight": 0.35 },
-          { "name": "SBI Magnum Gilt", "type": "debt_mf", "weight": 0.25 },
-          { "name": "HDFC Balanced Advantage", "type": "hybrid_mf", "weight": 0.18 }
-        ],
-        "last_activity": "2026-03-28",
-        "urgency_score": 87,
-        "ytd_return_pct": 5.6,
-        "benchmark_ytd_pct": 6.0
-      }
-    },
-    {
-      "id": "W032",
-      "name": "Kiran Verma",
-      "profile": {
-        "age": 41,
-        "flags": [
-          "Salary credit irregular last 3 months",
-          "Business downturn risk",
-          "Review risk tolerance"
-        ],
-        "action": "Risk Profiling Review",
-        "segment": "Risk",
-        "allocation": {
-          "cash": 0.20,
-          "debt": 0.35,
-          "equity": 0.40,
-          "alternatives": 0.05
-        },
-        "aum_inr_cr": 0.58,
-        "kyc_status": "Completed",
-        "occupation": "Restaurant Owner",
-        "sip_active": true,
-        "risk_profile": "Moderate",
-        "top_holdings": [
-          { "name": "Axis Bluechip Fund", "type": "equity_mf", "weight": 0.28 },
-          { "name": "Franklin India Short Term", "type": "debt_mf", "weight": 0.25 },
-          { "name": "SBI Liquid Fund", "type": "debt_mf", "weight": 0.20 }
-        ],
-        "last_activity": "2026-03-18",
-        "urgency_score": 80,
-        "ytd_return_pct": 7.9,
-        "benchmark_ytd_pct": 10.5
-      }
-    },
-    {
-      "id": "W033",
-      "name": "Pallavi Chatterjee",
-      "profile": {
-        "age": 30,
-        "flags": [
-          "House down payment goal 3 years away",
-          "SIP on track",
-          "Add debt fund for stability"
-        ],
-        "action": "Goal Alignment Check",
-        "segment": "Stable",
-        "allocation": {
-          "cash": 0.08,
-          "debt": 0.30,
-          "equity": 0.58,
-          "alternatives": 0.04
-        },
-        "aum_inr_cr": 0.31,
-        "kyc_status": "Completed",
-        "occupation": "UX Designer",
-        "sip_active": true,
-        "risk_profile": "Moderate",
-        "top_holdings": [
-          { "name": "SBI Bluechip Fund", "type": "equity_mf", "weight": 0.30 },
-          { "name": "HDFC Corporate Bond", "type": "debt_mf", "weight": 0.22 },
-          { "name": "Kotak Equity Hybrid", "type": "hybrid_mf", "weight": 0.18 }
-        ],
-        "last_activity": "2026-04-15",
-        "urgency_score": 28,
-        "ytd_return_pct": 10.8,
-        "benchmark_ytd_pct": 11.0
-      }
-    },
-    {
-      "id": "W034",
-      "name": "Harish Kumar",
-      "profile": {
-        "age": 52,
-        "flags": [
-          "Regular annual caller — very engaged",
-          "Portfolio well balanced",
-          "Explore NPS contribution"
-        ],
-        "action": "NPS Top-up Advisory",
-        "segment": "Stable",
-        "allocation": {
-          "cash": 0.06,
-          "debt": 0.38,
-          "equity": 0.52,
-          "alternatives": 0.04
-        },
-        "aum_inr_cr": 2.1,
-        "kyc_status": "Completed",
-        "occupation": "Senior Civil Servant",
-        "sip_active": true,
-        "risk_profile": "Moderate",
-        "top_holdings": [
-          { "name": "Parag Parikh Flexi Cap", "type": "equity_mf", "weight": 0.28 },
-          { "name": "UTI Nifty 50 Index", "type": "equity_mf", "weight": 0.20 },
-          { "name": "Aditya Birla Sun Life Corporate Bond", "type": "debt_mf", "weight": 0.18 }
-        ],
-        "last_activity": "2026-04-08",
-        "urgency_score": 22,
-        "ytd_return_pct": 11.5,
-        "benchmark_ytd_pct": 11.0
-      }
-    },
-    {
-      "id": "W035",
-      "name": "Rupa Iyer",
-      "profile": {
-        "age": 44,
-        "flags": [
-          "Returns 3% below peers in same segment",
-          "High expense ratio funds",
-          "Move to direct plan"
-        ],
-        "action": "Direct Plan Migration",
-        "segment": "Underperforming",
-        "allocation": {
-          "cash": 0.07,
-          "debt": 0.28,
-          "equity": 0.60,
-          "alternatives": 0.05
-        },
-        "aum_inr_cr": 0.74,
-        "kyc_status": "Completed",
-        "occupation": "Jewellery Designer",
-        "sip_active": true,
-        "risk_profile": "Moderate",
-        "top_holdings": [
-          { "name": "DSP Midcap Fund (Regular)", "type": "equity_mf", "weight": 0.32 },
-          { "name": "Franklin India Bluechip (Regular)", "type": "equity_mf", "weight": 0.22 },
-          { "name": "HDFC Short Term (Regular)", "type": "debt_mf", "weight": 0.18 }
-        ],
-        "last_activity": "2026-04-09",
-        "urgency_score": 65,
-        "ytd_return_pct": 6.9,
-        "benchmark_ytd_pct": 10.5
-      }
-    },
-    {
-      "id": "W036",
-      "name": "Vivek Malhotra",
-      "profile": {
-        "age": 35,
-        "flags": [
-          "Investor education needed",
-          "Panic-sold during last correction",
-          "Behavioural coaching required"
-        ],
-        "action": "Behavioural Re-engagement",
+        "action": "KYC Compliance Follow-up",
+        "reason": "KYC update pending since Nov 2025. SIP blocked. Compliance risk increases each day.",
         "segment": "Risk",
         "allocation": {
           "cash": 0.40,
@@ -1199,66 +1220,630 @@
           "equity": 0.25,
           "alternatives": 0.05
         },
-        "aum_inr_cr": 0.29,
+        "aum_inr_cr": 0.45,
+        "aum_potential_inr_cr": 0.05,
+        "net_profit_inr_cr": 0.02,
+        "commission_potential_inr": 2000,
+        "kyc_status": "Update Required",
+        "occupation": "Finance Analyst",
+        "sip_active": false,
+        "risk_profile": "Moderate",
+        "top_holdings": [
+          { "name": "Axis Liquid Fund", "type": "debt_mf", "weight": 0.45 },
+          { "name": "UTI Nifty 50 Index", "type": "equity_mf", "weight": 0.22 }
+        ],
+        "last_activity": "2026-03-01",
+        "last_contacted": "2026-03-15",
+        "urgency_score": 86,
+        "ytd_return_pct": 4.0,
+        "benchmark_ytd_pct": 11.0
+      }
+    },
+    {
+      "id": "W030",
+      "name": "Deepika Rao",
+      "profile": {
+        "age": 30,
+        "email": "deepika.rao@example.com",
+        "phone": "+91 8400062345",
+        "goal_tag": "Home Purchase",
+        "wealth_score": 60,
+        "flags": [
+          "Home loan taken — EMI ₹38k/month",
+          "Investment capacity reduced",
+          "SIP amount needs revision"
+        ],
+        "action": "SIP Revision",
+        "reason": "New home loan reduces investable surplus. Current SIP amount may be unsustainable.",
+        "segment": "Opportunity",
+        "allocation": {
+          "cash": 0.25,
+          "debt": 0.30,
+          "equity": 0.40,
+          "alternatives": 0.05
+        },
+        "aum_inr_cr": 0.30,
+        "aum_potential_inr_cr": 0.05,
+        "net_profit_inr_cr": 0.02,
+        "commission_potential_inr": 2000,
         "kyc_status": "Completed",
-        "occupation": "Store Manager",
+        "occupation": "Civil Engineer",
+        "sip_active": true,
+        "risk_profile": "Moderate",
+        "top_holdings": [
+          { "name": "Mirae Asset Large Cap", "type": "equity_mf", "weight": 0.32 },
+          { "name": "ICICI Prudential Short Term", "type": "debt_mf", "weight": 0.28 }
+        ],
+        "last_activity": "2026-04-17",
+        "last_contacted": "2026-04-08",
+        "urgency_score": 58,
+        "ytd_return_pct": 8.0,
+        "benchmark_ytd_pct": 9.0
+      }
+    },
+    {
+      "id": "W031",
+      "name": "Ajay Banerjee",
+      "profile": {
+        "age": 48,
+        "email": "ajay.banerjee@example.com",
+        "phone": "+91 8300073456",
+        "goal_tag": "Tax Saving",
+        "wealth_score": 56,
+        "flags": [
+          "Bulk of assets in FDs — low return",
+          "Tax inefficiency identified",
+          "Migrate ₹10L to debt MF + ELSS"
+        ],
+        "action": "Tax Optimisation",
+        "reason": "₹10L+ in low-yield FDs. Tax inefficiency vs debt mutual funds identified. Migration call needed.",
+        "segment": "Underperforming",
+        "allocation": {
+          "cash": 0.50,
+          "debt": 0.35,
+          "equity": 0.10,
+          "alternatives": 0.05
+        },
+        "aum_inr_cr": 0.60,
+        "aum_potential_inr_cr": 0.10,
+        "net_profit_inr_cr": 0.03,
+        "commission_potential_inr": 4000,
+        "kyc_status": "Completed",
+        "occupation": "Govt. Engineer",
         "sip_active": false,
         "risk_profile": "Conservative",
         "top_holdings": [
-          { "name": "SBI Liquid Fund", "type": "debt_mf", "weight": 0.45 },
-          { "name": "HDFC Balanced Advantage", "type": "hybrid_mf", "weight": 0.25 }
+          { "name": "Axis Liquid Fund", "type": "debt_mf", "weight": 0.50 },
+          { "name": "SBI Corporate Bond", "type": "debt_mf", "weight": 0.30 }
+        ],
+        "last_activity": "2026-04-02",
+        "last_contacted": "2026-03-22",
+        "urgency_score": 69,
+        "ytd_return_pct": 5.2,
+        "benchmark_ytd_pct": 8.5
+      }
+    },
+    {
+      "id": "W032",
+      "name": "Kavya Menon",
+      "profile": {
+        "age": 28,
+        "email": "kavya.menon@example.com",
+        "phone": "+91 8200084567",
+        "goal_tag": "Wealth Building",
+        "wealth_score": 65,
+        "flags": [
+          "ESOP vesting in 2 months",
+          "Large lump sum expected",
+          "Tax planning required"
+        ],
+        "action": "ESOP Planning",
+        "reason": "ESOP vesting in 2 months. Require lump sum deployment and staggered tax-planning strategy.",
+        "segment": "Opportunity",
+        "allocation": {
+          "cash": 0.30,
+          "debt": 0.20,
+          "equity": 0.45,
+          "alternatives": 0.05
+        },
+        "aum_inr_cr": 0.25,
+        "aum_potential_inr_cr": 0.30,
+        "net_profit_inr_cr": 0.02,
+        "commission_potential_inr": 12000,
+        "kyc_status": "Completed",
+        "occupation": "Senior Dev — Unicorn Startup",
+        "sip_active": true,
+        "risk_profile": "Aggressive",
+        "top_holdings": [
+          { "name": "Axis Long Term Equity", "type": "equity_mf", "weight": 0.35 },
+          { "name": "Nippon India Small Cap", "type": "equity_mf", "weight": 0.22 }
+        ],
+        "last_activity": "2026-04-16",
+        "last_contacted": "2026-04-10",
+        "urgency_score": 82,
+        "ytd_return_pct": 14.8,
+        "benchmark_ytd_pct": 13.0
+      }
+    },
+    {
+      "id": "W033",
+      "name": "Subramaniam Pillai",
+      "profile": {
+        "age": 65,
+        "email": "subra.pillai@example.com",
+        "phone": "+91 8100095678",
+        "goal_tag": "Retirement",
+        "wealth_score": 83,
+        "flags": [
+          "Large corpus — ₹4.2Cr",
+          "Income-generating asset mix needed",
+          "Quarterly review scheduled"
+        ],
+        "action": "Income Generation Review",
+        "reason": "₹4.2Cr corpus in retirement. Shift to income-generating mix for stable monthly distribution.",
+        "segment": "Stable",
+        "allocation": {
+          "cash": 0.08,
+          "debt": 0.55,
+          "equity": 0.30,
+          "alternatives": 0.07
+        },
+        "aum_inr_cr": 4.2,
+        "aum_potential_inr_cr": 0.00,
+        "net_profit_inr_cr": 0.25,
+        "commission_potential_inr": 0,
+        "kyc_status": "Completed",
+        "occupation": "Retired Banker",
+        "sip_active": false,
+        "risk_profile": "Conservative",
+        "top_holdings": [
+          { "name": "HDFC Balanced Advantage", "type": "hybrid_mf", "weight": 0.28 },
+          { "name": "Kotak Gilt Fund", "type": "debt_mf", "weight": 0.22 },
+          { "name": "Axis Bluechip Fund", "type": "equity_mf", "weight": 0.15 }
+        ],
+        "last_activity": "2026-04-08",
+        "last_contacted": "2026-03-20",
+        "urgency_score": 22,
+        "ytd_return_pct": 6.0,
+        "benchmark_ytd_pct": 6.5
+      }
+    },
+    {
+      "id": "W034",
+      "name": "Manisha Desai",
+      "profile": {
+        "age": 41,
+        "email": "manisha.desai@example.com",
+        "phone": "+91 8001006789",
+        "goal_tag": "Child Education",
+        "wealth_score": 70,
+        "flags": [
+          "Divorce settlement received — ₹18L",
+          "Investment restart required",
+          "Goal re-planning needed"
+        ],
+        "action": "Life Event Planning",
+        "reason": "Post-divorce settlement of ₹18L available. Life goals need complete re-planning.",
+        "segment": "Opportunity",
+        "allocation": {
+          "cash": 0.65,
+          "debt": 0.20,
+          "equity": 0.10,
+          "alternatives": 0.05
+        },
+        "aum_inr_cr": 0.55,
+        "aum_potential_inr_cr": 0.18,
+        "net_profit_inr_cr": 0.03,
+        "commission_potential_inr": 7200,
+        "kyc_status": "Completed",
+        "occupation": "Doctor",
+        "sip_active": false,
+        "risk_profile": "Moderate",
+        "top_holdings": [
+          { "name": "SBI Liquid Fund", "type": "debt_mf", "weight": 0.65 },
+          { "name": "Mirae Asset Large Cap", "type": "equity_mf", "weight": 0.15 }
+        ],
+        "last_activity": "2026-04-14",
+        "last_contacted": "2026-04-10",
+        "urgency_score": 76,
+        "ytd_return_pct": 5.0,
+        "benchmark_ytd_pct": 11.0
+      }
+    },
+    {
+      "id": "W035",
+      "name": "Nitin Kulkarni",
+      "profile": {
+        "age": 54,
+        "email": "nitin.kulkarni@example.com",
+        "phone": "+91 7900017890",
+        "goal_tag": "Wealth Building",
+        "wealth_score": 49,
+        "flags": [
+          "Returns well below category peers",
+          "Fund manager change impacted returns",
+          "Switch to passive index strategy"
+        ],
+        "action": "Active-to-Passive Migration",
+        "reason": "Fund manager change led to 4.2% underperformance vs peers. Passive index switch recommended.",
+        "segment": "Underperforming",
+        "allocation": {
+          "cash": 0.05,
+          "debt": 0.25,
+          "equity": 0.65,
+          "alternatives": 0.05
+        },
+        "aum_inr_cr": 0.98,
+        "aum_potential_inr_cr": 0.12,
+        "net_profit_inr_cr": 0.05,
+        "commission_potential_inr": 4800,
+        "kyc_status": "Completed",
+        "occupation": "Supply Chain Manager",
+        "sip_active": true,
+        "risk_profile": "Moderate",
+        "top_holdings": [
+          { "name": "Franklin India Flexi Cap", "type": "equity_mf", "weight": 0.38 },
+          { "name": "ICICI Value Discovery", "type": "equity_mf", "weight": 0.25 }
+        ],
+        "last_activity": "2026-04-04",
+        "last_contacted": "2026-03-25",
+        "urgency_score": 71,
+        "ytd_return_pct": 4.8,
+        "benchmark_ytd_pct": 11.0
+      }
+    },
+    {
+      "id": "W036",
+      "name": "Preethi Sundaram",
+      "profile": {
+        "age": 33,
+        "email": "preethi.sundaram@example.com",
+        "phone": "+91 7800028901",
+        "goal_tag": "Wealth Building",
+        "wealth_score": 74,
+        "flags": [
+          "RSU vesting from MNC — ₹8L",
+          "International diversification interest",
+          "FOF opportunity"
+        ],
+        "action": "International Fund Pitch",
+        "reason": "MNC RSU vesting with interest in international diversification. FOF pitch timing is ideal.",
+        "segment": "Opportunity",
+        "allocation": {
+          "cash": 0.15,
+          "debt": 0.15,
+          "equity": 0.65,
+          "alternatives": 0.05
+        },
+        "aum_inr_cr": 0.48,
+        "aum_potential_inr_cr": 0.12,
+        "net_profit_inr_cr": 0.06,
+        "commission_potential_inr": 4800,
+        "kyc_status": "Completed",
+        "occupation": "Data Scientist — MNC",
+        "sip_active": true,
+        "risk_profile": "Aggressive",
+        "top_holdings": [
+          { "name": "Motilal Oswal Nasdaq FOF", "type": "equity_mf", "weight": 0.22 },
+          { "name": "Nippon India Small Cap", "type": "equity_mf", "weight": 0.28 }
+        ],
+        "last_activity": "2026-04-18",
+        "last_contacted": "2026-04-12",
+        "urgency_score": 67,
+        "ytd_return_pct": 13.5,
+        "benchmark_ytd_pct": 13.0
+      }
+    },
+    {
+      "id": "W037",
+      "name": "Vijay Hegde",
+      "profile": {
+        "age": 44,
+        "email": "vijay.hegde@example.com",
+        "phone": "+91 7700039012",
+        "goal_tag": "Wealth Building",
+        "wealth_score": 36,
+        "flags": [
+          "Missed 6 SIPs in a row",
+          "Business cash flow issues cited",
+          "Temporary pause or fund switch suggested"
+        ],
+        "action": "SIP Rescue Plan",
+        "reason": "6 consecutive missed SIPs due to business cash flow. Intervention needed before full cancellation.",
+        "segment": "Risk",
+        "allocation": {
+          "cash": 0.45,
+          "debt": 0.25,
+          "equity": 0.25,
+          "alternatives": 0.05
+        },
+        "aum_inr_cr": 0.35,
+        "aum_potential_inr_cr": 0.03,
+        "net_profit_inr_cr": 0.02,
+        "commission_potential_inr": 1200,
+        "kyc_status": "Completed",
+        "occupation": "Restaurant Owner",
+        "sip_active": false,
+        "risk_profile": "Moderate",
+        "top_holdings": [
+          { "name": "Kotak Balanced Advantage", "type": "hybrid_mf", "weight": 0.30 },
+          { "name": "SBI Short Duration", "type": "debt_mf", "weight": 0.25 }
         ],
         "last_activity": "2026-02-10",
-        "urgency_score": 88,
+        "last_contacted": "2026-03-05",
+        "urgency_score": 94,
         "ytd_return_pct": 4.5,
         "benchmark_ytd_pct": 9.5
       }
     },
     {
-      "id": "W037",
-      "name": "Asha Mukherjee",
+      "id": "W038",
+      "name": "Shilpa Iyengar",
       "profile": {
-        "age": 59,
+        "age": 38,
+        "email": "shilpa.iyengar@example.com",
+        "phone": "+91 7600040123",
+        "goal_tag": "Retirement",
+        "wealth_score": 79,
         "flags": [
-          "Top 5% client by AUM",
-          "Potential PMS referral",
-          "Estate planning required"
+          "NPS + MF combo investor",
+          "Allocation well diversified",
+          "Tax optimisation review advisable"
         ],
-        "action": "HNI Upgrade",
+        "action": "Tax Planning Review",
+        "reason": "NPS + MF combo investor — tax optimisation across both vehicles can improve post-tax returns.",
         "segment": "Stable",
         "allocation": {
-          "cash": 0.05,
-          "debt": 0.30,
-          "equity": 0.60,
-          "alternatives": 0.05
+          "cash": 0.06,
+          "debt": 0.35,
+          "equity": 0.55,
+          "alternatives": 0.04
         },
-        "aum_inr_cr": 7.8,
+        "aum_inr_cr": 1.10,
+        "aum_potential_inr_cr": 0.08,
+        "net_profit_inr_cr": 0.12,
+        "commission_potential_inr": 3200,
         "kyc_status": "Completed",
-        "occupation": "Retired IPS Officer",
+        "occupation": "HR Business Partner",
         "sip_active": true,
         "risk_profile": "Moderate",
         "top_holdings": [
-          { "name": "DSP Midcap Fund", "type": "equity_mf", "weight": 0.25 },
-          { "name": "Parag Parikh Flexi Cap", "type": "equity_mf", "weight": 0.22 },
-          { "name": "HDFC Corporate Bond", "type": "debt_mf", "weight": 0.20 }
+          { "name": "Parag Parikh Flexi Cap", "type": "equity_mf", "weight": 0.28 },
+          { "name": "HDFC Short Duration", "type": "debt_mf", "weight": 0.22 },
+          { "name": "UTI Nifty 50 Index", "type": "equity_mf", "weight": 0.18 }
         ],
-        "last_activity": "2026-04-12",
-        "urgency_score": 10,
-        "ytd_return_pct": 13.8,
+        "last_activity": "2026-04-13",
+        "last_contacted": "2026-04-05",
+        "urgency_score": 24,
+        "ytd_return_pct": 11.0,
+        "benchmark_ytd_pct": 11.0
+      }
+    },
+    {
+      "id": "W039",
+      "name": "Rahul Chatterjee",
+      "profile": {
+        "age": 35,
+        "email": "rahul.chatterjee@example.com",
+        "phone": "+91 7500051234",
+        "goal_tag": "Home Purchase",
+        "wealth_score": 40,
+        "flags": [
+          "SIP inconsistency — 3 skips in 4 months",
+          "No explanation from client",
+          "Proactive outreach needed"
+        ],
+        "action": "Proactive Check-in",
+        "reason": "3 SIP skips in 4 months without explanation. Risk of attrition — proactive check-in required.",
+        "segment": "Risk",
+        "allocation": {
+          "cash": 0.35,
+          "debt": 0.30,
+          "equity": 0.30,
+          "alternatives": 0.05
+        },
+        "aum_inr_cr": 0.28,
+        "aum_potential_inr_cr": 0.04,
+        "net_profit_inr_cr": 0.01,
+        "commission_potential_inr": 1600,
+        "kyc_status": "Completed",
+        "occupation": "Journalist",
+        "sip_active": false,
+        "risk_profile": "Moderate",
+        "top_holdings": [
+          { "name": "SBI Bluechip Fund", "type": "equity_mf", "weight": 0.28 },
+          { "name": "Axis Short Duration", "type": "debt_mf", "weight": 0.25 }
+        ],
+        "last_activity": "2026-03-18",
+        "last_contacted": "2026-04-01",
+        "urgency_score": 80,
+        "ytd_return_pct": 5.8,
+        "benchmark_ytd_pct": 9.5
+      }
+    },
+    {
+      "id": "W040",
+      "name": "Bhavna Doshi",
+      "profile": {
+        "age": 56,
+        "email": "bhavna.doshi@example.com",
+        "phone": "+91 7400062345",
+        "goal_tag": "Retirement",
+        "wealth_score": 85,
+        "flags": [
+          "Daughter's wedding in 6 months",
+          "Planned partial redemption ₹8L",
+          "Post-wedding re-investment plan needed"
+        ],
+        "action": "Redemption + Re-investment Plan",
+        "reason": "Daughter's wedding in 6 months — planned ₹8L redemption. Re-investment plan must be in place.",
+        "segment": "Stable",
+        "allocation": {
+          "cash": 0.12,
+          "debt": 0.40,
+          "equity": 0.43,
+          "alternatives": 0.05
+        },
+        "aum_inr_cr": 2.60,
+        "aum_potential_inr_cr": 0.05,
+        "net_profit_inr_cr": 0.24,
+        "commission_potential_inr": 2000,
+        "kyc_status": "Completed",
+        "occupation": "Retired Banker",
+        "sip_active": true,
+        "risk_profile": "Conservative",
+        "top_holdings": [
+          { "name": "HDFC Balanced Advantage", "type": "hybrid_mf", "weight": 0.30 },
+          { "name": "SBI Magnum Gilt", "type": "debt_mf", "weight": 0.25 },
+          { "name": "Kotak Bluechip Fund", "type": "equity_mf", "weight": 0.18 }
+        ],
+        "last_activity": "2026-04-10",
+        "last_contacted": "2026-03-28",
+        "urgency_score": 30,
+        "ytd_return_pct": 9.2,
+        "benchmark_ytd_pct": 9.0
+      }
+    },
+    {
+      "id": "W041",
+      "name": "Ashwin Ramachandran",
+      "profile": {
+        "age": 31,
+        "email": "ashwin.ramachandran@example.com",
+        "phone": "+91 7300073456",
+        "goal_tag": "Wealth Building",
+        "wealth_score": 62,
+        "flags": [
+          "Peer referral — high potential",
+          "First meeting arranged",
+          "Complete KYC + onboarding"
+        ],
+        "action": "New Client Onboarding",
+        "reason": "Referred by Zoya Khan. High income, no investments. Priority onboarding opportunity.",
+        "segment": "Opportunity",
+        "allocation": {
+          "cash": 0.90,
+          "debt": 0.05,
+          "equity": 0.05,
+          "alternatives": 0.00
+        },
+        "aum_inr_cr": 0.02,
+        "aum_potential_inr_cr": 0.35,
+        "net_profit_inr_cr": 0.00,
+        "commission_potential_inr": 14000,
+        "kyc_status": "Pending",
+        "occupation": "Investment Banker",
+        "sip_active": false,
+        "risk_profile": "Aggressive",
+        "top_holdings": [],
+        "last_activity": "2026-04-19",
+        "last_contacted": "2026-04-18",
+        "urgency_score": 87,
+        "ytd_return_pct": 3.5,
         "benchmark_ytd_pct": 12.0
       }
     },
     {
-      "id": "W038",
-      "name": "Tarun Banerjee",
+      "id": "W042",
+      "name": "Geetha Subramanian",
       "profile": {
-        "age": 28,
+        "age": 60,
+        "email": "geetha.subramanian@example.com",
+        "phone": "+91 7200084567",
+        "goal_tag": "Retirement",
+        "wealth_score": 71,
         "flags": [
-          "Recently started SIP ₹2,000/mo",
-          "Can increase to ₹8,000/mo basis income",
-          "High future AUM potential"
+          "Widow — portfolio management alone",
+          "Conservative allocation appropriate",
+          "Quarterly check-in established"
         ],
-        "action": "SIP Scaling",
+        "action": "Maintenance & Support",
+        "reason": "Recently widowed, managing portfolio independently. Needs quarterly reassurance and review.",
+        "segment": "Stable",
+        "allocation": {
+          "cash": 0.10,
+          "debt": 0.60,
+          "equity": 0.25,
+          "alternatives": 0.05
+        },
+        "aum_inr_cr": 1.75,
+        "aum_potential_inr_cr": 0.00,
+        "net_profit_inr_cr": 0.11,
+        "commission_potential_inr": 0,
+        "kyc_status": "Completed",
+        "occupation": "Homemaker",
+        "sip_active": false,
+        "risk_profile": "Conservative",
+        "top_holdings": [
+          { "name": "SBI Savings Fund", "type": "debt_mf", "weight": 0.35 },
+          { "name": "HDFC Balanced Advantage", "type": "hybrid_mf", "weight": 0.25 },
+          { "name": "Axis Gilt Fund", "type": "debt_mf", "weight": 0.20 }
+        ],
+        "last_activity": "2026-04-05",
+        "last_contacted": "2026-03-15",
+        "urgency_score": 16,
+        "ytd_return_pct": 6.3,
+        "benchmark_ytd_pct": 6.5
+      }
+    },
+    {
+      "id": "W043",
+      "name": "Sachin Kulkarni",
+      "profile": {
+        "age": 40,
+        "email": "sachin.kulkarni@example.com",
+        "phone": "+91 7100095678",
+        "goal_tag": "Wealth Building",
+        "wealth_score": 57,
+        "flags": [
+          "Real estate heavy — 85% illiquid",
+          "Portfolio diversification needed",
+          "SIP initiation for liquid wealth"
+        ],
+        "action": "Diversification Pitch",
+        "reason": "85% net worth in real estate. SIP initiation needed to build liquid financial portfolio.",
+        "segment": "Opportunity",
+        "allocation": {
+          "cash": 0.10,
+          "debt": 0.15,
+          "equity": 0.70,
+          "alternatives": 0.05
+        },
+        "aum_inr_cr": 0.40,
+        "aum_potential_inr_cr": 0.25,
+        "net_profit_inr_cr": 0.03,
+        "commission_potential_inr": 10000,
+        "kyc_status": "Completed",
+        "occupation": "Real Estate Builder",
+        "sip_active": false,
+        "risk_profile": "Aggressive",
+        "top_holdings": [
+          { "name": "Mirae Asset Emerging Bluechip", "type": "equity_mf", "weight": 0.45 },
+          { "name": "Nippon India Small Cap", "type": "equity_mf", "weight": 0.28 }
+        ],
+        "last_activity": "2026-04-06",
+        "last_contacted": "2026-03-30",
+        "urgency_score": 63,
+        "ytd_return_pct": 14.0,
+        "benchmark_ytd_pct": 13.0
+      }
+    },
+    {
+      "id": "W044",
+      "name": "Divya Krishnamurthy",
+      "profile": {
+        "age": 29,
+        "email": "divya.krishnamurthy@example.com",
+        "phone": "+91 7001006789",
+        "goal_tag": "Wealth Building",
+        "wealth_score": 59,
+        "flags": [
+          "Freshly promoted to senior role",
+          "SIP at ₹3k — scope for increase",
+          "Discuss ELSS for tax saving"
+        ],
+        "action": "SIP Top-up & ELSS",
+        "reason": "Senior role promotion to double savings. Current SIP ₹3k/mo — scope for 3x top-up.",
         "segment": "Opportunity",
         "allocation": {
           "cash": 0.25,
@@ -1266,425 +1851,280 @@
           "equity": 0.50,
           "alternatives": 0.05
         },
-        "aum_inr_cr": 0.08,
+        "aum_inr_cr": 0.15,
+        "aum_potential_inr_cr": 0.12,
+        "net_profit_inr_cr": 0.01,
+        "commission_potential_inr": 4800,
         "kyc_status": "Completed",
-        "occupation": "Journalist",
-        "sip_active": true,
-        "risk_profile": "Aggressive",
-        "top_holdings": [
-          { "name": "Axis Long Term Equity", "type": "equity_mf", "weight": 0.40 },
-          { "name": "Mirae Asset Large Cap", "type": "equity_mf", "weight": 0.30 }
-        ],
-        "last_activity": "2026-04-18",
-        "urgency_score": 74,
-        "ytd_return_pct": 12.2,
-        "benchmark_ytd_pct": 13.0
-      }
-    },
-    {
-      "id": "W039",
-      "name": "Bhavna Trivedi",
-      "profile": {
-        "age": 46,
-        "flags": [
-          "SIP running but wrong category",
-          "Large cap returns lagging flexi cap",
-          "Switch funds within same AMC"
-        ],
-        "action": "Fund Category Switch",
-        "segment": "Underperforming",
-        "allocation": {
-          "cash": 0.05,
-          "debt": 0.22,
-          "equity": 0.68,
-          "alternatives": 0.05
-        },
-        "aum_inr_cr": 0.63,
-        "kyc_status": "Completed",
-        "occupation": "Hospital Administrator",
+        "occupation": "UX Designer",
         "sip_active": true,
         "risk_profile": "Moderate",
         "top_holdings": [
-          { "name": "HDFC Top 100 Fund", "type": "equity_mf", "weight": 0.38 },
-          { "name": "SBI Bluechip Fund", "type": "equity_mf", "weight": 0.22 },
-          { "name": "Kotak Short Duration", "type": "debt_mf", "weight": 0.18 }
-        ],
-        "last_activity": "2026-04-07",
-        "urgency_score": 71,
-        "ytd_return_pct": 7.2,
-        "benchmark_ytd_pct": 12.0
-      }
-    },
-    {
-      "id": "W040",
-      "name": "Santosh Nair",
-      "profile": {
-        "age": 33,
-        "flags": [
-          "Recently married — portfolio not updated",
-          "Joint financial planning required",
-          "Add spouse as nominee"
-        ],
-        "action": "Life Event Update",
-        "segment": "Opportunity",
-        "allocation": {
-          "cash": 0.18,
-          "debt": 0.22,
-          "equity": 0.55,
-          "alternatives": 0.05
-        },
-        "aum_inr_cr": 0.34,
-        "kyc_status": "Completed",
-        "occupation": "Mechanical Engineer",
-        "sip_active": true,
-        "risk_profile": "Moderate",
-        "top_holdings": [
-          { "name": "UTI Nifty 50 Index", "type": "equity_mf", "weight": 0.32 },
-          { "name": "DSP Midcap Fund", "type": "equity_mf", "weight": 0.22 },
-          { "name": "SBI Magnum Income Fund", "type": "debt_mf", "weight": 0.16 }
-        ],
-        "last_activity": "2026-04-16",
-        "urgency_score": 67,
-        "ytd_return_pct": 11.4,
-        "benchmark_ytd_pct": 12.0
-      }
-    },
-    {
-      "id": "W041",
-      "name": "Rekha Shetty",
-      "profile": {
-        "age": 56,
-        "flags": [
-          "Corpus target met 2 years early",
-          "Now a referral champion",
-          "Introduce Wealth+ advisory tier"
-        ],
-        "action": "Tier Upgrade & Cross-sell",
-        "segment": "Stable",
-        "allocation": {
-          "cash": 0.05,
-          "debt": 0.28,
-          "equity": 0.62,
-          "alternatives": 0.05
-        },
-        "aum_inr_cr": 5.2,
-        "kyc_status": "Completed",
-        "occupation": "Business Consultant",
-        "sip_active": true,
-        "risk_profile": "Aggressive",
-        "top_holdings": [
-          { "name": "Nippon India Small Cap", "type": "equity_mf", "weight": 0.28 },
-          { "name": "Mirae Asset Flexi Cap", "type": "equity_mf", "weight": 0.22 },
-          { "name": "ICICI Prudential Corporate Bond", "type": "debt_mf", "weight": 0.16 }
-        ],
-        "last_activity": "2026-04-19",
-        "urgency_score": 8,
-        "ytd_return_pct": 16.3,
-        "benchmark_ytd_pct": 14.0
-      }
-    },
-    {
-      "id": "W042",
-      "name": "Anil Goenka",
-      "profile": {
-        "age": 61,
-        "flags": [
-          "Medical expense ₹8L last year",
-          "Emergency fund below minimum",
-          "Add health emergency buffer"
-        ],
-        "action": "Emergency Fund Setup",
-        "segment": "Risk",
-        "allocation": {
-          "cash": 0.05,
-          "debt": 0.50,
-          "equity": 0.40,
-          "alternatives": 0.05
-        },
-        "aum_inr_cr": 1.1,
-        "kyc_status": "Completed",
-        "occupation": "Retired Banker",
-        "sip_active": false,
-        "risk_profile": "Conservative",
-        "top_holdings": [
-          { "name": "HDFC Short Term Debt", "type": "debt_mf", "weight": 0.35 },
-          { "name": "Kotak Balanced Advantage", "type": "hybrid_mf", "weight": 0.25 },
-          { "name": "HDFC Equity Opportunities", "type": "equity_mf", "weight": 0.18 }
-        ],
-        "last_activity": "2026-03-20",
-        "urgency_score": 83,
-        "ytd_return_pct": 6.8,
-        "benchmark_ytd_pct": 8.5
-      }
-    },
-    {
-      "id": "W043",
-      "name": "Simran Kaur",
-      "profile": {
-        "age": 29,
-        "flags": [
-          "Side income from freelancing started",
-          "Irregular cash flow pattern",
-          "Flexi SIP recommended"
-        ],
-        "action": "Flexi SIP Onboarding",
-        "segment": "Opportunity",
-        "allocation": {
-          "cash": 0.30,
-          "debt": 0.25,
-          "equity": 0.40,
-          "alternatives": 0.05
-        },
-        "aum_inr_cr": 0.09,
-        "kyc_status": "Completed",
-        "occupation": "Freelance Graphic Designer",
-        "sip_active": true,
-        "risk_profile": "Moderate",
-        "top_holdings": [
-          { "name": "Axis Bluechip Fund", "type": "equity_mf", "weight": 0.40 },
-          { "name": "SBI Liquid Fund", "type": "debt_mf", "weight": 0.30 }
+          { "name": "Axis Long Term Equity", "type": "equity_mf", "weight": 0.38 },
+          { "name": "UTI Nifty 50 Index", "type": "equity_mf", "weight": 0.28 }
         ],
         "last_activity": "2026-04-20",
-        "urgency_score": 69,
-        "ytd_return_pct": 10.9,
+        "last_contacted": "2026-04-14",
+        "urgency_score": 64,
+        "ytd_return_pct": 12.0,
         "benchmark_ytd_pct": 12.0
-      }
-    },
-    {
-      "id": "W044",
-      "name": "Mohan Das",
-      "profile": {
-        "age": 67,
-        "flags": [
-          "Nominee not updated post wife's demise",
-          "Legal succession risk",
-          "KYC update + Will documentation"
-        ],
-        "action": "Compliance & Succession Planning",
-        "segment": "Risk",
-        "allocation": {
-          "cash": 0.12,
-          "debt": 0.55,
-          "equity": 0.28,
-          "alternatives": 0.05
-        },
-        "aum_inr_cr": 1.6,
-        "kyc_status": "Update Required",
-        "occupation": "Retired Lawyer",
-        "sip_active": false,
-        "risk_profile": "Conservative",
-        "top_holdings": [
-          { "name": "SBI Magnum Gilt", "type": "debt_mf", "weight": 0.30 },
-          { "name": "ICICI All Seasons Bond", "type": "debt_mf", "weight": 0.25 },
-          { "name": "Axis Bluechip Fund", "type": "equity_mf", "weight": 0.15 }
-        ],
-        "last_activity": "2026-02-15",
-        "urgency_score": 94,
-        "ytd_return_pct": 6.1,
-        "benchmark_ytd_pct": 6.5
       }
     },
     {
       "id": "W045",
-      "name": "Preeti Tiwari",
+      "name": "Ramesh Gowda",
       "profile": {
-        "age": 38,
+        "age": 58,
+        "email": "ramesh.gowda@example.com",
+        "phone": "+91 6900017890",
+        "goal_tag": "Retirement",
+        "wealth_score": 46,
         "flags": [
-          "High savings rate 40% of income",
-          "Under-invested relative to savings",
-          "Aggressive investment shift recommended"
+          "Retirement 2 years away",
+          "Returns 4.5% — below retirement safe rate",
+          "Portfolio restructuring urgent"
         ],
-        "action": "Investment Acceleration",
-        "segment": "Opportunity",
+        "action": "Pre-retirement Restructuring",
+        "reason": "Retirement in 2 years with returns below safe withdrawal rate. Urgent restructuring needed.",
+        "segment": "Underperforming",
         "allocation": {
-          "cash": 0.50,
-          "debt": 0.20,
-          "equity": 0.25,
-          "alternatives": 0.05
+          "cash": 0.08,
+          "debt": 0.45,
+          "equity": 0.40,
+          "alternatives": 0.07
         },
-        "aum_inr_cr": 0.44,
+        "aum_inr_cr": 1.40,
+        "aum_potential_inr_cr": 0.15,
+        "net_profit_inr_cr": 0.06,
+        "commission_potential_inr": 6000,
         "kyc_status": "Completed",
-        "occupation": "Data Scientist",
+        "occupation": "Factory Supervisor",
         "sip_active": true,
-        "risk_profile": "Aggressive",
+        "risk_profile": "Conservative",
         "top_holdings": [
-          { "name": "SBI Liquid Fund", "type": "debt_mf", "weight": 0.50 },
-          { "name": "Mirae Asset Large Cap", "type": "equity_mf", "weight": 0.20 }
+          { "name": "HDFC Balanced Advantage", "type": "hybrid_mf", "weight": 0.32 },
+          { "name": "SBI Magnum Income", "type": "debt_mf", "weight": 0.28 },
+          { "name": "Kotak Bluechip", "type": "equity_mf", "weight": 0.15 }
         ],
-        "last_activity": "2026-04-14",
-        "urgency_score": 82,
-        "ytd_return_pct": 6.5,
-        "benchmark_ytd_pct": 14.0
+        "last_activity": "2026-04-04",
+        "last_contacted": "2026-03-20",
+        "urgency_score": 83,
+        "ytd_return_pct": 4.5,
+        "benchmark_ytd_pct": 8.0
       }
     },
     {
       "id": "W046",
-      "name": "Krishnamurthy Venkat",
+      "name": "Anita Reddy",
       "profile": {
-        "age": 70,
+        "age": 45,
+        "email": "anita.reddy@example.com",
+        "phone": "+91 6800028901",
+        "goal_tag": "Child Education",
+        "wealth_score": 77,
         "flags": [
-          "Corpus adequate — no major action needed",
-          "Review insurance adequacy",
-          "Annual performance report sharing"
+          "Consistent Stable investor for 7 years",
+          "Referral from Meera Deshmukh",
+          "Daughter starting engineering next year"
         ],
-        "action": "Annual Review & Maintenance",
+        "action": "Education Goal Top-up",
+        "reason": "Engineering fees coming next year. Education corpus needs ₹5L top-up for gap coverage.",
         "segment": "Stable",
         "allocation": {
-          "cash": 0.12,
-          "debt": 0.55,
-          "equity": 0.28,
-          "alternatives": 0.05
+          "cash": 0.06,
+          "debt": 0.35,
+          "equity": 0.55,
+          "alternatives": 0.04
         },
-        "aum_inr_cr": 6.5,
+        "aum_inr_cr": 1.30,
+        "aum_potential_inr_cr": 0.05,
+        "net_profit_inr_cr": 0.13,
+        "commission_potential_inr": 2000,
         "kyc_status": "Completed",
-        "occupation": "Retired IIT Professor",
-        "sip_active": false,
-        "risk_profile": "Conservative",
+        "occupation": "Nurse Practitioner",
+        "sip_active": true,
+        "risk_profile": "Moderate",
         "top_holdings": [
-          { "name": "HDFC Corporate Bond Fund", "type": "debt_mf", "weight": 0.30 },
-          { "name": "SBI Magnum Gilt", "type": "debt_mf", "weight": 0.20 },
-          { "name": "HDFC Balanced Advantage", "type": "hybrid_mf", "weight": 0.18 }
+          { "name": "Parag Parikh Flexi Cap", "type": "equity_mf", "weight": 0.30 },
+          { "name": "ICICI Prudential Short Term", "type": "debt_mf", "weight": 0.22 },
+          { "name": "Axis Bluechip", "type": "equity_mf", "weight": 0.18 }
         ],
-        "last_activity": "2026-04-04",
-        "urgency_score": 14,
-        "ytd_return_pct": 7.1,
-        "benchmark_ytd_pct": 6.5
+        "last_activity": "2026-04-15",
+        "last_contacted": "2026-04-07",
+        "urgency_score": 28,
+        "ytd_return_pct": 10.0,
+        "benchmark_ytd_pct": 10.0
       }
     },
     {
       "id": "W047",
-      "name": "Shreya Nayar",
+      "name": "Gaurav Tiwari",
       "profile": {
-        "age": 31,
+        "age": 33,
+        "email": "gaurav.tiwari@example.com",
+        "phone": "+91 6700039012",
+        "goal_tag": "Wealth Building",
+        "wealth_score": 33,
         "flags": [
-          "Career break planned — 1 year",
-          "SIP to be paused",
-          "Interest income planning needed"
+          "Stopped SIP citing market volatility",
+          "No investments for 3 months",
+          "Behavioural coaching needed"
         ],
-        "action": "Career Break Planning",
-        "segment": "Stable",
+        "action": "Investor Education Call",
+        "reason": "Stopped SIP due to market fear. Needs behavioural coaching to re-engage with long-term wealth creation.",
+        "segment": "Risk",
         "allocation": {
-          "cash": 0.10,
-          "debt": 0.35,
-          "equity": 0.50,
+          "cash": 0.60,
+          "debt": 0.20,
+          "equity": 0.15,
           "alternatives": 0.05
         },
-        "aum_inr_cr": 0.42,
+        "aum_inr_cr": 0.20,
+        "aum_potential_inr_cr": 0.04,
+        "net_profit_inr_cr": 0.01,
+        "commission_potential_inr": 1600,
         "kyc_status": "Completed",
-        "occupation": "Product Designer",
-        "sip_active": true,
+        "occupation": "Retail Store Manager",
+        "sip_active": false,
         "risk_profile": "Moderate",
         "top_holdings": [
-          { "name": "UTI Nifty 50 Index", "type": "equity_mf", "weight": 0.32 },
-          { "name": "HDFC Short Duration", "type": "debt_mf", "weight": 0.25 },
-          { "name": "SBI Small Cap Fund", "type": "equity_mf", "weight": 0.18 }
+          { "name": "SBI Liquid Fund", "type": "debt_mf", "weight": 0.55 },
+          { "name": "HDFC Balanced Advantage", "type": "hybrid_mf", "weight": 0.22 }
         ],
-        "last_activity": "2026-04-17",
-        "urgency_score": 35,
-        "ytd_return_pct": 11.2,
-        "benchmark_ytd_pct": 11.0
+        "last_activity": "2026-01-30",
+        "last_contacted": "2026-02-20",
+        "urgency_score": 92,
+        "ytd_return_pct": 3.5,
+        "benchmark_ytd_pct": 9.5
       }
     },
     {
       "id": "W048",
-      "name": "Balakrishnan Pillai",
+      "name": "Sujata Iyer",
       "profile": {
-        "age": 49,
+        "age": 47,
+        "email": "sujata.iyer@example.com",
+        "phone": "+91 6600040123",
+        "goal_tag": "Tax Saving",
+        "wealth_score": 66,
         "flags": [
-          "CAGR 4% — worst in segment peer group",
-          "Overlapping fund schemes detected",
-          "Rationalise to 3 core funds"
+          "Portfolio above target — review allocation",
+          "Gold ETF exposure low",
+          "Consider commodities diversification"
         ],
-        "action": "Portfolio Rationalisation",
-        "segment": "Underperforming",
+        "action": "Asset Diversification",
+        "reason": "Portfolio performing at target. Gold and commodity diversification will improve risk-adjusted returns.",
+        "segment": "Stable",
         "allocation": {
-          "cash": 0.08,
+          "cash": 0.06,
           "debt": 0.30,
-          "equity": 0.57,
-          "alternatives": 0.05
+          "equity": 0.58,
+          "alternatives": 0.06
         },
-        "aum_inr_cr": 0.97,
+        "aum_inr_cr": 1.60,
+        "aum_potential_inr_cr": 0.08,
+        "net_profit_inr_cr": 0.16,
+        "commission_potential_inr": 3200,
         "kyc_status": "Completed",
-        "occupation": "Civil Contractor",
+        "occupation": "Software Architect",
         "sip_active": true,
         "risk_profile": "Moderate",
         "top_holdings": [
-          { "name": "SBI Bluechip Fund", "type": "equity_mf", "weight": 0.20 },
-          { "name": "HDFC Top 100 Fund", "type": "equity_mf", "weight": 0.18 },
-          { "name": "Kotak Standard Multicap", "type": "equity_mf", "weight": 0.15 },
-          { "name": "Mirae Asset Large Cap", "type": "equity_mf", "weight": 0.12 }
+          { "name": "UTI Nifty 50 Index", "type": "equity_mf", "weight": 0.32 },
+          { "name": "Kotak Balanced Advantage", "type": "hybrid_mf", "weight": 0.20 },
+          { "name": "Nippon India Gold BeES", "type": "gold_etf", "weight": 0.08 }
         ],
-        "last_activity": "2026-04-05",
-        "urgency_score": 69,
-        "ytd_return_pct": 4.8,
-        "benchmark_ytd_pct": 10.5
+        "last_activity": "2026-04-12",
+        "last_contacted": "2026-04-04",
+        "urgency_score": 19,
+        "ytd_return_pct": 10.0,
+        "benchmark_ytd_pct": 10.0
       }
     },
     {
       "id": "W049",
-      "name": "Anjana Pillai",
+      "name": "Mohit Aggarwal",
       "profile": {
-        "age": 36,
+        "age": 41,
+        "email": "mohit.aggarwal@example.com",
+        "phone": "+91 6500051234",
+        "goal_tag": "Wealth Building",
+        "wealth_score": 39,
         "flags": [
-          "Consistency award — never missed SIP",
-          "Now contributing to PPF also",
-          "Cross-sell NPS"
+          "Portfolio in loss for 6 months",
+          "Client considering switching to FD",
+          "Prevent panic exit"
         ],
-        "action": "NPS Cross-sell",
-        "segment": "Stable",
+        "action": "Retention Call — Panic Prevention",
+        "reason": "6-month portfolio drawdown triggered FD switch consideration. Prevent panic exit from equity.",
+        "segment": "Risk",
         "allocation": {
-          "cash": 0.06,
-          "debt": 0.32,
-          "equity": 0.57,
+          "cash": 0.10,
+          "debt": 0.20,
+          "equity": 0.65,
           "alternatives": 0.05
         },
-        "aum_inr_cr": 0.68,
+        "aum_inr_cr": 0.42,
+        "aum_potential_inr_cr": 0.04,
+        "net_profit_inr_cr": -0.02,
+        "commission_potential_inr": 1600,
         "kyc_status": "Completed",
-        "occupation": "Bank Teller",
+        "occupation": "Media Producer",
         "sip_active": true,
-        "risk_profile": "Moderate",
+        "risk_profile": "Aggressive",
         "top_holdings": [
-          { "name": "Axis Bluechip Fund", "type": "equity_mf", "weight": 0.30 },
-          { "name": "HDFC Balanced Advantage", "type": "hybrid_mf", "weight": 0.22 },
-          { "name": "Aditya Birla Short Term", "type": "debt_mf", "weight": 0.16 }
+          { "name": "Axis Small Cap Fund", "type": "equity_mf", "weight": 0.35 },
+          { "name": "Nippon India Small Cap", "type": "equity_mf", "weight": 0.25 }
         ],
-        "last_activity": "2026-04-19",
-        "urgency_score": 17,
-        "ytd_return_pct": 11.7,
-        "benchmark_ytd_pct": 11.0
+        "last_activity": "2026-03-25",
+        "last_contacted": "2026-04-02",
+        "urgency_score": 88,
+        "ytd_return_pct": -4.5,
+        "benchmark_ytd_pct": 2.0
       }
     },
     {
       "id": "W050",
-      "name": "Vinod Khanna",
+      "name": "Rajalakshmi Venkat",
       "profile": {
-        "age": 53,
+        "age": 63,
+        "email": "rajalakshmi.venkat@example.com",
+        "phone": "+91 6400062345",
+        "goal_tag": "Retirement",
+        "wealth_score": 92,
         "flags": [
-          "Recently fired — severance ₹15L",
-          "Healthcare continuity needed",
-          "Conservative parking until job found"
+          "₹7.5Cr AUM — top decile client",
+          "Estate planning needed",
+          "Successor nomination review"
         ],
-        "action": "Emergency Liquid Parking",
-        "segment": "Risk",
+        "action": "Estate & Succession Planning",
+        "reason": "Top-decile client with ₹7.5Cr. Estate planning and nomination review required for wealth transition.",
+        "segment": "Stable",
         "allocation": {
-          "cash": 0.60,
-          "debt": 0.30,
-          "equity": 0.08,
-          "alternatives": 0.02
+          "cash": 0.08,
+          "debt": 0.45,
+          "equity": 0.40,
+          "alternatives": 0.07
         },
-        "aum_inr_cr": 0.72,
+        "aum_inr_cr": 7.5,
+        "aum_potential_inr_cr": 0.00,
+        "net_profit_inr_cr": 0.75,
+        "commission_potential_inr": 0,
         "kyc_status": "Completed",
-        "occupation": "Unemployed (ex-VP Operations)",
+        "occupation": "Retired CEO",
         "sip_active": false,
         "risk_profile": "Conservative",
         "top_holdings": [
-          { "name": "SBI Liquid Fund", "type": "debt_mf", "weight": 0.55 },
-          { "name": "HDFC Ultra Short Term", "type": "debt_mf", "weight": 0.25 }
+          { "name": "HDFC Balanced Advantage", "type": "hybrid_mf", "weight": 0.28 },
+          { "name": "Parag Parikh Flexi Cap", "type": "equity_mf", "weight": 0.20 },
+          { "name": "Kotak Gilt Fund", "type": "debt_mf", "weight": 0.18 },
+          { "name": "Nippon India Gold BeES", "type": "gold_etf", "weight": 0.08 }
         ],
-        "last_activity": "2026-04-19",
-        "urgency_score": 96,
-        "ytd_return_pct": 5.0,
-        "benchmark_ytd_pct": 7.0
+        "last_activity": "2026-04-10",
+        "last_contacted": "2026-03-28",
+        "urgency_score": 10,
+        "ytd_return_pct": 10.0,
+        "benchmark_ytd_pct": 9.0
       }
     }
   ]
