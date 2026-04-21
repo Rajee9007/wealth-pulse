@@ -9,6 +9,7 @@ import {
   getPortfolioHistory, getActivityLogs, addActivityLog, getFamilyMembers,
   type ClientFilters, type ClientListResult, type ActivityLog,
 } from '../services/clientService';
+import type { Client } from '../types/client.types';
 
 import {
   getDashboardSummary, getPossibility, getNudges, getNotifications,

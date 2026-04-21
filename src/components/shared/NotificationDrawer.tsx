@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { 
   X, Bell, Zap, ShieldAlert, CheckCircle, Brain, 
   ChevronRight, Sparkles, Clock, Check

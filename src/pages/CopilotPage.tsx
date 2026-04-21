@@ -56,7 +56,7 @@ function PriorityRow({ client, rank, selected, onClick }: {
 }
 
 export default function CopilotPage() {
-  const { clients: allClients, loading } = useData();
+  const { clients: allClients } = useData();
   // Ensure we sort locally but don't mutate original
   const clients = [...allClients].sort((a,b) => b.profile.aum_potential_inr_cr - a.profile.aum_potential_inr_cr);
   const [searchTerm, setSearchTerm] = useState('');
@@ -93,11 +93,8 @@ export default function CopilotPage() {
   const [outcomes, setOutcomes] = useState<Outcome[]>([]);
   const [outcomeFor, setOutcomeFor] = useState<OutcomeType | null>(null);
   const [outcomeNote, setOutcomeNote] = useState('');
-  const [savedOutcome, setSavedOutcome] = useState<Outcome | null>(null);
-
-  const guide = selected ? (CONVERSATION_GUIDES[selected.profile.segment] || []) : [];
-  const color = selected ? (SEG_COLORS[selected.profile.segment] || '#3b82f6') : '#3b82f6';
-  const existingOutcome = outcomes.find(o => o.clientId === selected?.id);
+  const guide = selected ? (CONVERSATION_GUIDES[selected.profile.segment as keyof typeof CONVERSATION_GUIDES] || []) : [];
+  const color = selected ? (SEG_COLORS[selected.profile.segment as keyof typeof SEG_COLORS] || '#3b82f6') : '#3b82f6';
   const clientLogs = selected ? (MOCK_ACTIVITY_LOGS[selected.id] || []) : [];
 
   const handleRegenerate = () => {
@@ -331,7 +328,7 @@ export default function CopilotPage() {
                     <span style={{ fontSize: 13, fontWeight: 800, color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Talking Points</span>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                    {selected.profile.flags.length > 0 ? selected.profile.flags.map((pt, i) => (
+                    {selected.profile.flags.length > 0 ? selected.profile.flags.map((pt: string, i: number) => (
                       <div key={i} style={{ display: 'flex', gap: 12, padding: '10px 14px', background: 'var(--bg-primary)', borderRadius: 10, border: '1px solid var(--border-subtle)', alignItems: 'flex-start' }}>
                         <div style={{ width: 22, height: 22, borderRadius: 6, background: `${color}20`, color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, flexShrink: 0, marginTop: 1 }}>{i + 1}</div>
                         <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{pt}</div>
@@ -388,7 +385,7 @@ export default function CopilotPage() {
                   </span>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10 }}>
-                  {guide.map((g, i) => (
+                  {guide.map((g: {topic: string; point: string}, i: number) => (
                     <div key={i} style={{ padding: '12px 14px', background: 'var(--bg-primary)', borderRadius: 10, border: '1px solid var(--border-subtle)', display: 'flex', gap: 12 }}>
                       <div style={{ width: 22, height: 22, borderRadius: 6, background: 'rgba(59,130,246,0.15)', color: 'var(--accent-blue)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, flexShrink: 0 }}>{i + 1}</div>
                       <div>

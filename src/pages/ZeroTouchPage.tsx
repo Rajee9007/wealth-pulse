@@ -738,7 +738,7 @@ export default function ZeroTouchPage() {
                           <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 12, background: `${statusCol}20`, color: statusCol, fontWeight: 700 }}>{status.replace(/_/g, ' ')}</span>
                         </div>
                       </div>
-                      {t.root_cause && <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Root cause: <span style={{ color: 'var(--accent-amber)', fontWeight: 600 }}>{t.root_cause as string}</span></div>}
+                      {t.root_cause ? <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Root cause: <span style={{ color: 'var(--accent-amber)', fontWeight: 600 }}>{t.root_cause as string}</span></div> : null}
                     </div>
                   );
                 })}

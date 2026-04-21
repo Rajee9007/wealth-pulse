@@ -1,8 +1,8 @@
 import AppShell from '../components/layout/AppShell';
 import { useData } from '../context/DataContext';
-import { formatCurrency, calcScore } from '../data/mockData';
+import { formatCurrency } from '../data/mockData';
 import { RadialBarChart, RadialBar, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, PolarAngleAxis } from 'recharts';
-import { TrendingUp, Target, Zap, Activity, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { TrendingUp, Target, Zap, Activity } from 'lucide-react';
 
 export default function PerformancePage() {
   const { performance: perf, monthlyTrend } = useData();

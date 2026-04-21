@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { Bell, Search, Sun, Moon, Settings, LogOut, ChevronDown } from 'lucide-react';
 import { 
-  MOCK_NOTIFICATIONS, NUDGES, ADVISOR_PERFORMANCE, 
+  MOCK_NOTIFICATIONS, ADVISOR_PERFORMANCE, 
   BADGE_TIERS, getBadge 
 } from '../../data/mockData';
 import { useData } from '../../context/DataContext';
@@ -15,7 +15,6 @@ interface TopbarProps {
 }
 
 export default function Topbar({ title, subtitle }: TopbarProps) {
-  const urgentCount = NUDGES.filter(n => n.type === 'risk').reduce((s, n) => s + n.count, 0);
   const { theme, toggleTheme } = useTheme();
   const { clients } = useData();
   const [menuOpen, setMenuOpen] = useState(false);

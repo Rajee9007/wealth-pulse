@@ -13,9 +13,8 @@ import {
   TrendingDown, CheckCircle
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
-import CopilotDrawer, { SEG_COLORS } from '../components/shared/CopilotDrawer';
+import CopilotDrawer from '../components/shared/CopilotDrawer';
 
-const COLORS = ['#10b981', '#f43f5e', '#f59e0b'];
 
 export default function PossibilityPage() {
   const navigate = useNavigate();

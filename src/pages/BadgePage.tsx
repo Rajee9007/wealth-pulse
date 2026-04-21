@@ -35,7 +35,7 @@ export default function BadgePage() {
         {/* Badge identity */}
         <div>
           <div style={{ fontSize: 72, lineHeight: 1, marginBottom: 10 }}>{emoji}</div>
-          <div style={{ fontSize: 11, fontWeight: 600, color: badge.color, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 4 }}>Current Badge</div>
+          <div style={{ fontSize: 11, fontWeight: 600, color: badgeTier.color, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 4 }}>Current Badge</div>
           <div style={{ fontSize: 28, fontWeight: 900, color: '#f1f5f9', letterSpacing: -0.5 }}>{badgeName}</div>
         </div>
 

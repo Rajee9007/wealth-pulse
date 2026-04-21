@@ -4,13 +4,11 @@ import { useData } from '../context/DataContext';
 import type { Client, Segment } from '../types/client.types';
 import { formatCurrency } from '../data/mockData';
 import {
-  Phone, TrendingUp, RefreshCw, ChevronUp, ChevronDown,
-  Search, X, MessageSquare, CheckCircle, XCircle, Calendar,
-  Clock, Sparkles, ChevronRight,
+  ChevronUp, ChevronDown,
+  Search, Sparkles
 } from 'lucide-react';
 import { useSearchParams, Link } from 'react-router-dom';
 import CopilotDrawer, { SEG_COLORS, ACTION_ICONS } from '../components/shared/CopilotDrawer';
-import type { OutcomeType } from '../components/shared/CopilotDrawer';
 
 /* ─── Types ──────────────────────────────────────────────────────────── */
 type SortKey = 'name' | 'aum_inr_cr' | 'urgency_score' | 'aum_potential_inr_cr' | 'ytd_return_pct';
@@ -146,8 +144,8 @@ export default function ClientsPage() {
           </thead>
           <tbody>
             {displayClients.map((c, i) => {
-              const color = SEG_COLORS[c.profile.segment];
-              const ActionIcon = ACTION_ICONS[c.profile.segment];
+              const color = SEG_COLORS[c.profile.segment as keyof typeof SEG_COLORS];
+              const ActionIcon = ACTION_ICONS[c.profile.segment as keyof typeof ACTION_ICONS];
               const isSelected = copilotClient?.id === c.id;
               return (
                 <tr
@@ -169,7 +167,7 @@ export default function ClientsPage() {
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         fontSize: 11, fontWeight: 800, color,
                       }}>
-                        {c.name.split(' ').map(w => w[0]).join('').slice(0, 2)}
+                        {c.name.split(' ').map((w: string) => w[0]).join('').slice(0, 2)}
                       </div>
                       <div>
                         <Link 

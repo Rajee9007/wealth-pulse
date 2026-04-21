@@ -10,13 +10,13 @@ import AppShell from '../components/layout/AppShell';
 import { 
   AreaChart, Area, XAxis, YAxis, Tooltip, 
   ResponsiveContainer, PieChart, Pie, Cell, 
-  Legend, CartesianGrid, BarChart, Bar
+  Legend, CartesianGrid
 } from 'recharts';
 import { 
-  ArrowLeft, Phone, Mail, MessageCircle, 
+  ArrowLeft, Phone, Mail,
   TrendingUp, Shield, Target, Users, 
-  Zap, Clock, Calendar, ChevronRight, Sparkles,
-  BarChart3, Wallet, Activity, Heart, Info
+  ChevronRight, Sparkles,
+  BarChart3, Wallet, Activity, Info
 } from 'lucide-react';
 
 const FALLBACK_COLOR = '#94a3b8';
@@ -61,7 +61,7 @@ export default function Client360Page() {
   const family = MOCK_FAMILY[client.id] || [];
   const holdings = MOCK_HOLDINGS[client.id] || [];
   const logs = MOCK_ACTIVITY_LOGS[client.id] || [];
-  const color = SEG_COLORS[client.segment] || FALLBACK_COLOR;
+  const color = SEG_COLORS[client.segment as keyof typeof SEG_COLORS] || FALLBACK_COLOR;
 
   const allocationData = [
     { name: 'Equity', value: Number(client.equityAllocation || 65), color: 'var(--accent-emerald)' },
@@ -110,7 +110,7 @@ export default function Client360Page() {
                   fontSize: 32, fontWeight: 900, color,
                   boxShadow: `0 12px 30px ${color}20`,
                 }}>
-                  {client.name.split(' ').map(w => w[0]).join('').slice(0, 2)}
+                  {client.name.split(' ').map((w: string) => w[0]).join('').slice(0, 2)}
                 </div>
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>

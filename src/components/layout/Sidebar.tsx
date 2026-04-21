@@ -1,6 +1,6 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import {
-  LayoutDashboard, PieChart, Zap, Target, BarChart3,
+  LayoutDashboard, Zap, Target, BarChart3,
   Award, Users, Bot, ChevronRight, Rocket, Cpu,
 } from 'lucide-react';
 
