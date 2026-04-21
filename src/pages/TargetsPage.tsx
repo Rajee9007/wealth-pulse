@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import AppShell from '../components/layout/AppShell';
 import { useData } from '../context/DataContext';
 import { formatCurrency } from '../data/mockData';
@@ -37,18 +37,23 @@ export default function TargetsPage() {
   const minAllowed    = Math.round(possibility * 0.70);
   const maxSlider     = Math.round(possibility * 1.50);
 
-  const [preset, setPreset] = useState<Preset | null>(() => {
-    if (targets.aum_target_inr > 0 && possibility > 0) {
-      const match = PRESETS.find(p => Math.abs(targets.aum_target_inr - Math.round(possibility * p.pct)) <= 10);
-      if (match) return match.key;
-      return null;
+  const [preset, setPreset] = useState<Preset | null>(null);
+  const [sliderVal, setSliderVal] = useState(0);
+
+  const hasInitialized = useRef(false);
+  useEffect(() => {
+    if (!hasInitialized.current && possibility > 0) {
+      if (targets.aum_target_inr > 0) {
+        const match = PRESETS.find(p => Math.abs(targets.aum_target_inr - Math.round(possibility * p.pct)) <= 10);
+        setPreset(match ? match.key : null);
+        setSliderVal(targets.aum_target_inr);
+      } else {
+        setPreset('Optimal');
+        setSliderVal(Math.round(possibility * 1.00));
+      }
+      hasInitialized.current = true;
     }
-    return 'Optimal';
-  });
-  
-  const [sliderVal, setSliderVal] = useState(() => 
-    targets.aum_target_inr > 0 ? targets.aum_target_inr : Math.round(possibility * 1.00)
-  );
+  }, [possibility, targets.aum_target_inr]);
 
   const [saved,      setSaved]      = useState(false);
   const [confirmed,  setConfirmed]  = useState(false);

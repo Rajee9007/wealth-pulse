@@ -24,9 +24,9 @@ export interface DashboardSummary {
 
 export interface MonthlyTrendPoint {
   month: string;
-  actual_inr: number;
-  target_inr: number;
-  possibility_inr: number;
+  actual: number;
+  target: number;
+  possibility: number;
   score: number;
   badge: string;
 }
@@ -93,12 +93,12 @@ export function getDashboardSummary(): DashboardSummary {
 // ─── Monthly Trend (static — will come from advisor's book in real backend) ────
 
 export const MONTHLY_TREND: MonthlyTrendPoint[] = [
-  { month: 'Nov', actual_inr: 420000, target_inr: 400000, possibility_inr: 500000, score: 65, badge: 'Stable' },
-  { month: 'Dec', actual_inr: 510000, target_inr: 450000, possibility_inr: 560000, score: 70, badge: 'Strong' },
-  { month: 'Jan', actual_inr: 480000, target_inr: 480000, possibility_inr: 530000, score: 68, badge: 'Stable' },
-  { month: 'Feb', actual_inr: 590000, target_inr: 520000, possibility_inr: 640000, score: 76, badge: 'Strong' },
-  { month: 'Mar', actual_inr: 660000, target_inr: 570000, possibility_inr: 740000, score: 80, badge: 'Elite'  },
-  { month: 'Apr', actual_inr: 720000, target_inr: 600000, possibility_inr: 850000, score: 82, badge: 'Elite'  },
+  { month: 'Nov', actual: 18500000, target: 18000000, possibility: 21000000, score: 65, badge: 'Stable' },
+  { month: 'Dec', actual: 21200000, target: 20000000, possibility: 23500000, score: 70, badge: 'Strong' },
+  { month: 'Jan', actual: 20500000, target: 21000000, possibility: 24000000, score: 68, badge: 'Stable' },
+  { month: 'Feb', actual: 24800000, target: 23000000, possibility: 27500000, score: 76, badge: 'Strong' },
+  { month: 'Mar', actual: 28200000, target: 26000000, possibility: 31000000, score: 80, badge: 'Elite'  },
+  { month: 'Apr', actual: 32500000, target: 30000000, possibility: 35000000, score: 82, badge: 'Elite'  },
 ];
 
 // ─── Nudges (computed from live client data) ───────────────────────────────────

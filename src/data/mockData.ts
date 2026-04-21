@@ -158,10 +158,10 @@ export interface AdvisorPerformance {
 
 export const ADVISOR_PERFORMANCE: AdvisorPerformance = {
   month: 'April 2026',
-  actual: 720000,
-  target: 600000,
-  possibilityAum: 850000,
-  possibilityCommission: 34000,
+  actual: 7200000,
+  target: 6000000,
+  possibilityAum: 8500000,
+  possibilityCommission: 340000,
   score: 82,
   badge: 'Elite',
   targetAchievement: 120,
@@ -183,12 +183,12 @@ export const BADGE_TIERS = [
 // ─── Monthly trend ────────────────────────────────────────────────────────────
 
 export const MONTHLY_TREND = [
-  { month: 'Nov', actual: 420000, target: 400000, possibility: 500000 },
-  { month: 'Dec', actual: 510000, target: 450000, possibility: 560000 },
-  { month: 'Jan', actual: 480000, target: 480000, possibility: 530000 },
-  { month: 'Feb', actual: 590000, target: 520000, possibility: 640000 },
-  { month: 'Mar', actual: 660000, target: 570000, possibility: 740000 },
-  { month: 'Apr', actual: 720000, target: 600000, possibility: 850000 },
+  { month: 'Nov', actual: 18500000, target: 18000000, possibility: 21000000 },
+  { month: 'Dec', actual: 21200000, target: 20000000, possibility: 23500000 },
+  { month: 'Jan', actual: 20500000, target: 21000000, possibility: 24000000 },
+  { month: 'Feb', actual: 24800000, target: 23000000, possibility: 27500000 },
+  { month: 'Mar', actual: 28200000, target: 26000000, possibility: 31000000 },
+  { month: 'Apr', actual: 32500000, target: 30000000, possibility: 35000000 },
 ];
 
 // ─── Notifications ────────────────────────────────────────────────────────────
@@ -233,7 +233,7 @@ export function formatCurrency(n: number): string {
   if (n >= 10_000_000) return `₹${(n / 10_000_000).toFixed(2)} Cr`;
   if (n >= 100_000)    return `₹${(n / 100_000).toFixed(2)} L`;
   if (n >= 1_000)      return `₹${(n / 1_000).toFixed(1)} K`;
-  return `₹${n}`;
+  return `₹${n.toLocaleString('en-IN')}`;
 }
 
 // ─── Per-client sub-resource stubs (used by Client360Page until migrated) ─────

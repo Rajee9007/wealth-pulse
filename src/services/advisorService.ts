@@ -81,7 +81,7 @@ export function getAdvisorPerformance(): AdvisorPerformance {
 
   // Previous performance for analysis / badge criteria
   const prevPerfRaw = localStorage.getItem('wealthpulse_prev_perf');
-  const prevPerf = prevPerfRaw ? JSON.parse(prevPerfRaw) : { actual: 650000, target: 500000 };
+  const prevPerf = prevPerfRaw ? JSON.parse(prevPerfRaw) : { actual: 28200000, target: 26000000 };
 
   const target_pct      = target_inr > 0 ? +(actual_inr / target_inr * 100).toFixed(1) : 0;
   const poss_pct        = possibility > 0 ? +(actual_inr / possibility * 100).toFixed(1) : 0;
@@ -138,15 +138,15 @@ function getDefaultTargets(): Targets {
   const poss = getPossibility();
   const default_target = poss.total_possibility_inr_cr > 0 
     ? Math.round(poss.total_possibility_inr_cr * 10_000_000 * 0.8) 
-    : 600000;
+    : 30000000;
 
   return {
     aum_target_inr:       default_target,
-    aum_actual_inr:       720000,
+    aum_actual_inr:       Math.round(default_target * 0.70),
     commission_target_inr: Math.round(default_target * 0.04),
-    commission_actual_inr: 28800,
+    commission_actual_inr: Math.round(default_target * 0.04 * 0.70),
     new_sip_target:       15,
-    new_sip_actual:       18,
+    new_sip_actual:       11,
     new_client_target:    5,
     new_client_actual:    3,
     period:               'April 2026',

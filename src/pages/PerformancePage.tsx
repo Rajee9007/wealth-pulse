@@ -9,7 +9,7 @@ export default function PerformancePage() {
   const score = perf.performance_score; // calculated in advisorService
 
   const radialData = [
-    { name: 'Score', value: score, fill: '#10b981' },
+    { name: 'Score', value: score, fill: score >= 90 ? '#10b981' : score >= 70 ? '#f59e0b' : '#f43f5e' },
   ];
 
   // Compare previous to current
@@ -65,14 +65,14 @@ export default function PerformancePage() {
               </ResponsiveContainer>
             </div>
             <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' }}>
-              <div style={{ fontSize: 48, fontWeight: 900, color: '#10b981', letterSpacing: -2, lineHeight: 1 }}>{score}</div>
+              <div style={{ fontSize: 48, fontWeight: 900, color: score >= 90 ? '#10b981' : score >= 70 ? '#f59e0b' : '#f43f5e', letterSpacing: -2, lineHeight: 1 }}>{score}</div>
               <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 0.5, marginTop: 4 }}>Score / 100</div>
             </div>
           </div>
 
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 20, justifyContent: 'flex-end' }}>
             {[
-              { label: 'Target Achievement', value: perf.target_achievement_pct, suffix: '%', color: '#10b981' },
+              { label: 'Target Achievement', value: perf.target_achievement_pct, suffix: '%', color: perf.target_achievement_pct >= 90 ? '#10b981' : perf.target_achievement_pct >= 70 ? '#f59e0b' : '#f43f5e' },
               { label: 'Possibility Harvested', value: perf.possibility_achievement_pct, suffix: '%', color: '#8b5cf6' },
             ].map(bar => (
               <div key={bar.label}>
